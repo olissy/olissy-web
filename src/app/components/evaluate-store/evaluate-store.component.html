@@ -1,0 +1,27 @@
+<div class="container">
+  <section class="content" style="padding-top: 30px">
+    <div class="jumbotron box">
+      <h2>
+        Pedido Conluído</h2>
+      <p>Seu pedido foi recebido pela loja!</p>
+      <p>
+        <b>Avalie</b>
+        sua experiência
+      </p>
+      <form [formGroup]="formularioComentario">
+        <div class="input-group">
+          <input class="form-control" formControlName="commentText" (keyup.enter)="publicarComentarioEnter()" placeholder="Avalie sua experiência... "/>
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-success" (click)="publicarComentarioClick()">
+              <i class="fa  fa-send-o"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      <br />
+      <a [routerLink]="['/product']" class="btn btn-success" style="width: 100%">
+        VOLTAR PARA HOME
+      </a>
+    </div>
+  </section>
+</div>

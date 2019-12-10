@@ -1,0 +1,267 @@
+<div class="container">
+  <div class="col-md-12 col-xs-12 center" style="bottom: 10px; margin-top: 25px">
+    <button type="submit" class="btn btn-success col-md-12 col-xs-12 card" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#buscarProdutoCadastrar" style="height: 60px; font-size: 16px">
+      <b>Buscar por filtro</b>
+    </button>
+  </div>
+
+  <br>
+  <!--<mt-pesquisa [boscar_por]='token.uid'></mt-pesquisa>
+  <mt-pesquisa [boscar_por]='token.uid' (produtos_Output)="produtos_Input($event)"></mt-pesquisa>-->
+  <br>
+  <div *ngFor="let produto of result.productDataBase" class="col-md-12 col-xs-12 center" style="top: 25px; margin-bottom: 40px" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#selecionadoProdutoCadastrar" (click)="selecionadoProdutoCadastrar(produto)">
+    <div *ngIf="produto.registration == false" class="menu-item-info-box card">
+      <div class="col-md-12 col-xs-12" style="padding-top: 0px; padding-bottom: 5px;">
+        <div id="carousel-example-generic" class="carousel slide imagemMobile" data-interval="false">
+          <div class="carousel-inner">
+            <div class="item active">
+              <img [src]="produto.productImageUrl || ''" style="width: 100%" alt="Photo" alt="Photo">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin: 5px 5px 10px 5px; padding:0px 0px 10px 0px ;">
+        <span class="menu-item-info-box-text">
+          {{produto.productName}}
+        </span>
+        <span class="menu-item-info-box-text" style="font-size: 14px; font-weight: normal; text-transform: none;  margin-bottom: 0px;">
+          {{ produto?.productSession }}, {{ produto?.productType }} <b>marca {{ produto?.provider }}</b> generico? <b>{{ produto?.andGeneric }}</b>
+        </span>
+      </div>
+    </div> 
+  </div>
+
+  <div class="col-md-12 col-xs-12 center" style="top: 5px; margin-bottom: 50px">
+    <div class="col-md-12 col-xs-12 card" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;" *ngIf="loading">
+      <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusProduct()">
+        Carregar mais
+      </button>
+    </div>
+    <div class="row" *ngIf="!loading">
+      <div class="login-logo">
+        <i class="fa fa-refresh fa-spin fa-2x"></i>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="formularioCadastro" novalidate>
+    <div class="modal fade" id="selecionadoProdutoCadastrar">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">
+                Cadastrar Produto
+              </h4>
+          </div>
+          <div class="modal-body">
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <img class="img-responsive center-block" style="margin-bottom: 15px"  [src]="produtoSelecionadoParaCadastar?.productImageUrl"   width="300" alt="User Avatar">
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                  <b>Produto: </b>{{ produtoSelecionadoParaCadastar?.productName}}
+                </p>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                  <b>Sessão: </b>{{ produtoSelecionadoParaCadastar?.productSession }}
+                </p>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                  <b>Categoria: </b>{{ produtoSelecionadoParaCadastar?.productCategory}}
+                </p>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                  <b>Tipo: </b>{{ produtoSelecionadoParaCadastar?.productType}}
+                </p>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                  <b>Generico: </b>{{ produtoSelecionadoParaCadastar?.andGeneric}}
+                </p>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <p style="margin-bottom: 0px;">
+                  <b>Fornecedor: </b>{{ produtoSelecionadoParaCadastar?.provider}}
+                </p>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%; font-weight: normal;">
+                <div [innerHTML]="produtoSelecionadoParaCadastar?.productDescription"></div>
+              </label>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%;">
+                Preco
+                <input type="text"class="form-control" [imask]="currencyMask" [unmask]="true"  style="font-weight: 500;" autocomplete="off" formControlName="productPrice">
+              </label>
+              <span class="help-block" style="color:green" *ngIf="this.formularioCadastro.controls['productPrice'].valid && (this.formularioCadastro.controls['productPrice'].dirty || this.formularioCadastro.controls['productPrice'].touched)">
+                <i class="fa fa-check"></i>
+                Ok
+              </span>
+              <span class="help-block" style="color:red" *ngIf="this.formularioCadastro.controls['productPrice'].invalid && (this.formularioCadastro.controls['productPrice'].dirty || this.formularioCadastro.controls['productPrice'].touched)">
+                <i class="fa fa-remove"></i>
+                Campo Obrigatorio
+              </span>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label style="width:100%;">
+                Quantidades
+                <input type="number" min="1" class="form-control"  style="font-weight: 500;" autocomplete="off" formControlName="productQuantities">
+              </label>
+              <span class="help-block" style="color:green" *ngIf="this.formularioCadastro.controls['productQuantities'].valid && (this.formularioCadastro.controls['productQuantities'].dirty || this.formularioCadastro.controls['productQuantities'].touched)">
+                <i class="fa fa-check"></i>
+                Ok
+              </span>
+              <span class="help-block" style="color:red" *ngIf="this.formularioCadastro.controls['productQuantities'].invalid && (this.formularioCadastro.controls['productQuantities'].dirty || this.formularioCadastro.controls['productQuantities'].touched)">
+                <i class="fa fa-remove"></i>
+                Campo Obrigatorio
+              </span>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label>
+                Publicar pra venda?
+              </label>
+              <select class="form-control" formControlName="productForSale">
+                <option  value="null" disabled hidden>
+                  << Em Vendas? >>
+                </option>
+                <option *ngFor="let emVendas of emVendas" [value]="emVendas">
+                  {{ emVendas }}
+                </option>
+              </select>
+              <span class="help-block" style="color:green" *ngIf="this.formularioCadastro.controls['productForSale'].valid && (this.formularioCadastro.controls['productForSale'].dirty || this.formularioCadastro.controls['productForSale'].touched)">
+                <i class="fa fa-check"></i>
+                Ok
+              </span>
+              <span class="help-block" style="color:red" *ngIf="this.formularioCadastro.controls['productForSale'].invalid && (this.formularioCadastro.controls['productForSale'].dirty || this.formularioCadastro.controls['productForSale'].touched)">
+                <i class="fa fa-remove"></i>
+                Campo Obrigatorio
+              </span>
+            </span>
+          </div>
+          <div class="modal-footer">
+            <button type="button" (click)="cancelarCadastraProduto()" class="btn btn-default pull-left" data-dismiss="modal">
+                Cancelar
+            </button>
+            <button type="button" (click)="cadastraProduto()" class="btn btn-success" >
+                Cadastrar Produto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="formularioBuscarProdutoCadastrar" novalidate>
+    <div class="modal fade" id="buscarProdutoCadastrar">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">
+              Buscar Produto para Cadastrar
+            </h4>
+          </div>
+          <div class="modal-body">
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label>
+                Sessão
+              </label>
+              <select class="form-control" formControlName="productSession" (change)="setProductSession($event.target.value)">
+                <option  value="null" disabled hidden>
+                  << Sessões? >>
+                </option>
+                <option *ngFor="let session of productSession" [value]="[session.productSession, session.productSessionIndece ]" >
+                  {{ session.productSession }}
+                </option>
+              </select>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label>
+                Categoria
+              </label>
+              <select class="form-control" formControlName="productCategory" (change)="setProductCategory($event.target.value)">
+                <option  value="null" disabled hidden>
+                  << Categorias? >>
+                </option>
+                <option *ngFor="let category of productCategory" [value]="[category.productCategory, category.productCategoryIndece]">
+                  {{ category.productCategory }}
+                </option>
+              </select>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label>
+                Tipo
+              </label>
+              <select class="form-control" formControlName="productType">
+                <option  value="null" disabled hidden>
+                  << Tipos? >>
+                </option>
+                <option *ngFor="let type of productType" [value]="type.productType">
+                  {{ type.productType }}
+                </option>
+              </select>
+            </span>
+            <span class="menu-item-info-box-detail" style="width:100%;">
+              <label>
+                Fornecedor
+              </label>
+              <select class="form-control" formControlName="provider">
+                <option  value="null" disabled hidden>
+                  << Fornecedor? >>
+                </option>
+                <option *ngFor="let provider of providerListRegistered | async" [value]="provider.providerName">
+                  {{ provider.providerName }}
+                </option>
+              </select>
+            </span>
+            <label>
+              Remedio é Generico?
+            </label>
+            <select class="form-control" formControlName="andGeneric" >
+              <option  value="null" disabled hidden>
+                << Remedio é Generico? >>
+              </option>
+              <option  *ngFor="let andGeneric of andGeneric" [value]="andGeneric">
+                {{ andGeneric }}
+              </option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" (click)="cancelarBuscarProdutoCadastrar()" class="btn btn-default pull-left" data-dismiss="modal">
+              Resetar
+            </button>
+            <button type="button" class="btn btn-warning pull-left" data-dismiss="modal">
+              Ocultar
+            </button>
+            <button type="button" (click)="buscarProdutoCadastrar()" class="btn btn-success" >
+              Buscar Produto
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+

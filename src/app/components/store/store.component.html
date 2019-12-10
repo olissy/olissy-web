@@ -1,0 +1,53 @@
+<!-- <br />
+<div style="padding-bottom: 40px;">
+  <mt-pesquisa [boscar_por]='"category"' (produtos_Output)="produtos_Input($event)" ></mt-pesquisa>
+</div>
+<br /> -->
+<div class="container">
+  <section class="content collumn-mobile">
+    <div class="row">
+      <div *ngFor="let store of stores | async" class="col-sm-6 col-xs-12">
+        <a [routerLink]="['/store-page', store.FOREIGN_KEY]">
+          <div class="place-info-box">
+            <span class="place-info-box-icon">
+              <img [src]="store.storeImageUrl" width="120px" height="120px" />
+            </span>
+            <div class="place-info-box-content">
+              <span class="place-info-box-text">
+                {{ store.storeName }}
+              </span>
+              <span class="place-info-box-star">
+                <i class="fa fa-thumbs-o-up"></i>
+                {{ store.follow }}
+              </span>
+              <span class="place-info-box-detail">
+                {{ store.storeCity }}
+              </span>
+              <span class="place-info-box-detail">
+                {{ store.storeNeighborhood }}
+              </span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+  <div class="row" *ngIf="!loading">
+    <div class="login-logo">
+      <i class="fa fa-refresh fa-spin fa-2x"></i>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div class="col-md-12 col-xs-12 card-desktop" style="top: 25px; margin-bottom: 40px;">
+    <div class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;" *ngIf="loading">
+        <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusProduct()">Carregar mais</button>
+    </div>
+
+    <div class="row" *ngIf="!loading">
+      <div class="login-logo">
+        <i class="fa fa-refresh fa-spin fa-2x"></i>
+      </div>
+    </div>
+</div> -->

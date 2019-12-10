@@ -1,0 +1,215 @@
+
+<div *ngIf=" PopularOrder == '' " class="notHaveOrder-main">
+  <img src="{{ iconeOrder }}">
+  <span>
+    Você não possui pedidos
+  </span>
+</div>
+
+<div class="col-md-12 col-xs-12" style="top: 25px;" *ngFor="let order of PopularOrder">
+  <div [routerLink]="['/order-detail', order.PRIMARY_KEY]"  class="info-box">
+    <span  class="info-box-icon no-padding" style="padding: 0px; background:  transparent; margin-top: -3px;">
+      <img [src]="order.clientImageUrl" width="70" class="img-circle"/>
+    </span>
+    <div class="info-box-content">
+      <div class="product-info">
+        <span class="label pull-right"
+          [ngClass]="{
+            'label-success': order.orderState == 'Enviado',
+            'label-info':    order.orderState == 'Entregando',
+            'label-danger':  order.orderState == 'Desistência',
+            'label-primary':order.orderState == 'Finalizado',
+            'label-warning': order.orderState == 'Em processamento'
+          }">
+          {{ order.orderState }}
+        </span>
+      </div>
+      <span class="info-box-text text-nome-pedido font-weight-bold" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
+        {{ order.clientName }} {{ order.clientLastName }}
+      </span>
+      <span class="info-box-number" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
+        {{ order.totalOrderValue | currency: 'BRL' }}
+      </span>
+      <span class="progress-description" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
+        {{ formatDataOrderList(order.orderDate) }}
+      </span>
+    </div>
+  </div>
+</div>
+<!-- 
+<form *ngIf="order">
+  <div class="modal fade" id="exibir-mais-info-pedido">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="exampleModalLabel">
+            Informação do Pedido
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="box box-widget widget-user-2" style="box-shadow: 0 0px 0px rgba(0,0,0,0.0); margin: 0px;">
+            <div class="widget-user-header bg-blue" style="border-radius: 0px; padding-bottom: 40px">
+              <div class="widget-user-image">
+                <img class="img-circle" [src]="order.clientImageUrl" alt="User Avatar">
+              </div>
+              <h3 class="widget-user-username" style="letter-spacing: 0.2em; position: relative; top:15px">
+                <b>
+                  {{ order.clientName | uppercase }} {{ order.clientLastName | uppercase }}
+                </b>
+              </h3>
+              <br /><br />
+              <h6 class="info-box-text text-nome-pedido font-weight-bold" style="letter-spacing: 0.1em; position: relative; top:15px; color: #FFF">
+                &nbsp;&nbsp;{{ order.clientAddressFull | uppercase }}
+              </h6>
+              <h6 class="info-box-text text-nome-pedido font-weight-bold" style="letter-spacing: 0.1em; position: relative; top:10px; color: #FFF">
+                &nbsp;&nbsp;{{ order.clientCellPhone | mask: '(00) 0 0000-0000' }}
+              </h6>
+            </div>
+            <div class="box-footer no-padding">
+              <div class="nav nav-stacked" *ngFor="let order of order.product">
+                <span  class="info-box-icon no-padding" style="padding: 0px; background:  transparent; margin-top: -13px; margin-left: -10px;">
+                  <img [src]="order.productImageUrl" width="70" style="padding-top: 18px; padding-left: 8px;"/>
+                </span>
+                <div class="info-box-content" style="margin-left: -20px">
+                  <div class="product-info">
+                    <span class="label pull-right badge bg-green">
+                      {{ order.quantities }}
+                    </span>
+                  </div>
+                  <span class="info-box-number">
+                    {{ order.productName }}
+                  </span>
+                  <span class="progress-description" style=" margin-top: -5px;">
+                    <b>
+                      {{ order.productPrice | currency: 'BRL'}}
+                    </b>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="table-responsive" style="border: 0;">
+              <table class="table borderless">
+                <tbody>
+                  <tr>
+                    <th style="width:10%">
+                      Pedido:
+                    </th>
+                    <td>
+                      <b>
+                        #{{ order.PRIMARY_KEY }}
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Data:
+                    </th>
+                    <td>
+                      {{ formatDataOrderList(order.orderDate) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Estado:
+                    </th>
+                    <td>
+                      {{ order.orderState }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Pagamento:
+                    </th>
+                    <td>
+                      {{ order.clientMethodPayment }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Produtos:
+                    </th>
+                    <td>
+                      {{ order.product.length }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Quantidades:
+                    </th>
+                    <td>
+                      {{ SomarQuantidadeProduto() }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      Total:
+                    </th>
+                    <td>
+                      {{ order.totalOrderValue | currency: 'BRL' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="position: relative; left: 0px; top: 0px;">
+              <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto;">
+                <div class="box-body chat" id="chat-box" style="overflow: hidden; width: auto;">
+                  <div class="item" *ngFor="let message of order.message">
+                    <img [src]="message.messageImageUrl" alt="user image">
+                    <p class="message">
+                      <a class="name">
+                        <small class="text-muted pull-right">
+                          {{ formatHours(message.messageDate) }}
+                        </small>
+                        {{ message.messageName | uppercase }} {{ message.messageLastName | uppercase }}
+                      </a>
+                      {{ message.message }} &nbsp;
+                      <span *ngIf="token.uid == message.FOREIGN_KEY" class="label badge" [ngClass]="{'bg-default': message.messageViewed == false, 'bg-green': message.messageViewed == true}" style="font-size: 7px">
+                        <i class="fa fa-check"></i>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="box-footer">
+                <form [formGroup]="formularioMensagem" class="input-group">
+                  <input formControlName="message" autocomplete="off" class="form-control" placeholder="Type message...">
+                  <div class="input-group-btn">
+                  <button type="button" data-dismiss="modal" class="btn btn-success" (click)="enviarMensagem()"><i class="fa fa-send"></i></button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default  pull-left" data-dismiss="modal">
+            Cancelar
+          </button>
+          <div *ngIf="order.orderState == 'Enviado' ">
+            <button type="button" class="btn btn-warning" data-dismiss="modal" (click)="macarComoEmProcessamento()">
+              Em processamento
+            </button>
+          </div>
+          <div *ngIf="order.orderState == 'Em processamento' ">
+            <button type="button" class="btn btn-info" data-dismiss="modal" (click)="macarComoEntregar()">
+              Entragar
+            </button>
+          </div>
+          <div *ngIf="order.orderState == 'Finalizado' ||  order.orderState == 'Desistência'">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="RemoverPedido(order)">   Finalizar   </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+
+
+
+ -->

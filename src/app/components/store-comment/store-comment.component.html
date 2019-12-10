@@ -1,0 +1,41 @@
+<div class="col-xs-12 col-sm-12 center" *ngFor="let comentario of comentarios">
+  <div class="box box-solid card">
+    <div class="box-header with-border">
+      <div class="user-block">
+        <img alt="User Image" class="img-circle" [src]="comentario?.commentImageUrl"/>
+        <span class="username">{{ comentario?.commentName }}</span>
+        <span class="description">
+          {{ comentario?.commentDate | date: "dd/MM/yyyy" }}
+        </span>
+      </div>
+    </div>
+    <div class="box-body">
+      <p>{{ comentario?.commentText }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-xs-12 center" style="padding-bottom: 30px;" *ngIf="loading && comentarios.length != 0">
+  <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais card" (click)="loadingPlusProduct()">
+    Carregar mais
+  </button>
+</div>
+
+<div class="row" *ngIf="!loading && comentarios.length != 0">
+  <div class="login-logo">
+    <i class="fa fa-refresh fa-spin fa-2x"></i>
+  </div>
+</div>
+
+<div class="col-md-12 col-xs-12 center" *ngIf="comentarios.length == 0">
+  <div class="box box-solid card">
+    <div class="box-header with-border">
+      <div class="user-block">
+        <span class="username center">
+          Esta loja não possui comentario
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+ 

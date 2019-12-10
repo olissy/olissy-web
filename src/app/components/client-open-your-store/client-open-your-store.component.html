@@ -1,0 +1,367 @@
+<div class="container">
+  <section *ngIf="!loading">
+    <br />
+    <div class="box box-primary">
+      <div class="box-body box-profile">
+        <img class="profile-user-img img-responsive" [src]="formularioAbrirMinhaLoja.controls.imageDisplay.value" alt="User profile picture" />
+        <label class="filebutton" style="width:100%;">
+          <div class="widget-user-image">
+            <div style="width:100%;  padding: 15px;" class="btn btn-default"
+              [class.alert-success]="
+                this.formularioAbrirMinhaLoja.controls['imageNew'].valid &&
+                (this.formularioAbrirMinhaLoja.controls['imageNew'].dirty ||
+                this.formularioAbrirMinhaLoja.controls['imageNew'].touched)
+              "
+              [class.alert-danger]="
+                this.formularioAbrirMinhaLoja.controls['imageNew'].invalid &&
+                (this.formularioAbrirMinhaLoja.controls['imageNew'].dirty ||
+                this.formularioAbrirMinhaLoja.controls['imageNew'].touched)
+              "><b>Inserir Imagem</b>
+            </div>
+          </div>
+          <span hidden>
+            <input type="file"  class="filebutton2" (change)="uploadFileImagem($event)" />
+          </span>
+        </label>
+        <ul class="list-group list-group-unbordered">
+          <form [formGroup]="formularioAbrirMinhaLoja" novalidate>
+            <div class="form-group">
+              <label for="exampleInputEmail1">*CNPJ</label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                [imask]="cnpjMask"
+                [unmask]="true"
+                minlength="14"
+                formControlName="storeCNPJ"
+                required
+                placeholder="Insira CNPJ"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeCNPJ.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeCNPJ.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeCNPJ.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeCNPJ.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeCNPJ.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeCNPJ.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">
+                Nome da Loja
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeName"
+                required
+                placeholder="Ex: Padaria do Vovô"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeName.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeName.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeName.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeName.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeName.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeName.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio</span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Horário de funcionamento</label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeHours"
+                required
+                placeholder="Ex: Funciona de segunda à sexta, de 8h às 23h"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeHours.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeHours.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeHours.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeHours.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeHours.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeHours.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">
+                Tempo de entrega do seu produto
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeDeliveryEstimate"
+                required
+                placeholder="Ex: 25 minutos"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeDeliveryEstimate.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeDeliveryEstimate.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeDeliveryEstimate.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeDeliveryEstimate.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeDeliveryEstimate.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeDeliveryEstimate.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">
+                Sobre sua Loja
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeAbout"
+                required
+                placeholder="Ex: A Padaria do Vovô tem 2 anos de mercado. Fazemos os melhores doces e pães. Compre e confira."
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeAbout.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeAbout.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeAbout.touched)
+                "><i class="fa fa-check"></i>Ok
+                </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeAbout.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeAbout.dirty ||
+                    formularioAbrirMinhaLoja.controls.storeAbout.touched)
+                "
+                ><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">
+                Email da sua loja
+              </label>
+              <input
+                type="text"
+                disabled
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeEmail"
+                placeholder="Enter email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">
+                cidade
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeCity"
+                required
+                placeholder="Enter cidade"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeCity.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeCity.dirty ||
+                    formularioAbrirMinhaLoja.controls.storeCity.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeCity.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeCity.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeCity.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">bairro</label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeNeighborhood"
+                required
+                placeholder="Enter bairro"
+              />
+              <span class="help-block" style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeNeighborhood.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeNeighborhood.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeNeighborhood.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+
+              <span class="help-block" style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeNeighborhood.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeNeighborhood.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeNeighborhood.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">rua</label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                formControlName="storeStreet"
+                required
+                placeholder="Enter rua"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeStreet.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeStreet.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeStreet.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeStreet.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeStreet.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeStreet.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">celular</label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                [imask]="cellPhoneMask"
+                [unmask]="true"
+                minlength="11"
+                formControlName="storeCellPhone"
+                required
+                placeholder="Enter celular"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeCellPhone.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeCellPhone.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeCellPhone.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeCellPhone.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeCellPhone.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeCellPhone.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">telefone</label>
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                [imask]="phoneMask"
+                [unmask]="true"
+                minlength="10"
+                formControlName="storeTelephone"
+                required
+                placeholder="Enter telefone"
+              />
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeTelephone.valid &&
+                  (formularioAbrirMinhaLoja.controls.storeTelephone.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeTelephone.touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  formularioAbrirMinhaLoja.controls.storeTelephone.invalid &&
+                  (formularioAbrirMinhaLoja.controls.storeTelephone.dirty ||
+                  formularioAbrirMinhaLoja.controls.storeTelephone.touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+          </form>
+        </ul>
+        <button class="btn btn-success btn-block" (click)="abrirMinhaLoja()">
+          <b>
+            Abrir minha loja
+          </b>
+        </button>
+      </div>
+    </div>
+  </section>
+  <div *ngIf="loading">
+    <div class="login-logo">
+      Aguarde
+    </div>
+    <div class="row">
+      <div class="login-logo">
+        <i class="fa fa-refresh fa-spin fa-2x"></i>
+      </div>
+    </div>
+  </div>
+</div>

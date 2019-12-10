@@ -1,0 +1,168 @@
+
+<!--  
+<div class="col-md-9 col-xs-12 collumn-mobile">
+  <div *ngFor="let item of menu" class="menu-item-info-box">
+    <a [routerLink]="['/product-page', item.PRIMARY_KEY]" class="produtos imagemDesktop">
+      <span class="menu-item-info-box-icon" style="text-align: start; background: #FFF">
+        <img [src]="item?.productImageUrl" style="height: 120px;" />
+      </span>
+    </a>
+    <div id="carousel-example-generic" [routerLink]="['/product-page', item.PRIMARY_KEY]"  class="carousel slide imagemMobile" data-interval="false">
+      <div class="carousel-inner">
+        <div class="item active">
+          <img [src]="item?.productImageUrl" style="width: 100%;" alt="Photo" />
+        </div>
+      </div>
+    </div>
+    <div class="menu-item-info-box-content" style="padding: 30px 10px;">
+      <a [routerLink]="['/product-page', item.PRIMARY_KEY]" class="produtos">
+        <span class="menu-item-info-box-text">
+          {{ item?.productName }}
+        </span>
+      </a>
+      <a [routerLink]="['/product-page', item.PRIMARY_KEY]" class="produtos">
+        <span class="menu-item-info-box-detail">
+          {{ item?.categoryCatalog }} é {{ item?.categoryName }} da marca <b>{{ item?.provider }}</b>, este producto e generico <b>{{ item?.andGeneric }}</b>
+        </span>
+      </a>
+      <div class="row" style="margin-left: 0px; margin-right: 0px;">
+        <span class="menu-item-info-box-price">
+          {{ item.productPriceOrigin ? (item.productPriceOrigin | currency: "BRL")  : (item.productPrice | currency: "BRL") }}
+        </span>
+        <button type="button" class="btn btn-default btn-xs pull-right" style="border-radius: 5px; border: 0px solid #EE3233; background: #fff; color:#666">
+          <i class="fa fa-heart"></i>
+          {{ item.love }}
+        </button>
+        <button type="button" class="btn btn-default btn-xs pull-right" style="border-radius: 5px; border: 0px solid #EE3233; background: #fff; color:#666">
+          <i class="fa fa fa-eye"></i>
+          {{ item.view }}
+        </button>
+        <button type="button" class="btn btn-default btn-xs pull-right" style="border-radius: 5px; border: 0px solid #EE3233; background: #fff; color:#666">
+          <i class="fa fa-bell"></i>
+          {{ item.sale }}
+        </button>
+      </div>
+      <div class="pull-right" style="margin-right: 5px">
+        <a (click)="adicionarItemCarrinho(item)" class="adicionar-carrinho" >
+          Adicionar
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;" *ngIf="loading && menu.length != 0">
+    <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusProduct()">
+      Carregar mais
+    </button>
+  </div>
+  <div class="row" *ngIf="!loading && menu.length != 0">
+    <div class="login-logo">
+      <i class="fa fa-refresh fa-spin fa-2x"></i>
+    </div>
+  </div>
+</div>
+-->
+<div *ngFor="let product of result.product" >
+  <div *ngFor="let productDB of result.productDataBase">
+    <div *ngIf="productDB.PRIMARY_KEY == product.PRIMARY_KEY_PRODUCT_DB">
+      <div  class="col-md-12 col-xs-12 center">
+        <div  class="menu-item-info-box card">
+          <div id="carousel-example-generic" class="carousel slide" data-interval="false">
+            <div class="carousel-inner">
+              <div class="item active">
+                <img [src]="productDB?.productImageUrl" [routerLink]="['/product-page', product.PRIMARY_KEY]" style="width: 100%;" alt="Photo" />
+              </div>
+            </div>
+          </div>
+
+          <div class="menu-item-info-box-content" style="padding: 30px 10px;">
+            <a class="produtos" [routerLink]="['/product-page', product.PRIMARY_KEY]" >
+              <span class="menu-item-info-box-text">
+                  {{ productDB?.productName }}
+              </span>
+            </a>
+            <a class="produtos" [routerLink]="['/product-page', product.PRIMARY_KEY]">
+              <span class="menu-item-info-box-detail">
+                  {{ productDB?.productSession }}, {{ productDB?.productType }} <b>marca{{ productDB?.provider }}</b> generico? <b>{{ productDB?.andGeneric }}</b>
+                </span>
+            </a>
+            <div class="row" style="margin-left: 0px; margin-right: 0px;">
+              <span class="menu-item-info-box-price">
+                  {{ product.productPriceOrigin ? (product.productPriceOrigin | currency: "BRL")  : (product.productPrice | currency: "BRL") }}
+              </span>
+              <button type="button" class="btn btn-default btn-xs pull-right" style="font-size: 16px;border-radius: 0px; border: 0px solid #EE3233; background: #fff; color:#666">
+                <b>{{ product.productQuantities }} Produtos</b>
+              </button>
+            </div>
+            <div class="pull-right" style="margin-right: 5px">
+              <a (click)="incrementarItemCarrinho(product, productDB)" class="adicionar-carrinho" >
+                Adicionar
+              </a>
+            </div>
+            <div class="pull-right" *ngIf="product.quantities > 0">
+              <a class="adicionar-carrinho" style="color: #666; font-size:14px; margin:0px 15px 0px 15px">
+              <b>  {{ product.quantities }} </b>
+              </a>
+            </div>
+            <div class="pull-right" *ngIf="product.quantities > 0">
+              <a (click)="decrementarItemCarrinho(product)" class="remover-carrinho">
+                Remover
+              </a>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-xs-12 center" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;" *ngIf="loading && result.product != 0">
+  <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais card" (click)="loadingPlusProduct()">
+    Carregar mais
+  </button>
+</div>
+
+<div class="row" *ngIf="!loading && result.product != 0">
+  <div class="login-logo">
+    <i class="fa fa-refresh fa-spin fa-2x"></i>
+  </div>
+</div>
+
+<div class="col-md-12 col-xs-12 center" *ngIf="result.product == 0">
+  <div class="box box-solid card">
+    <div class="box-header with-border">
+      <div class="user-block">
+        <span class="username center">
+          Esta loja não possui produtos
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-xs-12"  *ngIf="TotalValorDoPedido() != 0">
+  <div class="col-md-12 col-xs-12">
+    <footer class="main-footer text-center btn-primary" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo" >
+      <i style="font-size:18px"class="fa fa-shopping-cart"></i> &nbsp; <b style="border-radius: 100px;padding:5px; background-color:rgba(0,0,0,0.2); ">{{ TotalProdutoCarrinho() }}</b>
+    </footer>
+  </div>
+</div>
+  
+<form>
+  <div class="modal fade" id="displayStoreInfo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-footer" style="border-top: 0px;">
+            <div class="row">
+              <div class="box-solid" style="border:0px">
+                <mt-carrinho></mt-carrinho>
+              </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form> 

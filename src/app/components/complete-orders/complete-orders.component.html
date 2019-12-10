@@ -1,0 +1,188 @@
+<div class="container">
+  <section class="content" style="padding: 15px 0px 15px 0px;">
+    <section class="invoice box box-widget" style="margin: 0px 0px;">
+      <form [formGroup]="formularioPedido" novalidate>
+        <div class="row">
+          <div class="col-xs-4">
+            <h2 (click)="historyNavigateBack()" class="page-header linkCabecarioVoltraEstrela">
+              <i class="fa fa fa-reply"></i> Voltar
+            </h2>
+          </div>
+        </div>
+        <div class="row invoice-info">
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label class="control-label" for="clientAddressFull">
+                Digite seu Endereço
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="clientAddressFull"
+                required
+                minlength="5"
+                autocomplete="off"
+                placeholder="Digite seu Endereço"
+                id="clientAddressFull"
+              />
+              <span
+                class="help-block button-alert-danger"
+                style="color:#FFF; padding: 5px;"
+                *ngIf="
+                  this.formularioPedido.controls['clientAddressFull'].invalid &&
+                  (this.formularioPedido.controls['clientAddressFull'].dirty ||
+                  this.formularioPedido.controls['clientAddressFull'].touched)
+                "><b>Digite seu Endereço de entrega</b>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label class="control-label" for="clientCellPhone">
+                Digite seu numero de celular
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="clientCellPhone"
+                [imask]="cellPhoneMask"
+                [unmask]="true"
+                required
+                minlength="11"
+                autocomplete="off"
+                placeholder="Telefone"
+                id="clientCellPhone"
+              />
+              <span
+                class="help-block button-alert-danger"
+                style="color:#FFF; padding: 5px;"
+                *ngIf="
+                  this.formularioPedido.controls['clientCellPhone'].invalid &&
+                  (this.formularioPedido.controls['clientCellPhone'].dirty ||
+                  this.formularioPedido.controls['clientCellPhone'].touched)
+                ">Digite o numero do seu <b>CELULAR</b>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-4 col-xs-12">
+            <div class="form-group">
+              <label class="control-label" for="message">
+                Enviar mensagem?
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="message"
+                autocomplete="off"
+                placeholder="Você deseja enviar uma mensagem para a loja?"
+                id="message"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <span class="lead">Itens do Pedido:</span>
+          </div>
+          <div class="col-xs-12 table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th class="text-center">Quantidade</th>
+                  <th>Item</th>
+                  <th class="text-right">Preço</th>
+                  <th class="text-right"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of produtos; let i = index">
+                  <td class="text-center">
+                    <a (click)="diminuirItem(item)" class="btn btn-sm" style="color:red">
+                      <i class="fa fa-minus"></i>
+                    </a>
+                    {{ item.quantities }}
+                    <a (click)="aumentartem(item)" class="btn btn-sm" style="color:green">
+                      <i class="fa fa-plus"></i>
+                    </a>
+                  </td>
+                  <td>{{ item.productName }}</td>
+                  <td class="text-right">
+                    {{ item.productPriceOrigin | currency: "BRL" }}
+                  </td>
+                  <td class="text-right">
+                    <a class="btn btn-sm danger" (click)="removerItem(i)">
+                      <i class="fa fa-remove"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-xs-12">
+            <div class="form-group">  <span class="lead" style="font-size:14px">
+              <b>Escolhe a forma de Pagamento</b></span>
+              <select class="form-control" formControlName="clientMethodPayment" id="clientMethodPayment">
+                <option value="null" disabled hidden>
+                  << Forma de Pagamento? >>
+                </option>
+                <option *ngFor="let pagamento of FormaPagamento"[value]="pagamento">
+                  {{ pagamento }}
+                </option>
+              </select>
+              <span class="help-block button-alert-danger" style="color:#FFF; padding: 5px;"
+                *ngIf="
+                  formularioPedido.controls.clientMethodPayment.invalid &&
+                  (formularioPedido.controls.clientMethodPayment.dirty ||
+                  formularioPedido.controls.clientMethodPayment.touched)
+                "><b>Clique acima e escolhe a opção de pagamento</b>
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xs-12">
+            <span class="lead">Montantes:</span>
+            <div class="table-responsive">
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <th>Subtotal:</th>
+                    <td class="text-right">
+                      {{ TotalValorDoPedido() | currency: "BRL" }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Tax (0.0%):</th>
+                    <td class="text-right">{{ 0 | currency: "BRL" }}</td>
+                  </tr>
+                  <tr>
+                    <th>Plataforma:</th>
+                    <td class="text-right">{{ 0 | currency: "BRL" }}</td>
+                  </tr>
+                  <tr>
+                    <th>Entrega:</th>
+                    <td class="text-right">{{ 0 | currency: "BRL" }}</td>
+                  </tr>
+                  <tr>
+                    <th>Total:</th>
+                    <td class="text-right">
+                      {{ TotalValorDoPedido() | currency: "BRL" }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-xs-12">
+          <button class="btn btn-success pull-right button-order-mobile button-alert" style="font-size:18px;" (click)="concluirPedido()">
+            <b>CONCLUIR PEDIDO</b>
+          </button>
+        </div>
+      </div>
+    </section>
+  </section>
+</div>

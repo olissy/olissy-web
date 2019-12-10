@@ -1,0 +1,134 @@
+<header class="main-header">
+  <a class="logo" style="background-color: #c71582;">
+    <span class="logo-mini">
+      <b>
+        <img
+          src="{{ cliente?.clientImageUrl }}"
+          class="user-image"
+          width="50"
+          alt="User Image"
+        /> 
+      </b>
+    </span>
+    <span class="logo-lg">
+      <b>
+        {{ cliente?.clientName }} {{ cliente?.clientLastName }}
+      </b>
+    </span>
+  </a>
+  <nav class="navbar navbar-static-top">
+    <a class="sidebar-toggle" data-toggle="push-menu" role="button">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </a>
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <li routerLinkActive="active">
+          <a routerLink="/product">
+            <i class="fa fa-newspaper-o"></i>
+          </a>
+        </li>
+        <li routerLinkActive="active">
+          <a routerLink="/store">
+            <i class="fa fa-cubes"></i>
+          </a>
+        </li>
+        <li class="dropdown messages-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-envelope-o"></i>
+            <span class="label label-success" *ngIf="newMessage?.length">
+              {{ newMessage?.length }}  
+            </span>
+          </a> 
+          <ul class="dropdown-menu" *ngIf="newMessage?.length">
+            <li *ngFor="let mensagem of newMessage" class="mensagem-mobile" style="width: 100%;" [routerLink]="['/client-message-text', mensagem.PRIMARY_KEY]">
+              <ul class="menu">
+                <li>
+                  <a style="padding-left: 0px;">
+                    <div class="pull-left">
+                      <span class="label label-success" style="position: relative; left: 40px; top:-15px">
+                        {{ countNewMensage(mensagem.message) }} 
+                      </span>
+                      <img src="{{ mensagem.photoStore }}" class="img-circle" alt="User Image"/>
+                    </div>
+                    <h4>
+                      {{ mensagem.nameStore }}
+                    </h4>
+                    <p>
+                      {{ showLestNewMensage(mensagem.message) }}
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li> 
+        <li class="dropdown notifications-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-bell-o"></i>
+            <span class="label label-success" *ngIf="pedidos?.length">
+              {{ pedidos?.length }}
+            </span>
+          </a>
+          <ul class="dropdown-menu" *ngIf="pedidos?.length">
+            <li>
+              <ul class="menu" *ngFor="let pedido of pedidos">
+                <li class="widget-user-header"  [routerLink]="['/order-detail', pedido?.PRIMARY_KEY]" style="padding: 7px; background-color: #c71582; color: #fff">
+                  <img
+                    [src]="pedido.storeImageUrl"
+                    class="img-circle"
+                    width="30"         
+                    alt="User Image"/>
+                  {{ pedido?.storeName }}
+                </li>
+                <li *ngFor="let produto of pedido.product"  [routerLink]="['/order-detail', pedido?.PRIMARY_KEY]" class="info-box-texts" style="padding: 10px; background-color: #ffe7f0;">
+                  <span style="padding: 6px; padding-top: 3px">
+                    {{ produto.quantities }} X
+                  </span>
+                  <span style="padding: 6px; padding-top: 3px">
+                    {{ produto.productName }}
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown user user-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <img src="{{ cliente?.clientImageUrl }}" class="user-image" alt="User Image"/>
+            <span class="hidden-xs">
+              {{ cliente?.clientName }} {{ cliente?.clientLastName }}
+            </span>
+          </a>
+          <ul class="dropdown-menu" style="left: initial; width: 250px">
+            <li class="user-header">
+              <img src="{{ cliente?.clientImageUrl }}" class="img-circle" width="50" alt="User Image"/>
+              <p>
+                {{ cliente?.clientName }} {{ cliente?.clientLastName }}
+                <small>
+                  {{ cliente?.clientEmail }} 
+                </small>
+              </p>
+            </li>
+            <li class="user-footer">
+              <div class="pull-left">
+                <a routerLink="/client-panel" class="btn btn-default btn-flat">
+                  Criar Loja
+                </a>
+              </div>
+              &nbsp;
+              <div class="pull-right">
+                <a (click)="SignOut()" class="btn btn-default btn-flat">
+                  Deslogar
+                </a>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+ 
