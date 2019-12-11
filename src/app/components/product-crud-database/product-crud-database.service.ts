@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { firebase } from '@firebase/app';
 import '@firebase/storage';
 import '@firebase/firestore';
+import apiOlissyMongoDB from '../../api'
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,9 @@ import '@firebase/firestore';
 
 export class ProductCrudDatabaseService {
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore, private http: HttpClient){}
+
+  private url = apiOlissyMongoDB
 
   public async createNewProvider(provider) {
     await this.db.collection("provider").add(provider)
@@ -43,9 +47,14 @@ export class ProductCrudDatabaseService {
   public async createProduto(collection, data) {
     delete data.imageDisplay
     delete data.imageNew
-    return await this.db.collection(collection).add(data).then(res => {
-      this.update(collection, res.id, { PRIMARY_KEY:res.id }).then(()=>{
-         this.productDataBaseQuantity()
+    return await this.db.collection(collection).add(data).then( async(res) => {
+      return await this.update(collection, res.id, { PRIMARY_KEY:res.id }).then(async(update)=>{
+        await update
+         let product = data
+             product.PRIMARY_KEY = res.id
+         this.createMongoDB(product).subscribe(()=>{
+          this.productDataBaseQuantity()
+         })
       })
     })
   }
@@ -61,5 +70,25 @@ export class ProductCrudDatabaseService {
   public async productDataBaseQuantity() {
     const increment = firebase.firestore.FieldValue.increment(1);
     await this.db.collection('countOf').doc("0FPh9yLyy34ldMYC8l8t").update({ productDataBase : increment })
+  }
+
+  public getByIdMongoDB(id: string) {
+    return this.http.get<any>(this.url + '/' + id);
+  }
+
+  public getAllMongoDB() {
+    return this.http.get<any[]>(this.url);
+  }
+
+  public createMongoDB(product: any) {
+    return this.http.post(this.url, product);
+  }
+
+  public updateMongoDB(product: any) {
+    return this.http.put(this.url + '/' + product.PRIMARY_KEY, product);
+  }
+
+  public deleteMongoDB(id: string) {
+    return this.http.delete(this.url + '/' + id);
   }
 }

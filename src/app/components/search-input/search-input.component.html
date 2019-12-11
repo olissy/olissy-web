@@ -68,24 +68,23 @@
         </li>
       </ul>
       <ul *ngIf="produto" id="dropdown-buscar-produto-sugestao" class="dropdown-menu dropdown-buscar-produto" aria-labelledby="dropdownMenu1">
-        <li *ngFor="let produto of listProduct" (click)="sendProductSearch(produto)" class="list-product-search">
+        <li *ngFor="let suggested of suggestedProductList" class="list-product-search" (click)="selectSuggestion(suggested)">
           <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
             <div class="info-box" style=" box-shadow: 0 0px 0px rgba(0,0,0,0.1); ">
               <span class="info-box-icon" style="background-color: #fff;">
-                <img [src]="produto.productImageUrl" style=" margin-top: 0px;" width="100%"/>
+                <img [src]="suggested.productImageUrl" style=" margin-top: 0px;" width="100%"/>
               </span>
               <div class="info-box-content">
+                <span class="info-box-number">
+                  {{ suggested.productName }}
+                </span>
+                <span class="info-box-text">
+                  {{ suggested.productSession }} - {{ suggested.productCategory }} - {{ suggested.productType }}
+                </span>
                 <span class="info-box-text">
                   <b>
-                    {{ produto.productName }}
+                   {{ suggested.provider }}
                   </b>
-                </span>
-                <span class="info-box-text">
-                  {{ produto.store.storeCity }},
-                  {{ produto.store.storeNeighborhood }}
-                </span>
-                <span class="info-box-number">
-                  {{ produto.productPrice | currency: "BRL" }}
                 </span>
               </div>
             </div>
@@ -94,9 +93,10 @@
       </ul>
       <input
         type="text"
-        (keyup)="pesquisarProdutoSugerido($event.target.value, $event)"
+        (keyup)="SearchBySuggestions($event.target.value, $event)"
+        (keyup.enter)="searchByTyping($event.target.value)"
         class="form-control"
-        placeholder="Buscar..."
+        placeholder="Digite nome do produto"
         autocomplete="off"
         formControlName="pesquisa"
         id="input-buscar-produto"
@@ -104,63 +104,6 @@
         aria-haspopup="true"
         aria-expanded="true"
       />
-    </div>
-  </div>
-</form>
-<form [formGroup]="formularioPesquisa">
-  <div class="modal fade" id="filtro-pesquisa">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="exampleModalLabel">
-            Filtrar Produtos
-          </h4>
-        </div>
-        <div class="modal-body">
-          <span class="menu-item-info-box-detail">
-            <label style="width:100%;  font-size: 14px">
-              Buscar Por
-            </label>
-            <select id="id_select3" formControlName="buscarPor" class="form-control select-buscar-por">
-              <option value="todos">Todos</option>
-              <option value="productName">Nome</option>
-              <option value="productDescription">Descrição</option>
-            </select>
-          </span>
-          <span class="menu-item-info-box-detail">
-            <label style="width:100%;  font-size: 14px">Em venda</label>
-            <select id="id_select" formControlName="emVenda" class="form-control select-em-venda">
-              <option value="todos">Todos</option>
-              <option value="sim">Sim</option>
-              <option value="nao">Não</option>
-            </select>
-          </span>
-          <span class="menu-item-info-box-detail">
-            <label style="width:100%;  font-size: 14px">Preço Minimo</label>
-            <input type="text" formControlName="precoMin" class="form-control input-buscar-produto" autocomplete="off"/>
-          </span>
-          <span class="menu-item-info-box-detail">
-            <label style="width:100%;  font-size: 14px">Preço Maximo</label>
-            <input type="text" formControlName="precoMax" class="form-control input-buscar-produto" autocomplete="off"/>
-          </span>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default  pull-left" data-dismiss="modal">
-            Cancelar
-          </button>
-          <button type="button" class="btn btn-success" data-dismiss="modal">
-            OK
-          </button>
-        </div>
-      </div>
     </div>
   </div>
 </form>

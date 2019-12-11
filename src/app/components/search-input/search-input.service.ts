@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-
+import { HttpClient } from '@angular/common/http';
+import apiOlissyMongoDB from '../../api'
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +13,10 @@ export class SearchInputService implements OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore, private http: HttpClient){}
 
+  private url = apiOlissyMongoDB
+  
   public pesquisaProdutosAll(collection, campo, valor, emVenda, precoMin = 0, precoMax = 0, boscar_por) {
     return this.db.collection(collection, ref => ref.where(campo, ">", valor).where('productForSale', "==", 'sim')).valueChanges()
   }
@@ -30,6 +33,10 @@ export class SearchInputService implements OnDestroy {
 
   public getByStoreFOREIGN_KEY(FOREIGN_KEY){
     return this.db.collection('store', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
+  }
+
+  public searchProductsByRegex(search: string) {
+    return this.http.get<any>(this.url + '/regex/?text=' + search);
   }
 
   ngOnDestroy(){

@@ -20,8 +20,6 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   @Input() boscar_por:string
 
-  public id_comercio = ""
-
   public Digite_tres_ou_mais_caracteres_total = 3
 
   public digite = true
@@ -32,7 +30,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   public produto = false
 
-  public listProduct = []
+  public suggestedProductList = []
 
   public formularioPesquisa: FormGroup = new FormGroup({
     'pesquisa': new FormControl(null),
@@ -49,118 +47,36 @@ export class SearchInputComponent implements OnInit, OnDestroy {
               private route:ActivatedRoute) {}
 
   ngOnInit() {
-    this.route.params.pipe(takeUntil(this.unsubscribe$)).subscribe(params => {
-      this.id_comercio = params.id
-   })
+
   }
 
-  private pesquisarProduto(){
-    let buscarPor = this.formularioPesquisa.value.buscarPor
-    let pesquisa  = this.formularioPesquisa.value.pesquisa
-    let emVenda   = this.formularioPesquisa.value.emVenda
-    let precoMin  = this.formularioPesquisa.value.precoMin
-    let precoMax  = this.formularioPesquisa.value.precoMax
-
+  private pesquisarProduto(suggestion){
+    console.log(suggestion)
     this.desculpe = false
     this.aguarde = true
-
-    if(this.boscar_por === 'store'){
-      this.pageStore(buscarPor, pesquisa, emVenda, precoMin, precoMax)
-    }
-
-    if(this.boscar_por == 'category'){
-      this.allCategory(buscarPor, pesquisa, emVenda, precoMin, precoMax)
-      console.log('categoria')
-    }
-
-    if(this.boscar_por != 'store' && this.boscar_por != 'category'){
-      this.pageRegisterProductStore(buscarPor, pesquisa, emVenda, precoMin, precoMax, this.boscar_por)
-      console.log('cadastro produto')
-    }
-
+    setTimeout(() => {
+      this.sendSearch(suggestion)
+    }, 1000);
   }
 
-  public sendProductSearch(produto){
-    this.pesquisaService.getByStoreFOREIGN_KEY(produto.FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-      let product = produto
-          product.store =  resposta[0]
-
-      this.appService.ListaProdutosPesquisado = [product]
-      this.produtos_Output.emit(true)
+  public sendSearch(Search){
+    this.suggestedProductList = []
+    this.pesquisaService.searchProductsByRegex(Search).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+       console.log(resposta)      
+       this.suggestedProductList.push(resposta[0])
+       this.aguarde = false
+      this.produto = true
     })
   }
 
-  public allCategory(buscarPor, pesquisa, emVenda, precoMin, precoMax){
-    this.listProduct = []
-    this.pesquisaService.pesquisaProdutosAll("product", buscarPor, pesquisa, emVenda, precoMin, precoMax, this.boscar_por).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-      if(Object.keys(resposta).length != 0){
-        resposta.forEach((product , index) => {
-          this.pesquisaService.getByStoreFOREIGN_KEY(product.FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
-            product.store = store[0]
-           this.listProduct.push(product)
-          })
-          if(Object.keys(resposta).length == index+1){
-            this.aguarde = false
-            this.produto = true
-          }
-        });
-      }else{
-        this.desculpe = true
-        this.produto = false
-      }
-    })
-  }
-
-  public pageStore(buscarPor, pesquisa, emVenda, precoMin, precoMax){
-    this.listProduct = []
-    this.pesquisaService.pesquisaProdutosStore("product", buscarPor, pesquisa, emVenda, precoMin, precoMax, this.boscar_por, this.id_comercio).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-      if(Object.keys(resposta).length != 0){
-        resposta.forEach((product , index) => {
-          this.pesquisaService.getByStoreFOREIGN_KEY(product.FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
-            product.store = store[0]
-           this.listProduct.push(product)
-          })
-          if(Object.keys(resposta).length == index+1){
-            this.aguarde = false
-            this.produto = true
-          }
-        });
-      }else{
-        this.desculpe = true
-        this.produto = false
-      }
-    })
-  }
-
-  public pageRegisterProductStore(buscarPor, pesquisa, emVenda, precoMin, precoMax, FOREIGN_KEY){
-    this.listProduct = []
-    this.pesquisaService.pesquisaProdutosStore("product", buscarPor, pesquisa, emVenda, precoMin, precoMax, this.boscar_por, FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-      if(Object.keys(resposta).length != 0){
-        resposta.forEach((product , index) => {
-          this.pesquisaService.getByStoreFOREIGN_KEY(product.FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
-            product.store = store[0]
-           this.listProduct.push(product)
-          })
-          if(Object.keys(resposta).length == index+1){
-            this.aguarde = false
-            this.produto = true
-          }
-        });
-      }else{
-        this.desculpe = true
-        this.produto = false
-      }
-    })
-  }
-
-  public pesquisarProdutoSugerido(value, event){
+  public SearchBySuggestions(suggestion, event){
     if(event.key != 'Backspace' && this.Digite_tres_ou_mais_caracteres_total <= 3 && this.Digite_tres_ou_mais_caracteres_total > 0){
-      if(value != false){
+      if(suggestion != false){
         this.Digite_tres_ou_mais_caracteres_total --
       }
     }
 
-    if(event.key == 'Backspace' && value.length <= 2 && this.Digite_tres_ou_mais_caracteres_total <= 2 ){
+    if(event.key == 'Backspace' && suggestion.length <= 2 && this.Digite_tres_ou_mais_caracteres_total <= 2 ){
       this.digite = true
       this.aguarde = false
       this.desculpe = false
@@ -168,17 +84,30 @@ export class SearchInputComponent implements OnInit, OnDestroy {
       this.Digite_tres_ou_mais_caracteres_total ++
     }
 
-    if(value.length == 0){
+    if(suggestion.length == 0){
       this.Digite_tres_ou_mais_caracteres_total = 3
     }
 
     if(this.Digite_tres_ou_mais_caracteres_total <= 0){
       this.digite = false
-      this.pesquisarProduto()
+      this.pesquisarProduto(suggestion)
     }else{
       this.digite = true
     }
 
+  }
+
+  public searchByTyping(typedSearch){
+    console.log(typedSearch)
+    this.desculpe = false
+    this.aguarde = true
+    setTimeout(() => {
+      this.sendSearch(typedSearch)
+    }, 1000);
+  }
+
+  public selectSuggestion(select){
+    console.log(select)
   }
 
   ngOnDestroy(){

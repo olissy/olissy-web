@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import productDataBase from './productDataBase'
 declare var $ :any;
 
+
 @Component({
   selector: 'app-product-crud-database',
   templateUrl: './product-crud-database.component.html',
