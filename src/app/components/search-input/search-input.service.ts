@@ -31,6 +31,14 @@ export class SearchInputService implements OnDestroy {
                                                                              .where('FOREIGN_KEY', "==", FOREIGN_KEY)).valueChanges()
   }
 
+  public getSearchByTyping(PRIMARY_KEY) {
+    return this.db.collection('product', ref => ref.where('PRIMARY_KEY_PRODUCT_DB', "==", PRIMARY_KEY).limit(5).where("productQuantities", ">", 0).where("productForSale", "==", "sim")).valueChanges()
+  }
+
+  public getSuggestion(PRIMARY_KEY) {
+    return this.db.collection('product', ref => ref.where('PRIMARY_KEY_PRODUCT_DB', "==", PRIMARY_KEY).limit(50).where("productQuantities", ">", 0).where("productForSale", "==", "sim")).valueChanges()
+  }
+
   public getByStoreFOREIGN_KEY(FOREIGN_KEY){
     return this.db.collection('store', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
   }
