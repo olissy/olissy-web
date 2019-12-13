@@ -1,5 +1,5 @@
 <div id="out"></div>
-<form [formGroup]="formularioPesquisa">
+<form>
   <div class="col-md-12 col-xs-12 query-mobile">
     <div class="input-group col-md-12 col-xs-12" style="margin: 0px">
       <ul *ngIf="digite" id="dropdown-buscar-produto-sugestao" class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -91,15 +91,19 @@
             </div>
           </div>
         </li>
+        <div *ngIf="loadingSuggested" class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+          <span class="info-box-icon" style="background-color: transparent ">
+            <i class="fa fa-refresh fa-spin fa-2x"></i>
+          </span>
+        </div> 
       </ul>
       <input
         type="text"
         (keyup)="SearchBySuggestions($event.target.value, $event)"
-        (keyup.enter)="searchByTyping($event.target.value)"
+        (keyup.enter)="searchByTyping()"
         class="form-control"
         placeholder="Digite nome do produto"
         autocomplete="off"
-        formControlName="pesquisa"
         id="input-buscar-produto"
         data-toggle="dropdown"
         aria-haspopup="true"

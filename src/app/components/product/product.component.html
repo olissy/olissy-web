@@ -1,7 +1,6 @@
  <br />
   <div class="pesquisa-margin-bottom">
-    <!-- <mt-pesquisa [boscar_por]='"category"'></mt-pesquisa> -->
-    <mt-pesquisa [boscar_por]='"category"'></mt-pesquisa>
+    <mt-pesquisa (searchProductDB_Output)="searchProductDB_Output($event)"></mt-pesquisa>
   </div> 
 
 <div class="container">

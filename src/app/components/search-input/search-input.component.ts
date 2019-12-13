@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy, Output,Input, EventEmitter } from '@angular/core'
-import { FormGroup, FormControl  }  from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
 import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
-import { AppService } from '../../app.service'
 import { SearchInputService } from './search-input.service'
 declare var $ :any
 
@@ -17,7 +14,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject()
 
-  @Output() produtos_Output:any = new EventEmitter()
+  @Output() searchProductDB_Output:any = new EventEmitter()
 
   @Input() boscar_por:string
 
@@ -33,29 +30,18 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   public suggestedProductList = []
 
-  public wordSearchByTyping = []
+  public TypingProductList = []
 
-  suggestionssw
+  public loadingSuggested:boolean = false
 
-  public formularioPesquisa: FormGroup = new FormGroup({
-    'pesquisa': new FormControl(null),
-    'buscarPor':new FormControl("productName"),
-    'precoMin':new FormControl(0.00),
-    'precoMax':new FormControl(0.00),
-    'categoria':new FormControl(null),
-    'emVenda':new FormControl("todos"),
-    'sugestoes':new FormControl(true)
-  })
-
-  constructor(private appService:AppService,
-              private pesquisaService:SearchInputService,
-              private route:ActivatedRoute) {}
+  constructor(private pesquisaService:SearchInputService) {}
 
   ngOnInit() {
 
   }
 
   public SearchBySuggestions(suggestion, event){
+    this.aguarde = true
     if(event.key != 'Backspace' && this.Digite_tres_ou_mais_caracteres_total <= 3 && this.Digite_tres_ou_mais_caracteres_total > 0){
       if(suggestion != false){
         this.Digite_tres_ou_mais_caracteres_total --
@@ -79,36 +65,36 @@ export class SearchInputComponent implements OnInit, OnDestroy {
       this.digite = false
       this.desculpe = false
       this.aguarde = true
-      this.debounceTime()
+      this.debounceTimeSuggestion()
     }else{
       this.digite = true
     }
     
   }
 
-  public debounceTime(){
+  public debounceTimeSuggestion(){
     var timer;
     var self = this;
     $('#input-buscar-produto').keyup(function(){
-        clearTimeout(timer)
-        if ($('#input-buscar-produto').val) {
-            timer = setTimeout(function(){
-                 var suggestion = $("#input-buscar-produto").val()    
-                 if(this.suggestionssw != suggestion){
-                  this.suggestionssw = suggestion
-                  console.log(suggestion)
-                  var arrayWordSuggestion = suggestion.split(" ")
-                  console.log(arrayWordSuggestion)
-                  self.sendSearch(arrayWordSuggestion)
-                 }
-            }, 1000);
-        }
+      clearTimeout(timer)
+      if ($('#input-buscar-produto').val) {
+        timer = setTimeout(function(){
+          var suggestion = $("#input-buscar-produto").val()    
+          if(this.suggestionssw != suggestion){
+            this.suggestionssw = suggestion
+            var wordSuggestion = suggestion.split(" ")
+            self.sendSearchSuggestion(wordSuggestion)
+          }
+        }, 1000);
+      }
     });
   }
 
-  public sendSearch(arrayWordSuggestion){
+  public sendSearchSuggestion(wordSuggestion){
     this.suggestedProductList = []
-    for (const word of arrayWordSuggestion) {
+    let cont = 1
+    for (const word of wordSuggestion) {
+      this.loadingSuggested = true
        this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
           if(Object.keys(resposta).length != 0){
             this.suggestedProductList.push(resposta[0])
@@ -117,34 +103,47 @@ export class SearchInputComponent implements OnInit, OnDestroy {
           }else{
             this.desculpe = true
           }
+          console.log(wordSuggestion.length, cont)
+          if(wordSuggestion.length == cont){
+            this.loadingSuggested = false
+            console.log(this.loadingSuggested )
+          }
+          cont++
        })
     }
   }
 
-  public selectSuggestion(select){
-    this.pesquisaService.getSuggestion(select.PRIMARY_KEY).subscribe((product)=>{
-      console.log(product)
-    })
+  public selectSuggestion(suggestion){
+    this.searchProductDB_Output.emit({search:'suggestion', product:suggestion})
   }
 
-  public searchByTyping(typedSearch){
-    console.log(typedSearch)
+  public searchByTyping(){
     this.desculpe = false
     this.aguarde = true
-    let arrayWord = typedSearch.split(" ")
-    this.resultSearchByTyping(arrayWord)
+    this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
+    //let wordTyping = typedSearch.split(" ")
+    //this.resultSearchByTyping(wordTyping)
   }
   
-  public resultSearchByTyping(arrayWord){
-    this.wordSearchByTyping = []
-    for (const word of arrayWord) {
-       console.log(word)
+  /*public resultSearchByTyping(wordTyping){
+    this.aguarde = false
+    this.TypingProductList = []
+    let cont = 1
+    for (const word of wordTyping) {
+
        this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          this.wordSearchByTyping.push(resposta[0])
-          console.log(this.wordSearchByTyping)
+        if(Object.keys(resposta).length != 0){
+          this.TypingProductList.push(resposta[0])
+        }
+        console.log(wordTyping.length, cont)
+
+        if(wordTyping.length == cont){
+          this.searchProductDB_Output.emit({search:'typing', product:this.TypingProductList})
+        }
+        cont++
        })
     }
-  }
+  }*/
 
   ngOnDestroy(){
     this.unsubscribe$.next()

@@ -29,6 +29,44 @@ export class ProductComponent implements OnInit {
     this.product()
   }
 
+  searchProductDB_Output(ProductDB){
+    console.log(ProductDB)
+    if(ProductDB.search == "suggestion"){
+      this.searchProductDBSuggested(ProductDB.product)
+    }
+    if(ProductDB.search == "typing"){
+      this.searchProductDBTyping(ProductDB.product)
+    }
+  }
+
+  searchProductDBSuggested(ProductDB){
+    this.result.productDataBase = []
+    this.result.product = []
+    this.result.store = []
+    this.result.productDataBase.push( ProductDB )
+    this.productService.productSuggested(ProductDB.PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
+      this.result.product = product
+       console.log(this.result)
+       this.store()
+    })
+  }
+
+  searchProductDBTyping(ProductDB){
+    this.result.productDataBase = []
+    this.result.product = []
+    this.result.store = []
+    for (const index in ProductDB){
+      this.productService.productSuggested(ProductDB[index].PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
+        this.result.productDataBase.push( ProductDB[index] )
+        this.result.product.push( product[0] )
+         console.log(this.result)
+         this.store()
+      })
+    }
+  }
+
+
+
   public product(){
     this.loading = false
     this.productService.product(this.result.limit).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
