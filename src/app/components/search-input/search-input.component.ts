@@ -41,7 +41,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   }
 
   public SearchBySuggestions(suggestion, event){
-    this.aguarde = true
+    
     if(event.key != 'Backspace' && this.Digite_tres_ou_mais_caracteres_total <= 3 && this.Digite_tres_ou_mais_caracteres_total > 0){
       if(suggestion != false){
         this.Digite_tres_ou_mais_caracteres_total --
@@ -96,6 +96,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
        this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+         console.log("ppppsppppppppppppp")
           if(Object.keys(resposta).length != 0){
             this.suggestedProductList.push(resposta[0])
             this.aguarde = false
@@ -119,31 +120,18 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   public searchByTyping(){
     this.desculpe = false
-    this.aguarde = true
-    this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
-    //let wordTyping = typedSearch.split(" ")
-    //this.resultSearchByTyping(wordTyping)
-  }
-  
-  /*public resultSearchByTyping(wordTyping){
     this.aguarde = false
-    this.TypingProductList = []
-    let cont = 1
-    for (const word of wordTyping) {
+    $("#input-buscar-produto").blur(); 
+    this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
+  }
 
-       this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-        if(Object.keys(resposta).length != 0){
-          this.TypingProductList.push(resposta[0])
-        }
-        console.log(wordTyping.length, cont)
-
-        if(wordTyping.length == cont){
-          this.searchProductDB_Output.emit({search:'typing', product:this.TypingProductList})
-        }
-        cont++
-       })
+  searchByClick(suggestion, event){
+    if(suggestion.length >= 2){
+      console.log(suggestion)
+      var wordSuggestion = suggestion.split(" ")
+      this.sendSearchSuggestion(wordSuggestion)
     }
-  }*/
+  }
 
   ngOnDestroy(){
     this.unsubscribe$.next()
