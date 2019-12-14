@@ -204,6 +204,12 @@ plugin para Visual Studio Code / frontEnd
 
 
 
+MEDICAMENTOS  FITOTERÁPICO  CALMANTE NATURAL
+MEDICAMENTOS  FITOTERÁPICO  DIGESTIVO
+
+
+
+
 -------- enviar para producao -----------
 git status
 
