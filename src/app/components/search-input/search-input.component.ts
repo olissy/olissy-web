@@ -61,6 +61,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     }
 
     if(this.Digite_tres_ou_mais_caracteres_total <= 0){
+      console.log(suggestion)
       this.produto = false
       this.digite = false
       this.desculpe = false
@@ -96,18 +97,18 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
        this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-         console.log("ppppsppppppppppppp")
+        
           if(Object.keys(resposta).length != 0){
-            this.suggestedProductList.push(resposta[0])
+            for (const product of resposta) {
+              this.suggestedProductList.push(product)
+            }
             this.aguarde = false
             this.produto = true
           }else{
             this.desculpe = true
           }
-          console.log(wordSuggestion.length, cont)
           if(wordSuggestion.length == cont){
             this.loadingSuggested = false
-            console.log(this.loadingSuggested )
           }
           cont++
        })
@@ -127,7 +128,6 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   searchByClick(suggestion, event){
     if(suggestion.length >= 2){
-      console.log(suggestion)
       var wordSuggestion = suggestion.split(" ")
       this.sendSearchSuggestion(wordSuggestion)
     }

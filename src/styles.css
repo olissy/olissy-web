@@ -387,5 +387,10 @@ button:focus {
   animation: glowingDanger 1500ms infinite;
 }
 
+@media (max-width: 767px){
+  .fixed .content-wrapper, .fixed .right-side {
+      padding-top: 60px;
+  }
+}
 
 

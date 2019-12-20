@@ -1,7 +1,7 @@
 <div id="out"></div>
 <form>
   <div class="col-md-12 col-xs-12 query-mobile">
-    <div class="input-group col-md-12 col-xs-12" style="margin: 0px">
+    <div class="input-group col-md-12 col-xs-12" style="margin: 0px;">
       <ul *ngIf="digite" id="dropdown-buscar-produto-sugestao" class="dropdown-menu" aria-labelledby="dropdownMenu1">
         <li>
           <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
@@ -98,18 +98,18 @@
         </div> 
       </ul>
       <input
-        type="text"
-        (keyup)="SearchBySuggestions($event.target.value, $event)"
-        (keyup.enter)="searchByTyping()"
-        (click)="searchByClick($event.target.value, $event)"
-        class="form-control"
-        placeholder="Pesquise seu produto"
-        autocomplete="off"
-        id="input-buscar-produto"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="true"
-      />
+      type="text"
+      (keyup)="SearchBySuggestions($event.target.value, $event)"
+      (keyup.enter)="searchByTyping()"
+      (click)="searchByClick($event.target.value, $event)"
+      class="form-control"
+      placeholder="Pesquise seu produto"
+      autocomplete="off"
+      id="input-buscar-produto"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="true"
+    />
     </div>
   </div>
 </form>

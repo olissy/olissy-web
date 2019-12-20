@@ -26,6 +26,8 @@
 .form-control {
   height: 40px;
   border-radius: 0px;
+  padding: 30px 12px;
+  font-size: 25px;
 }
 
 .input-group-addon, .input-group-btn {
