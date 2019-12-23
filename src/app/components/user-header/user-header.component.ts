@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { DataService } from "../../data.service";
-import { ActivatedRoute } from '@angular/router'
-import { Router } from '@angular/router';
 declare var $ :any;
 
 @Component({
@@ -16,16 +14,7 @@ export class UserHeaderComponent {
   search = false
 
 
-  constructor(private data: DataService, private route:ActivatedRoute, private router:Router  ) {
-
-    /*    router.events.subscribe((url:any) => {
-      console.log(url.url)
-      if(url.url == "/product"){
-        this.search = true
-      }
-    });
-    */
-  
+  constructor(private data: DataService  ) {
   }
 
   searchProductDB_Output(productDB){
