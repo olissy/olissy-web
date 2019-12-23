@@ -6,7 +6,6 @@ import { ProductComponent } from './product.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule} from 'angular-imask';
-import { SearchInputModule } from '../search-input/search-input.module';
 
 @NgModule({
   imports: [
@@ -16,7 +15,6 @@ import { SearchInputModule } from '../search-input/search-input.module';
     ReactiveFormsModule,
     NgxMaskModule,
     IMaskModule, 
-    SearchInputModule
   ],
   declarations: [ProductComponent,]
 

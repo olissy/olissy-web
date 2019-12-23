@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DataService } from "../../data.service";
 import { AppService } from '../../app.service'
 import { AuthService  } from '../../AuthService'
 import { client, user } from '../../interfaces';
@@ -30,7 +31,8 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
   constructor(private appservice: AppService,
               private clienteHeaderService: ClientHeaderService,
               private router_navigator:Router,
-              private authService: AuthService ) {}
+              private authService: AuthService,
+              private data: DataService ) {}
 
   async ngOnInit() {
     await this.obterDadosToken()
@@ -106,6 +108,10 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
     let data = new Date(d);
     let my = data.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true});
     return my
+  }
+
+  searchProductDB_Output(productDB){
+    this.data.setProductDB(productDB)
   }
 
   ngOnDestroy(){

@@ -223,4 +223,4 @@ firebase init
 
 firebase.json " alterar host "
 
-firebase deploy
+firebase deploy 

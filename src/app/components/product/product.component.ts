@@ -3,6 +3,7 @@ import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { AppService } from '../../app.service'
 import { ProductService } from './product.service'
+import { DataService } from "../../data.service";
 declare var $ :any;
 
 @Component({
@@ -22,14 +23,19 @@ export class ProductComponent implements OnInit {
 
   public result = { store : [], product : null, productDataBase : [], limit : 10, offset : 0, size : 0  }
 
-  constructor(private productService:ProductService, private appService:AppService) { }
+
+
+  constructor(private productService:ProductService, 
+              private appService:AppService,
+              private data: DataService) { }
 
   ngOnInit(){
     this.haveOrderOpen()
     this.product()
+    this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB))
   }
 
-  searchProductDB_Output(ProductDB){
+  searchProductDB(ProductDB){
     console.log(ProductDB)
     if(ProductDB.search == "suggestion"){
       this.searchProductDBSuggested(ProductDB.product)

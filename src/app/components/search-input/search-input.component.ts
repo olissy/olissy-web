@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output,Input, EventEmitter } from '@angular/core'
+import { Component, OnInit, OnDestroy, Output,Input, EventEmitter  } from '@angular/core'
 import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { SearchInputService } from './search-input.service'
@@ -37,7 +37,51 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   constructor(private pesquisaService:SearchInputService) {}
 
   ngOnInit() {
+    this.clearTextSearch()
+  }
 
+  public clearTextSearchCaracter(){
+
+    this.Digite_tres_ou_mais_caracteres_total = 3
+
+    this.loadingSuggested = false
+
+    this.digite = true
+      
+    this.aguarde = false
+
+    this.desculpe = false
+
+    this.produto = false
+
+    this.suggestedProductList = []
+
+    this.TypingProductList = []
+
+    console.log(this.Digite_tres_ou_mais_caracteres_total)
+
+  }
+
+  public clearTextSearch(){
+    
+    $(".clearable").each(function() {
+
+      $("#input-buscar-produto").focus()
+      
+      var $inp = $(this).find("input:text")
+
+      var  $cle = $(this).find(".clearable__clear");
+    
+      $inp.on("input", function(){
+        $cle.toggle(!!this.value);
+      });
+      
+      $cle.on("touchstart click", function(e) {
+        e.preventDefault();
+        $inp.val("").trigger("input");
+      });
+      
+    });
   }
 
   public SearchBySuggestions(suggestion, event){
@@ -61,7 +105,6 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     }
 
     if(this.Digite_tres_ou_mais_caracteres_total <= 0){
-      console.log(suggestion)
       this.produto = false
       this.digite = false
       this.desculpe = false

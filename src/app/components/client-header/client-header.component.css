@@ -35,3 +35,8 @@ menu>.dropdown-menu>li .menu>li>a, .navbar-nav>.messages-menu>.dropdown-menu>li 
   width: 95%;
 }
 
+
+.main-header .navbar .nav>li>a>.label {
+  top: 15px;
+  right: 13px;
+}

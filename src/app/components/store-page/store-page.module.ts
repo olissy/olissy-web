@@ -7,7 +7,6 @@ import { StoreCommentComponent } from '../../components/store-comment/store-comm
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ShoppingCartComponent } from '../../components/shopping-cart/shopping-cart.component';
 import { StorePageComponent } from './store-page.component';
-import { SearchInputModule } from '../search-input/search-input.module';
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule} from 'angular-imask';
 @NgModule({
@@ -16,7 +15,6 @@ import { IMaskModule} from 'angular-imask';
     StorePageRoute,
     FormsModule,
     ReactiveFormsModule,
-    SearchInputModule,
     NgxMaskModule,
     IMaskModule
   ],

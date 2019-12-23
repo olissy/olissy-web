@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { olissyWebKey }   from './private'
+
 
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule } from 'angular-imask';
@@ -21,16 +23,8 @@ import { StoreColumnComponent } from './components/store-column/store-column.com
 import { StoreHeaderComponent } from './components/store-header/store-header.component';
 import { UserColumnComponent } from './components/user-column/user-column.component';
 import { UserHeaderComponent } from './components/user-header/user-header.component';
+import { SearchInputComponent } from './components/search-input/search-input.component'
 
-const olissyWebKey = {
-  apiKey: "AIzaSyBTEcMPuVzjYhUDa2drm2Cxco4-vZRfxl4",
-  authDomain: "olissy-web.firebaseapp.com",
-  databaseURL: "https://olissy-web.firebaseio.com",
-  projectId: "olissy-web",
-  storageBucket: "olissy-web.appspot.com",
-  messagingSenderId: "462995326690",
-  appId: "1:462995326690:web:c82e5d6d6590a069fd80bb"
-};
 
 @NgModule({
   declarations: [
@@ -40,7 +34,8 @@ const olissyWebKey = {
     StoreColumnComponent,
     StoreHeaderComponent,
     UserColumnComponent,
-    UserHeaderComponent
+    UserHeaderComponent,
+    SearchInputComponent
   ],
   imports: [
     NgxMaskModule.forRoot(),

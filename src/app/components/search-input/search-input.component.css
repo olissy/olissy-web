@@ -23,13 +23,6 @@
   }
 }
 
-.form-control {
-  height: 40px;
-  border-radius: 0px;
-  padding: 30px 12px;
-  font-size: 25px;
-}
-
 .input-group-addon, .input-group-btn {
   width: 0%;
 }
@@ -50,37 +43,58 @@
 }
 
 .form-control {
-  color: #ffffff;
-  background-color: #c71582;
+  color: #c71582;
+  background-color: #ffffff;
   background-image: none;
-  border: 1px solid #c71582;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #ffffff;
+  color: #ccc;
   opacity: 1; /* Firefox */
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #ffffff;
+  color: #ccc;
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
-  color: #ffffff;
+  color: #ccc;
 }
 
-::-webkit-input-placeholder {
-  text-align: center;
+/* Bootstrap 3 text input with search icon */
+
+.has-search .form-control-feedback {
+  right: initial;
+  left: 0;
+  color: #ccc;
 }
 
-:-moz-placeholder { /* Firefox 18- */
-  text-align: center;  
+.has-search .form-control {
+  padding-right: 12px;
+  padding-left: 34px;
 }
 
-::-moz-placeholder {  /* Firefox 19+ */
-  text-align: center;  
-}
 
-:-ms-input-placeholder {  
-  text-align: center; 
+/* Clearable text inputs */
+.clearable{
+  position: relative;
+  display: inline-block;
+}
+.clearable input[type=text]{
+  padding-right: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.clearable__clear{
+  display: none;
+  position: absolute;
+  right:0; top:0;
+  padding: 0 8px;
+  font-style: normal;
+  font-size: 1.2em;
+  user-select: none;
+  cursor: pointer;
+}
+.clearable input::-ms-clear {  /* Remove IE default X */
+  display: none;
 }

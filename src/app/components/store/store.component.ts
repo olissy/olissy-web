@@ -25,14 +25,4 @@ export class StoreComponent implements OnInit {
       this.loading = true
     }, 1000);
   }
-
-  public loadingPlusProduct(){
-    this.loading = false
-    setTimeout(() => {
-      this.stores = this.storeListService.obterTodosComercioPorCategoria((this.LIMIT++)*2)
-      this.loading = true
-    }, 1000);
-  }
-
-  produtos_Input(){}
 }

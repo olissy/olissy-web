@@ -5,7 +5,6 @@ import { StoreProductRecordRoute } from './store-product-record.route';
 import { StoreProductRecordComponent } from './store-product-record.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule} from 'angular-imask';
-import { SearchInputModule } from '../search-input/search-input.module';
 
 @NgModule({
   imports: [
@@ -14,8 +13,7 @@ import { SearchInputModule } from '../search-input/search-input.module';
     FormsModule,
     ReactiveFormsModule,
     IMaskModule,
-    NgxMaskModule,
-    SearchInputModule
+    NgxMaskModule
   ],
   declarations: [
     StoreProductRecordComponent
