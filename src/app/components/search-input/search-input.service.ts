@@ -15,4 +15,8 @@ export class SearchInputService {
   public searchProductsByRegex(search: string) {
     return this.http.get<any>(this.url + '/regex/?text=' + search);
   }
+
+  public searchProductsByDeepSearch(search: string) {
+    return this.http.get<any>(this.url + '/text/?text=' + search);
+  }
 }

@@ -1,26 +1,31 @@
 
 <form>
-  <div class="col-md-12 col-xs-12 query-mobile">
-
-  <!-- Actual search box -->
-  <div class="col-md-12 col-xs-12 form-group has-feedback has-search">
-    <span class="glyphicon glyphicon-search form-control-feedback"></span>
-    <span class="col-md-12 col-xs-12 clearable">
-      <input
-        type="text"
-        (keyup)="SearchBySuggestions($event.target.value, $event)"
-        (keyup.enter)="searchByTyping()"
-        (click)="searchByClick($event.target.value, $event)"
-        class="form-control"
-        placeholder="Pesquise seu produto"
-        autocomplete="off"
-        id="input-buscar-produto"
-      />
-      <i class="clearable__clear fa  fa-times-circle" (click)="clearTextSearchCaracter()" style="display: inline; margin-top: 10px; color: #dd4b39;"></i>
-    </span>
+  <div *ngIf="enter">
+    <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
+      <div class="info-box center" style=" box-shadow: 0 0px 0px rgba(0,0,0,0.1); ">
+        <span class="info-box-icon" style="background-color: transparent ">
+          <i class="fa fa-refresh fa-spin fa-2x"></i>
+        </span>
+      </div>
+    </div>
   </div>
-  
-
+  <div *ngIf="enter == false" class="col-md-12 col-xs-12 query-mobile">
+    <div class="col-md-12 col-xs-12 form-group has-feedback has-search">
+      <span class="glyphicon glyphicon-search form-control-feedback"></span>
+      <span class="col-md-12 col-xs-12 clearable">
+        <input
+          type="text"
+          (keyup)="SearchBySuggestions($event.target.value, $event)"
+          (keyup.enter)="searchByTyping($event.target.value, $event)"
+          (click)="searchByClick($event.target.value, $event)"
+          class="form-control"
+          placeholder="Pesquise seu produto"
+          autocomplete="off"
+          id="input-buscar-produto"
+        />
+        <i class="clearable__clear fa  fa-times-circle" (click)="clearTextSearchCaracter()" style="display: inline; margin-top: 10px; color: #dd4b39;"></i>
+      </span>
+    </div>
     <div class="input-group col-md-12 col-xs-12" style="margin: 0px;">
       <div *ngIf="digite">
         <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
@@ -80,6 +85,9 @@
               </span>
             </div>
           </div>
+          <span *ngIf="wordDoDeepSearchStatus">
+            <button type="button" class="btn btn-default btn-block" (click)="doDeepSearch()">Fazer uma pesquisa profunda</button>
+          </span>
         </div>
       </div>
       <div *ngIf="produto" class="dropdown-buscar-produto">
