@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Meta, Title } from '@angular/platform-browser';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { AppService } from '../../app.service'
@@ -27,16 +28,32 @@ export class ProductComponent implements OnInit {
 
   constructor(private productService:ProductService, 
               private appService:AppService,
-              private data: DataService) { }
+              private data: DataService,
+              private metaTagService: Meta,
+              private titleService: Title,) { }
 
   ngOnInit(){
+    this.searchEngineOptimization()
     this.haveOrderOpen()
     this.product()
     this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB))
   }
 
+  public searchEngineOptimization(){
+    this.metaTagService.addTags([
+      { name: 'keywords', content: 'olissy, delivery de farmacia em guarapari, farmacia em guarapari, farmacia guarapari' },
+      { name: 'robots', content: 'index, follow' },
+      { name: 'author', content: 'olissy' },
+      { name: 'date', content: '2019-10-31', scheme: 'YYYY-MM-DD' },
+      { charset: 'UTF-8' }
+    ]);
+    this.titleService.setTitle('olissy');
+    this.metaTagService.updateTag(
+      { name: 'description', content: 'olissy delivery de farmacia' }
+    );
+  }
+
   searchProductDB(ProductDB){
-    console.log(ProductDB)
     if(ProductDB.search == "suggestion"){
       this.searchProductDBSuggested(ProductDB.product)
     }

@@ -183,6 +183,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
             this.aguarde = false
             this.enter = false
             this.desculpe = false
+            $("#input-buscar-produto").blur();
           }else{
             this.desculpe = true
             this.aguarde = false
@@ -243,6 +244,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
           this.aguarde = false
           this.enter = false
           this.desculpe = false
+          $("#input-buscar-produto").blur();
         }else{
           this.desculpe = true
           this.aguarde = false
