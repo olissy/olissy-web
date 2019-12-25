@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AppService } from './app.service';
 import { AuthService } from './AuthService';
 import { user } from './interfaces';
+import { environment } from '../../src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent {
               private authService: AuthService) {}
 
   ngOnInit() {
+    console.log(environment.apiOlissyMongoDB)
     this.tela = this.appService.router_app_componet;
     this.token();
   }

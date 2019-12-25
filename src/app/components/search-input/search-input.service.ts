@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import apiOlissyMongoDB from '../../api'
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class SearchInputService {
 
   constructor(private http: HttpClient){}
 
-  private url = apiOlissyMongoDB
+  private url = environment.apiOlissyMongoDB
 
   public searchProductsByRegex(search: string) {
     return this.http.get<any>(this.url + '/regex/?text=' + search);

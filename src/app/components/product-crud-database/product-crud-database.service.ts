@@ -4,7 +4,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { firebase } from '@firebase/app';
 import '@firebase/storage';
 import '@firebase/firestore';
-import apiOlissyMongoDB from '../../api'
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class ProductCrudDatabaseService {
 
   constructor(private db: AngularFirestore, private http: HttpClient){}
 
-  private url = apiOlissyMongoDB
+  private url = environment.apiOlissyMongoDB
 
   public async createNewProvider(provider) {
     await this.db.collection("provider").add(provider)

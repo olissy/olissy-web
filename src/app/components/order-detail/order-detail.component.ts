@@ -50,7 +50,6 @@ export class OrderDetailComponent implements OnInit {
         if(this.userType == 2){
           this.macarComoVisto()
         }
-        console.log(this.order)
       })
     })
   }
@@ -71,18 +70,22 @@ export class OrderDetailComponent implements OnInit {
   }
 
   public macarComoFinalizado(){
-    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'Finalizado'})
+    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'Finalizado'}).then(()=>{
+      this.historyNavigateBack()
+    })
   }
 
   public Desistir(){
-    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'Desistência'})
+    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'Desistência'}).then(()=>{
+      this.historyNavigateBack()
+    })
   }
 
   public macarComoEmProcessamento(){
     this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'Em processamento'})
   }
 
-  public macarComoEntregar(){
+  public macarComoEntregar(){ 
     this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'Entregando'})
   }
 
@@ -94,9 +97,14 @@ export class OrderDetailComponent implements OnInit {
 
   public async RemoverPedido(order){
     if(order.orderState == 'Desistência'){
+      let productDecrement = 1
       this.orderDetailService.deleterCollectionStorage('order', this.order.PRIMARY_KEY)
       for (const key of order.product) {
         this.orderDetailService.incrementProductQuantities(key.PRIMARY_KEY, key.quantities)
+        if(productDecrement >= order.product.length){
+          this.historyNavigateBack()
+        }
+        productDecrement++
       }
     }
     if(order.orderState == 'Finalizado'){
@@ -116,7 +124,6 @@ export class OrderDetailComponent implements OnInit {
     this.order.product.forEach((element:any) => {
       for (let i = 0; i < element.quantities; i++) {
         this.orderDetailService.updateSales(element.PRIMARY_KEY )
-        console.log( this.order.FOREIGN_KEY_CLIENT, element.PRIMARY_KEY)
         this.orderDetailService.getReactionsProduct(this.order.FOREIGN_KEY_CLIENT, element.PRIMARY_KEY).subscribe((res:any)=>{
           if(res[0].clientReactionsSale == false){
             this.macarComoComprado(res[0].PRIMARY_KEY)

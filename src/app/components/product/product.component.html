@@ -1,8 +1,3 @@
-
-  <!-- <div class="pesquisa-margin-bottom">
-    <mt-pesquisa (searchProductDB_Output)="searchProductDB_Output($event)"></mt-pesquisa>
-  </div>  -->
-
 <div class="container">
   <div *ngFor="let product of result.product" class="col-md-12 col-xs-12 center" style="top: 25px; margin-bottom: 10px">
     <div *ngFor="let store of result.store" class="menu-item-info-box card" style="cursor: pointer">
@@ -30,15 +25,19 @@
           </div>
         </div>
       </div>
-      <div *ngFor="let productDB of result.productDataBase"  class="col-md-12 col-xs-12" [routerLink]="['/product-page', product.PRIMARY_KEY]" style="padding-top: 0px; padding-bottom: 5px;">
-        <div *ngIf="productDB.PRIMARY_KEY == product.PRIMARY_KEY_PRODUCT_DB && store.FOREIGN_KEY == product.FOREIGN_KEY"  id="carousel-example-generic" class="carousel slide imagemMobile" data-interval="false">
-          <div class="carousel-inner">
-            <div class="item active">
-              <img [src]="productDB.productImageUrl || ''" style="width: 100%" alt="Photo" alt="Photo">
+
+      <div *ngFor="let productDB of result.productDataBase">
+        <div *ngIf="productDB.PRIMARY_KEY == product.PRIMARY_KEY_PRODUCT_DB && store.FOREIGN_KEY == product.FOREIGN_KEY" class="col-md-12 col-xs-12" [routerLink]="['/product-page', product.PRIMARY_KEY]" style="padding-top: 0px; padding-bottom: 5px;">
+          <div id="carousel-example-generic" class="carousel slide imagemMobile" data-interval="false">
+            <div class="carousel-inner">
+              <div class="item active">
+                <img [src]="productDB.productImageUrl || ''" style="width: 100%" alt="Photo" alt="Photo">
+              </div>
             </div>
           </div>
         </div>
-      </div>  
+      </div>
+
       <div *ngFor="let productDB of result.productDataBase" >
         <div *ngIf="productDB.PRIMARY_KEY == product.PRIMARY_KEY_PRODUCT_DB && store.FOREIGN_KEY == product.FOREIGN_KEY">
           <div [routerLink]="['/product-page', product.PRIMARY_KEY]" style="margin: 5px 5px 10px 5px; padding:0px 0px 10px 0px ;" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#atualizar">
