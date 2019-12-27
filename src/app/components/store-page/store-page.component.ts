@@ -8,6 +8,7 @@ import { StorePageService } from './store-page.service'
 import { AuthService } from '../../AuthService';
 import { Router } from '@angular/router'
 declare var $ :any;
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-store-page',
@@ -17,7 +18,7 @@ declare var $ :any;
 
 export class StorePageComponent implements OnInit {
 
-  public comercios: Observable<any[]>
+  public comercios
 
   private unsubscribe$ = new Subject();
 
@@ -51,7 +52,9 @@ export class StorePageComponent implements OnInit {
     ]
   }
 
-  constructor(private appService:AppService,
+  constructor(private metaTagService: Meta, 
+              private titleService: Title,
+              private appService:AppService,
               private comercioPaginaService:StorePageService,
               private route:ActivatedRoute,
               private authService:AuthService,
@@ -60,8 +63,24 @@ export class StorePageComponent implements OnInit {
   ngOnInit() {
     this.scrollToTop()
     this.appService.produtos = []//remover produtos do carrinho
-    this.comercios = this.comercioPaginaService.store('store', this.route.snapshot.params['id'])
+    this.comercioPaginaService.store('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
+      this.comercios = store
+      console.log(store)
+      this.searchEngineOptimization(store[0].storeCategory, store[0].storeCity, store[0].storeNeighborhood, store[0].storeName, store[0].storeAbout)
+    })
     this.quantityOfProductsEndSales()
+  }
+
+  public searchEngineOptimization(keywords1, keywords2, keywords3, title, description){
+    this.metaTagService.addTags([
+      { name: 'keywords', content: `olissy, olissy farmacia, olissy delivery, ${keywords1}, olissy ${keywords2}, olissy ${keywords3}` },
+      { name: 'robots', content: 'index, follow' },
+      { charset: 'UTF-8' }
+    ]);
+    this.titleService.setTitle(`${title}`);
+    this.metaTagService.updateTag(
+      { name: 'description', content: `${description}` }
+    );
   }
 
   public scrollToTop(){

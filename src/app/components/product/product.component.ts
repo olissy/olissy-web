@@ -32,7 +32,7 @@ export class ProductComponent implements OnInit {
               private metaTagService: Meta,
               private titleService: Title,) { }
 
-  ngOnInit(){
+  ngOnInit(){ 
     this.searchEngineOptimization()
     this.haveOrderOpen()
     this.product()
@@ -41,15 +41,13 @@ export class ProductComponent implements OnInit {
 
   public searchEngineOptimization(){
     this.metaTagService.addTags([
-      { name: 'keywords', content: 'olissy, delivery de farmacia em guarapari, farmacia em guarapari, farmacia guarapari' },
+      { name: 'keywords', content: 'olissy, olissy farmacia, delivery de farmacia em guarapari, farmacia em guarapari, farmacia guarapari' },
       { name: 'robots', content: 'index, follow' },
-      { name: 'author', content: 'olissy' },
-      { name: 'date', content: '2019-10-31', scheme: 'YYYY-MM-DD' },
       { charset: 'UTF-8' }
     ]);
     this.titleService.setTitle('olissy');
     this.metaTagService.updateTag(
-      { name: 'description', content: 'olissy delivery de farmacia' }
+      { name: 'description', content: 'A olissy delivery trata-se de uma Marketplace local de compras e vendas de produtos. No ambiente online isso se traduz em um espaço virtual onde a farmacia empresa permite que outros lojistas anunciem seus produtos e serviços através da plataforma da olissy.' }
     );
   }
 

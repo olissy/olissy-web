@@ -52,7 +52,7 @@
   <section class="content">
     <div class="row">
       <div class="col-xs-12 collumn-mobile center">
-        <div class="box box-solid" *ngFor="let store of comercios | async">
+        <div class="box box-solid" *ngFor="let store of comercios">
           <div class="box-header with-border">
             <span class="pull-left" style="font-size: 20px" [routerLink]="['/about-store', store.FOREIGN_KEY ]">
               <i class="fa fa-home"></i>

@@ -4,7 +4,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { StoreProductRegistrationService } from './store-product-registration.service';
 import { AuthService  } from '../../AuthService';
-import productDataBaseObject from '../product-crud-database/productDataBase'
 import { Observable } from 'rxjs';
 declare var $ :any;
 
@@ -64,14 +63,6 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
     'view':new FormControl(0),
   })
 
-  public formularioBuscarProdutoCadastrar: FormGroup = new FormGroup({
-    'productSession':new FormControl(null),
-    'productCategory':new FormControl(null),
-    'productType':new FormControl(null),
-    'andGeneric':new FormControl(null, Validators.required),
-    'provider':new FormControl(null, Validators.required),
-  })
-
   public result = { store : null, product : null, productDataBase : [], limit : 10, offset : 0, size : 0  }
 
 
@@ -81,8 +72,6 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getToken()
-    this.getProductSession()
-    this.getAllProvider()
     this.productDataBase()
   }
 
@@ -95,8 +84,11 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
 
   public productDataBase(){
     this.storeProductRegistrationService.productDataBase(this.result.limit).pipe(takeUntil(this.unsubscribe$)).subscribe((productDataBase:any)=>{
-      this.result.size = productDataBase.length
-      this.result.productDataBase = productDataBase
+      this.result.productDataBase = []
+      for(let index in productDataBase){
+        productDataBase[index].registration = false
+        this.result.productDataBase.push(productDataBase[index])
+      }
       this.product()
       this.enableScroll()
     })
@@ -104,9 +96,8 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
 
   public product(){
     for(let index in this.result.productDataBase){
-      this.result.productDataBase[index].registration = false
       this.storeProductRegistrationService.product(this.token.uid, this.result.productDataBase[index].PRIMARY_KEY).subscribe((product:any)=>{
-        if(Object.keys(product).length != 0 ){
+        if(Object.keys(product).length == 0 ){
           this.result.productDataBase[index].registration = true
         }
       })
@@ -121,24 +112,11 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
     })
   }
 
-  public getProductSession(){
-    for (const session in productDataBaseObject.product){
-      this.productSession.push({
-        productSessionIndece:session,
-        productSession:Object.keys(productDataBaseObject.product[session])[0]
-      })
-    }
-  }
-
-  public getAllProvider(){
-    this.providerListRegistered = this.comercioService.getAllProvider()
-  }
-
   public loadingPlusProduct(){
     this.loading = false
     this.disableScroll()
     setTimeout(() => {
-      this.result.limit = this.result.limit * 10
+      this.result.limit = this.result.limit + 10
       this.productDataBase()
       this.loading = true
     }, 1000);
@@ -161,78 +139,16 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
     this.formularioCadastro.get('productPrice').markAsTouched()
     this.formularioCadastro.get('productForSale').markAsTouched()
     this.formularioCadastro.get('productQuantities').markAsTouched()
-
     if(this.formularioCadastro.status === "VALID"){
       this.comercioService.createProduct(this.formularioCadastro.value)
       this.formularioCadastro.reset()
+      this.productDataBase()
       $('#selecionadoProdutoCadastrar').modal('hide')
     } 
   }
 
   public cancelarCadastraProduto(){
     this.formularioCadastro.reset()
-  }
-
-  public setProductSession(value){
-    let productSession = value.substring(0,value.indexOf(","))
-    let productSessionIndece = value.replace(`${productSession},`,"")
-    this.getProductCategory(productSession, parseInt(productSessionIndece))
-  }
-
-  public getProductCategory(productSession, productSessionIndece){
-    this.productCategory = []
-    for (const category in productDataBaseObject.product[productSessionIndece][productSession]){
-      this.productCategory.push({
-        productCategoryIndece:category,
-        productCategory:Object.keys(productDataBaseObject.product[productSessionIndece][productSession][category])[0]
-      })
-    }
-  }
-
-  public setProductCategory(value){
-    console.log(value)
-    let productCategory = value.substring(0,value.indexOf(","))
-    let productCategoryIndece = value.replace(`${productCategory},`,"")
- 
-    let productSessionValue =  this.formularioBuscarProdutoCadastrar.get('productSession').value
-    let productSession = productSessionValue.substring(0,productSessionValue.indexOf(","))
-    let productSessionIndece = productSessionValue.replace(`${productSession},`,"")
- 
-    this.getProductType(productSessionIndece, productSession, productCategoryIndece, productCategory)
-  }
- 
-  public getProductType(productSessionIndece:number, productSession:string, productCategoryIndece:number, productCategory:string){
-    this.productType = []
-     for (const type of productDataBaseObject.product[productSessionIndece][productSession][productCategoryIndece][productCategory]){
-      this.productType.push(type)
-    }
-  }
-
-  public buscarProdutoCadastrar(){
-    this.formularioBuscarProdutoCadastrar.get('andGeneric').markAsTouched()
-    this.formularioBuscarProdutoCadastrar.get('productCategory').markAsTouched()
-    this.formularioBuscarProdutoCadastrar.get('productType').markAsTouched()
-    this.formularioBuscarProdutoCadastrar.get('productSession').markAsTouched()
-    this.formularioBuscarProdutoCadastrar.get('provider').markAsTouched()
-    if(this.formularioBuscarProdutoCadastrar.valid){
-      let andGeneric =  this.formularioBuscarProdutoCadastrar.get('andGeneric').value
-
-      let productCategory =  this.formularioBuscarProdutoCadastrar.get('productCategory').value
-          productCategory = productCategory.substring(0,productCategory.indexOf(","))
-
-      let productType =  this.formularioBuscarProdutoCadastrar.get('productType').value
-
-      let productSession =  this.formularioBuscarProdutoCadastrar.get('productSession').value
-          productSession = productSession.substring(0,productSession.indexOf(","))
-
-      let provider =  this.formularioBuscarProdutoCadastrar.get('provider').value
-
-      this.comercioService.getProductDatabase(productSession, productCategory, productType, andGeneric, provider).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
-        this.result.productDataBase = product
-        this.product()
-      })
-      $('#buscarProdutoCadastrar').modal('hide')
-    }
   }
 
   public disableScroll(){ 
@@ -247,11 +163,7 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
   public enableScroll(){ 
     setTimeout(() => {
       window.onscroll = function() {}; 
-    }, 3000);
-  }
-
-  public cancelarBuscarProdutoCadastrar(){
-    this.formularioBuscarProdutoCadastrar.reset()
+    }, 1000);
   }
 
   public cancelarCadastroProduto(){

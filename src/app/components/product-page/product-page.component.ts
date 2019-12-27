@@ -8,6 +8,7 @@ import { AuthService } from '../../AuthService'
 import { ProductPageService } from './product-page.service'
 import { store, client } from './../../interfaces';
 declare var $ :any;
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-page',
@@ -78,7 +79,9 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     commentView : new FormControl(false),
   })
 
-  constructor(private appService:AppService,
+  constructor(private metaTagService: Meta, 
+              private titleService: Title,
+              private appService:AppService,
               private produtoService:ProductPageService,
               private route:ActivatedRoute,
               private authService:AuthService
@@ -88,6 +91,18 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     this.PRIMARY_KEY_PRODUCT_STORE = this.route.snapshot.params['id']
     this.produtos()
     this.scrollToTop()
+  }
+
+  public searchEngineOptimization(keywords1, keywords2, title, description){
+    this.metaTagService.addTags([
+      { name: 'keywords', content: `olissy, olissy farmacia, olissy delivery, ${keywords1}, ${keywords2}` },
+      { name: 'robots', content: 'index, follow' },
+      { charset: 'UTF-8' }
+    ]);
+    this.titleService.setTitle(`${title}`);
+    this.metaTagService.updateTag(
+      { name: 'description', content: `${description}` }
+    );
   }
 
   public scrollToTop(){
@@ -138,9 +153,14 @@ export class ProductPageComponent implements OnInit, OnDestroy {
           this.product.productName = productDatabse[0].productName
           this.product.productCategory = productDatabse[0].productCategory
 
+          this.searchEngineOptimization(productDatabse[0].productCategory, productDatabse[0].productType, productDatabse[0].productName, productDatabse[0].productDescription)
+      
+
           this.love = product[0].love
           this.view = product[0].view
           this.sale = product[0].sale
+
+          this.searchEngineOptimization(productDatabse[0].productCategory, productDatabse[0].productType, productDatabse[0].productName, productDatabse[0].productDescription)
 
         
           this.adicionarProdutoNoCarrinho(product[0])

@@ -1,0 +1,10 @@
+
+ .box.box-primary {
+    border-top-color: #c71582;
+  }
+  
+  .btn-primary {
+    color: #fff;
+    background-color: #c71582;
+    border-color: #b31374;
+  }

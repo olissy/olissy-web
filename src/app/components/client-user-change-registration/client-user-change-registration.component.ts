@@ -182,7 +182,17 @@ export class ClientUserChangeRegistrationComponent implements OnInit, OnDestroy 
   }
 
   public uploadFileAtualizar(event: Event){
-    this.uploadFile(event, 1)
+    var file = (<HTMLInputElement>event.target).files[0]
+    if ((<HTMLInputElement>event.target).files[0] && (<HTMLInputElement>event.target)) {
+      var reader = new FileReader();
+      reader.onload = ()=> {
+        this.formularioCliente.patchValue({
+          imageDisplay:reader.result,
+          imageNew: file
+          })
+      }
+      reader.readAsDataURL((<HTMLInputElement>event.target).files[0]);
+    }
   }
 
   public uploadFile(event: Event, FORM:number = 0){
