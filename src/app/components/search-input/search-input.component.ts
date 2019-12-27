@@ -159,7 +159,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     let cont = 1
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
-       this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+       this.pesquisaService.searchProductsByDeepSearch(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
 
           if(this.enter){
             if(Object.keys(resposta).length != 0){
