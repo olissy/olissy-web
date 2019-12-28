@@ -33,6 +33,7 @@ export class ProductComponent implements OnInit {
               private titleService: Title,) { }
 
   ngOnInit(){ 
+    console.log(window.location.href)
     this.searchEngineOptimization()
     this.haveOrderOpen()
     this.product()

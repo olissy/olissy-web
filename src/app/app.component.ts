@@ -18,7 +18,6 @@ export class AppComponent {
               private authService: AuthService) {}
 
   ngOnInit() {
-    console.log(environment.apiOlissyMongoDB)
     this.tela = this.appService.router_app_componet;
     this.token();
   }

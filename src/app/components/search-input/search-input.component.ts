@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, Output,Input, EventEmitter  } from '@angular/core'
+import { Router } from '@angular/router'
 import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { SearchInputService } from './search-input.service'
@@ -40,7 +41,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   public loadingSuggested:boolean = false
 
-  constructor(private pesquisaService:SearchInputService) {}
+  constructor(private pesquisaService:SearchInputService, private router: Router) {}
 
   ngOnInit() {
     this.clearTextSearch()
@@ -142,12 +143,6 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
             self.sendSearchSuggestion(wordSuggestionFilter)
 
-          }else{
-            self.aguarde = false
-            self.desculpe = false
-            if(self.Digite_tres_ou_mais_caracteres_total >= 2){
-              self.desculpe = false
-            }
           }
         }, 1000);
       }
@@ -159,11 +154,12 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     let cont = 1
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
-       this.pesquisaService.searchProductsByDeepSearch(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+       this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
 
+    
           if(this.enter){
             if(Object.keys(resposta).length != 0){
-              for (const product of resposta) {
+              for (const product of resposta){
                 this.suggestedProductList.push(product)
               }
               this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
@@ -172,10 +168,10 @@ export class SearchInputComponent implements OnInit, OnDestroy {
               this.enter = false
               this.desculpe = false
             }
-          }
+          } 
 
           if(Object.keys(resposta).length != 0){
-            this.suggestedProductList = []
+            
             for (const product of resposta) {
               this.suggestedProductList.push(product)
             }
@@ -188,18 +184,19 @@ export class SearchInputComponent implements OnInit, OnDestroy {
             this.desculpe = true
             this.aguarde = false
             this.enter = false
-            this.wordDoDeepSearch = wordSuggestion
-            this.wordDoDeepSearchStatus = true
           }
+
           if(wordSuggestion.length == cont){
             this.loadingSuggested = false
           }
+          
           cont++
        })
     }
   }
 
   public selectSuggestion(suggestion){
+    this.router.navigate(['/'])
     this.searchProductDB_Output.emit({search:'suggestion', product:suggestion})
   }
 
@@ -210,48 +207,18 @@ export class SearchInputComponent implements OnInit, OnDestroy {
       $("#input-buscar-produto").blur(); 
       
       if(this.suggestedProductList.length >= 1){
+        this.router.navigate(['/'])
         this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
       }else{
         this.enter = true
-        this.searchByClick(suggestion, event)
+        var wordSuggestion = suggestion.split(" ")
+
+        var wordSuggestionFilter = wordSuggestion.filter(function (el) {
+          return el != null && el != "";
+        });
+        this.router.navigate(['/'])
+        this.sendSearchSuggestion(wordSuggestionFilter)
       }
-    }
-  }
-
-  searchByClick(suggestion, event){
-    if(this.Digite_tres_ou_mais_caracteres_total <= 0 && suggestion.length >= 2){
-      var wordSuggestion = suggestion.split(" ")
-
-      var wordSuggestionFilter = wordSuggestion.filter(function (el) {
-        return el != null && el != "";
-      });
-      this.sendSearchSuggestion(wordSuggestionFilter)
-    }
-  }
-
-  doDeepSearch(){
-    this.aguarde = true
-    this.desculpe = false
-    for (const word of this.wordDoDeepSearch) {
-      this.pesquisaService.searchProductsByDeepSearch(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-        console.log(resposta)
-        if(Object.keys(resposta).length != 0){
-          this.suggestedProductList = []
-          for (const product of resposta) {
-            this.suggestedProductList.push(product)
-          }
-          this.produto = true
-          this.aguarde = false
-          this.enter = false
-          this.desculpe = false
-          $("#input-buscar-produto").blur();
-        }else{
-          this.desculpe = true
-          this.aguarde = false
-          this.enter = false
-          this.wordDoDeepSearchStatus = false
-        }
-      })
     }
   }
 

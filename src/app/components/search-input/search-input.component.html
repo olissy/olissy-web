@@ -17,7 +17,6 @@
           type="text"
           (keyup)="SearchBySuggestions($event.target.value, $event)"
           (keyup.enter)="searchByTyping($event.target.value, $event)"
-          (click)="searchByClick($event.target.value, $event)"
           class="form-control"
           placeholder="Pesquise seu produto"
           autocomplete="off"
@@ -85,9 +84,6 @@
               </span>
             </div>
           </div>
-          <span *ngIf="wordDoDeepSearchStatus">
-            <button type="button" class="btn btn-default btn-block" (click)="doDeepSearch()">Fazer uma pesquisa profunda</button>
-          </span>
         </div>
       </div>
       <div *ngIf="produto" class="dropdown-buscar-produto">
