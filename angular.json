@@ -23,6 +23,7 @@
               "src/favicon.ico",
               "src/assets",
               "src/assets/sitemap.xml",
+              "src/firebase-messaging-sw.js",
               "src/assets/manifest/manifest.json"
             ],
             "styles": [

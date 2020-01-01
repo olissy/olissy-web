@@ -25,6 +25,7 @@ import { UserColumnComponent } from './components/user-column/user-column.compon
 import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { SearchInputComponent } from './components/search-input/search-input.component'
 
+import { MessagingService } from './messaging.service'
 
 @NgModule({
   declarations: [
@@ -49,7 +50,7 @@ import { SearchInputComponent } from './components/search-input/search-input.com
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AppService, AngularFirestore, AuthService],
+  providers: [AppService, AngularFirestore, AuthService, MessagingService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
