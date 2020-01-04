@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators'
 import { AppService } from '../../app.service'
 import { ProductService } from './product.service'
 import { DataService } from "../../data.service";
+//import { PushNotificationService } from "../../PushNotification.service";
 declare var $ :any;
 
 @Component({
@@ -30,14 +31,21 @@ export class ProductComponent implements OnInit {
               private appService:AppService,
               private data: DataService,
               private metaTagService: Meta,
-              private titleService: Title,) { }
+              private titleService: Title,
+              //private pushNotification: PushNotificationService
+              ) { }
 
   ngOnInit(){ 
-    console.log(window.location.href)
+    //console.log(window.location.href)
     this.searchEngineOptimization()
     this.haveOrderOpen()
     this.product()
+    this.pushNotifications()
     this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB))
+  }
+
+  pushNotifications() {
+    //this.pushNotification.getPermission()
   }
 
   public searchEngineOptimization(){

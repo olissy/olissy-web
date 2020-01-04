@@ -25,7 +25,8 @@ import { UserColumnComponent } from './components/user-column/user-column.compon
 import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { SearchInputComponent } from './components/search-input/search-input.component'
 
-import { MessagingService } from './messaging.service'
+//import { PushNotificationService } from "./PushNotification.service";
+
 
 @NgModule({
   declarations: [
@@ -50,7 +51,7 @@ import { MessagingService } from './messaging.service'
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AppService, AngularFirestore, AuthService, MessagingService],
+  providers: [AppService, AngularFirestore, AuthService, /*PushNotificationService*/],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

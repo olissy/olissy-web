@@ -23,7 +23,7 @@ export class UserHeaderComponent implements OnInit {
   }
 
   ngOnInit(){ 
-    console.log(window.location.href)
+    //console.log(window.location.href)
   }
 
   searchProductDB_Output(productDB){
