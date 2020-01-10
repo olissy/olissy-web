@@ -1,7 +1,10 @@
 
 
 
-# Olissy
+# Olissy Delivery Pharmacy
+
+[lingua portuguesa](https://github.com/olissy/olissy-web/blob/master/README-pt-br.md)
+[language english](https://github.com/olissy/olissy-web/blob/master/README.md)
 
 ![Preview-Screens](https://github.com/olissy/olissy-web/blob/master/screens-olissy.png)
 
