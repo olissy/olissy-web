@@ -3,10 +3,10 @@
 
 # Olissy
 
-![Preview-Screens](https://github.com/caifnet/olissy/blob/master/screens-olissy.png)
+![Preview-Screens](https://github.com/olissy/olissy-web/blob/master/screens-olissy.png)
 
 If you want to take a look on all screens of the App, they are [here]
-(https://github.com/caifnet/olissy/blob/master/screens-olissy.png).
+(https://github.com/olissy/olissy-web/blob/master/screens-olissy.png).
 
 ## About this Project
 
@@ -16,7 +16,7 @@ _"Allows other retailers to advertise their products and services through the pl
 
 ** PS: ** pharmacy Marketplace was just the context I chose for this project, but all the code in this app can be reused for any business domain, so you can reuse anything within that context!
 
-**On the Media 🤩:** A [review](https://github.com/caifnet/olissy/blob/master/screens-olissy.png) about this app (pt-BR 🇧🇷).
+**On the Media 🤩:** A [review](https://github.com/olissy/olissy-web/blob/master/screens-olissy.png) about this app (pt-BR 🇧🇷).
 
 ## Why?
 
