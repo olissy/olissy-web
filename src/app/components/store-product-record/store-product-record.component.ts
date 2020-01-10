@@ -4,6 +4,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { StoreProductRecordService } from './store-product-record.service';
 import { AuthService  } from '../../AuthService';
+import { DataService } from "../../data.service";
 declare var $ :any;
 
 @Component({
@@ -74,10 +75,43 @@ export class StoreProductRecordComponent implements OnInit, OnDestroy {
 
   constructor(private comercioService:StoreProductRecordService,
               private storeProductRecordService:StoreProductRecordService,
+              private data: DataService,
               private authService: AuthService) {}
 
   public ngOnInit() {
     this.toke()
+    this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB)) 
+  }
+
+  searchProductDB(ProductDB){
+    if(ProductDB.search == "suggestion"){
+      this.searchProductDBSuggested(ProductDB.product)
+    }
+    if(ProductDB.search == "typing"){
+      this.searchProductDBTyping(ProductDB.product)
+    }
+  }
+
+  searchProductDBSuggested(ProductDB){
+    this.result.productDataBase = []
+    this.result.product = []
+    this.result.store = []
+    this.result.productDataBase.push( ProductDB )
+    this.storeProductRecordService.productSuggested(ProductDB.PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
+      this.result.product = product
+    })
+  }
+
+  searchProductDBTyping(ProductDB){
+    this.result.productDataBase = []
+    this.result.product = []
+    this.result.store = []
+    for (const index in ProductDB){
+      this.storeProductRecordService.productSuggested(ProductDB[index].PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
+        this.result.productDataBase.push( ProductDB[index] )
+        this.result.product.push( product[0] )
+      })
+    }
   }
 
   public toke(){

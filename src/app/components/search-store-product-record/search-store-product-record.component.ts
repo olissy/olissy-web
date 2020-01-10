@@ -2,16 +2,15 @@ import { Component, OnInit, OnDestroy, Output,Input, EventEmitter  } from '@angu
 import { Router } from '@angular/router'
 import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
-import { SearchInputService } from './search-input.service'
+import { SearchStoreProductRecordService } from './search-store-product-record.service'
 declare var $ :any
 
 @Component({
-  selector: 'mt-pesquisa',
-  templateUrl: './search-input.component.html',
-  styleUrls: ['./search-input.component.css']
+  selector: 'search-store-product-record',
+  templateUrl: './search-store-product-record.component.html',
+  styleUrls: ['./search-store-product-record.component.css']
 })
-
-export class SearchInputComponent implements OnInit, OnDestroy {
+export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject()
 
@@ -41,7 +40,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   public loadingSuggested:boolean = false
 
-  constructor(private pesquisaService:SearchInputService, private router: Router) {}
+  constructor(private search:SearchStoreProductRecordService, private router: Router) {}
 
   ngOnInit() {
     this.clearTextSearch()
@@ -49,8 +48,8 @@ export class SearchInputComponent implements OnInit, OnDestroy {
 
   public clearTextSearchCaracter(){
 
-    $("#input-buscar-produto").focus()
-    $('#input-buscar-produto').val('')
+    $("#search-store-product-record").focus()
+    $('#search-store-product-record').val('')
 
     this.Digite_tres_ou_mais_caracteres_total = 3
 
@@ -74,7 +73,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     
     $(".clearable").each(function() {
 
-      $("#input-buscar-produto").focus()
+      $("#search-store-product-record").focus()
       
       var $inp = $(this).find("input:text")
 
@@ -127,12 +126,12 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   public debounceTimeSuggestion(){
     var timer;
     var self = this;
-    $('#input-buscar-produto').keyup(function(){
+    $('#search-store-product-record').keyup(function(){
       clearTimeout(timer)
       
-      if ($('#input-buscar-produto').val) {
+      if ($('#search-store-product-record').val) {
         timer = setTimeout(function(){
-          var suggestion = $("#input-buscar-produto").val() 
+          var suggestion = $("#search-store-product-record").val() 
           if(this.suggestion != suggestion && suggestion.length >= 3){
             this.suggestion = suggestion
             var wordSuggestion = suggestion.split(" ")
@@ -154,9 +153,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     let cont = 1
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
-       this.pesquisaService.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-
-    
+        this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
           if(this.enter){
             if(Object.keys(resposta).length != 0){
               for (const product of resposta){
@@ -179,7 +176,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
             this.aguarde = false
             this.enter = false
             this.desculpe = false
-            $("#input-buscar-produto").blur();
+            $("#search-store-product-record").blur();
           }else{
             this.desculpe = true
             this.aguarde = false
@@ -196,7 +193,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
   }
 
   public selectSuggestion(suggestion){
-    this.router.navigate(['/'])
+    this.router.navigate(['/store-product-record'])
     this.searchProductDB_Output.emit({search:'suggestion', product:suggestion})
   }
 
@@ -204,10 +201,10 @@ export class SearchInputComponent implements OnInit, OnDestroy {
     if(this.Digite_tres_ou_mais_caracteres_total <= 0 && suggestion.length >= 2){
       this.desculpe = false
       this.aguarde = false
-      $("#input-buscar-produto").blur(); 
+      $("#search-store-product-record").blur(); 
       
       if(this.suggestedProductList.length >= 1){
-        this.router.navigate(['/'])
+        this.router.navigate(['/store-product-record'])
         this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
       }else{
         this.enter = true
@@ -216,7 +213,7 @@ export class SearchInputComponent implements OnInit, OnDestroy {
         var wordSuggestionFilter = wordSuggestion.filter(function (el) {
           return el != null && el != "";
         });
-        this.router.navigate(['/'])
+        this.router.navigate(['/store-product-record'])
         this.sendSearchSuggestion(wordSuggestionFilter)
       }
     }

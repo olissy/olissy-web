@@ -25,6 +25,10 @@ export class StoreProductRegistrationService {
     return this.db.collection('productDataBase', ref => ref.limit(LIMIT)).valueChanges()
   }
 
+  public productSuggested(PRIMARY_KEY) {
+    return this.db.collection('productDataBase', ref => ref.where('PRIMARY_KEY', "==", PRIMARY_KEY).limit(50)).valueChanges()
+  }
+
   public getPlusProduct(LIMIT){
     console.log(LIMIT)
     return this.db.collection('productDataBase', ref => ref.limit(LIMIT)).valueChanges()

@@ -23,9 +23,11 @@ import { StoreColumnComponent } from './components/store-column/store-column.com
 import { StoreHeaderComponent } from './components/store-header/store-header.component';
 import { UserColumnComponent } from './components/user-column/user-column.component';
 import { UserHeaderComponent } from './components/user-header/user-header.component';
-import { SearchInputComponent } from './components/search-input/search-input.component'
+import { SearchStoreProductRegistrationComponent } from './components/search-store-product-registration/search-store-product-registration.component';
+import { SearchStoreProductRecordComponent } from './components/search-store-product-record/search-store-product-record.component';
+import { SearchProductComponent } from './components/search-product/search-product.component'
 
-//import { PushNotificationService } from "./PushNotification.service";
+
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { SearchInputComponent } from './components/search-input/search-input.com
     StoreHeaderComponent,
     UserColumnComponent,
     UserHeaderComponent,
-    SearchInputComponent
+    SearchStoreProductRegistrationComponent,
+    SearchStoreProductRecordComponent,
+    SearchProductComponent
   ],
   imports: [
     NgxMaskModule.forRoot(),
@@ -51,7 +55,7 @@ import { SearchInputComponent } from './components/search-input/search-input.com
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AppService, AngularFirestore, AuthService, /*PushNotificationService*/],
+  providers: [AppService, AngularFirestore, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

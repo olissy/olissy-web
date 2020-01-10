@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators  }  from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { StoreProductRegistrationService } from './store-product-registration.service';
 import { AuthService  } from '../../AuthService';
-import { Observable } from 'rxjs';
+import { DataService } from "../../data.service";
 declare var $ :any;
 
 @Component({
@@ -68,11 +68,50 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
 
   constructor(private comercioService:StoreProductRegistrationService,
               private storeProductRegistrationService:StoreProductRegistrationService,
+              private data: DataService,
               private authService: AuthService) {}
 
   ngOnInit() {
     this.getToken()
     this.productDataBase()
+    this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB))
+  }
+
+  searchProductDB(ProductDB){
+    if(ProductDB.search == "suggestion"){
+      this.searchProductDBSuggested(ProductDB.product)
+    }
+    if(ProductDB.search == "typing"){
+      this.searchProductDBTyping(ProductDB.product)
+    }
+  }
+
+  searchProductDBSuggested(ProductDB){
+    this.result.productDataBase = []
+    this.result.product = []
+    this.result.store = []
+    this.result.productDataBase.push( ProductDB )
+
+    for(let index in this.result.productDataBase){
+      this.result.productDataBase[index].registration = false
+      this.result.productDataBase.push(this.result.productDataBase[index])
+    }
+
+    this.product()
+  }
+
+  searchProductDBTyping(ProductDB){
+    this.result.productDataBase = []
+    this.result.product = []
+    this.result.store = []
+    this.result.productDataBase.push( ProductDB )
+
+    for(let index in this.result.productDataBase){
+      this.result.productDataBase[index].registration = false
+      this.result.productDataBase.push(this.result.productDataBase[index])
+    }
+    
+    this.product()
   }
 
   public getToken(){

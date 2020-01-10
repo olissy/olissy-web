@@ -8,8 +8,18 @@
     </a>
     <div class="navbar-custom-menu">
       <ul class="nav navbar-nav">
-        <li routerLinkActive="active">
+        <li *ngIf="url == '/' " routerLinkActive="active">
           <a data-keyboard="false" data-toggle="modal" data-target="#displaySearch"  style="font-size: 20px;padding-top: 22px;">
+            <i class="fa fa-search"></i>
+          </a>
+        </li>
+        <li *ngIf="url == '/store-product-registration' " routerLinkActive="active">
+          <a data-keyboard="false" data-toggle="modal" data-target="#displaySearch-store-product-registration"  style="font-size: 20px;padding-top: 22px;">
+            <i class="fa fa-search"></i>
+          </a>
+        </li>
+        <li *ngIf="url == '/store-product-record' " routerLinkActive="active">
+          <a data-keyboard="false" data-toggle="modal" data-target="#displaySearch-store-product-record"  style="font-size: 20px;padding-top: 22px;">
             <i class="fa fa-search"></i>
           </a>
         </li>
@@ -81,7 +91,7 @@
         <li class="dropdown user user-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 22px;">
             <img [src]="store.storeImageUrl" class="user-image" alt="User Image" />
-            <span class="hidden-xs">
+            <span class="hidden-xs"> 
               {{ store.storeName }}
             </span>
           </a>
@@ -130,3 +140,54 @@
     </div>
   </nav>
 </header>
+<form>
+  <div class="modal fade" id="displaySearch">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-footer" style="border-top: 0px;">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+               <search-product (searchProductDB_Output)="searchProductDB_Output($event)"></search-product>
+              </div>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form>
+  <div class="modal fade" id="displaySearch-store-product-registration">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-footer" style="border-top: 0px;">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+               <search-store-product-registration (searchProductDB_Output)="searchProductDB_Output($event)"></search-store-product-registration>
+              </div>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<form>
+  <div class="modal fade" id="displaySearch-store-product-record">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-footer" style="border-top: 0px;">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+               <search-store-product-record (searchProductDB_Output)="searchProductDB_Output($event)"></search-store-product-record>
+              </div>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

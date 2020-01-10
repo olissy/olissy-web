@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 
-export class SearchInputService {
+export class SearchStoreProductRegistrationService {
 
   constructor(private http: HttpClient){}
 

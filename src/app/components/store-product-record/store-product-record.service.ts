@@ -32,6 +32,10 @@ export class StoreProductRecordService {
     return this.db.collection('productDataBase', ref => ref.where("PRIMARY_KEY", "==", PRIMARY_KEY)).valueChanges()
   }
 
+  public productSuggested(PRIMARY_KEY) {
+    return this.db.collection('product', ref => ref.where('PRIMARY_KEY_PRODUCT_DB', "==", PRIMARY_KEY).limit(50)).valueChanges()
+  }
+
 
   /** */
 

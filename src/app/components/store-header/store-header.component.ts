@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
+import { OnDestroy } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { StoreHeaderService } from './store-header.service'
 import { AppService } from '../../app.service'
 import { AuthService  } from '../../AuthService';
 import { store } from '../../interfaces';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { OnDestroy } from '@angular/core';
+import { DataService } from "../../data.service";
+declare var $ :any;
 
 @Component({
   selector: 'app-store-header',
@@ -30,15 +32,40 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
 
   public quantiyOfSales = 0
 
+  public url:string = '/'
+
   constructor(private appservice: AppService,
               private authService: AuthService,
               private storeHeaderService:StoreHeaderService,
-              private router_navigator: Router) { }
+              private router:Router,
+              private data: DataService) {
+                this.getRouter()
+              }
 
   async ngOnInit() {
+    await this.getRouter()
     await this.obterDadosToken()
     this.getComercio()
     this.getNewMessage()
+    
+  }
+
+  public getRouter(){
+    this.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe( (event:any) => {
+      if(event instanceof NavigationStart) {
+        if(event.url == '/store-product-registration' || event.url == '/store-product-record'){
+          this.url = event.url 
+        }else{
+          this.url = '/'
+        }
+      }
+    });
+  }
+
+  public searchProductDB_Output(productDB){
+    $('#displaySearch-store-product-registration').modal('hide'); 
+    $('#displaySearch-store-product-record').modal('hide'); 
+    this.data.setProductDB(productDB)
   }
 
   soundOfNotification(){
@@ -90,7 +117,7 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
   public SignOut(){
     this.appservice.router_app_componet = 'usuario'
     this.authService.logout()
-    this.router_navigator.navigateByUrl('/login')
+    this.router.navigateByUrl('/login')
   }
 
   public formatHours(d){
