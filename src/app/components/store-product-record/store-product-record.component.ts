@@ -80,10 +80,10 @@ export class StoreProductRecordComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.toke()
-    this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB)) 
+    this.data.subject.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB)) 
   }
 
-  searchProductDB(ProductDB){
+  public searchProductDB(ProductDB){
     if(ProductDB.search == "suggestion"){
       this.searchProductDBSuggested(ProductDB.product)
     }
@@ -92,26 +92,35 @@ export class StoreProductRecordComponent implements OnInit, OnDestroy {
     }
   }
 
-  searchProductDBSuggested(ProductDB){
+  public searchProductDBSuggested(ProductDB){
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
-    this.result.productDataBase.push( ProductDB )
-    this.storeProductRecordService.productSuggested(ProductDB.PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
-      this.result.product = product
-    })
+
+    this.result.productDataBase = [ProductDB]
+
+    this.productForProductDB()
   }
 
-  searchProductDBTyping(ProductDB){
+  public searchProductDBTyping(ProductDB){
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
-    for (const index in ProductDB){
-      this.storeProductRecordService.productSuggested(ProductDB[index].PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
-        this.result.productDataBase.push( ProductDB[index] )
-        this.result.product.push( product[0] )
+   
+    this.result.productDataBase = ProductDB 
+    
+    this.productForProductDB()
+  }
+
+  public productForProductDB(){
+    for(let index in this.result.productDataBase){
+      this.storeProductRecordService.productForProductDB(this.token.uid, this.result.productDataBase[index].PRIMARY_KEY).subscribe((product:any)=>{
+        if(Object.keys(product).length != 0 ){
+          this.result.product.push(product[0])
+        }
       })
     }
+    this.loading = true
   }
 
   public toke(){
@@ -248,7 +257,7 @@ export class StoreProductRecordComponent implements OnInit, OnDestroy {
     }, 3000);
   }
 
-  ngOnDestroy(){
+  public ngOnDestroy(){
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

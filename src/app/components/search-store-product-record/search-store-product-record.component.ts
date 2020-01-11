@@ -3,6 +3,7 @@ import { Router } from '@angular/router'
 import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { SearchStoreProductRecordService } from './search-store-product-record.service'
+import { AuthService  } from '../../AuthService';
 declare var $ :any
 
 @Component({
@@ -40,10 +41,14 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
 
   public loadingSuggested:boolean = false
 
-  constructor(private search:SearchStoreProductRecordService, private router: Router) {}
+  public token:any = ""
+
+  constructor(private search:SearchStoreProductRecordService, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
+    console.log('SearchStoreProductRecordComponent')
     this.clearTextSearch()
+    this.toke()
   }
 
   public clearTextSearchCaracter(){
@@ -154,33 +159,45 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
         this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          if(this.enter){
-            if(Object.keys(resposta).length != 0){
-              for (const product of resposta){
-                this.suggestedProductList.push(product)
-              }
-              this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
-              this.produto = true
-              this.aguarde = false
-              this.enter = false
-              this.desculpe = false
+          
+          if(this.enter && Object.keys(resposta).length != 0){
+      
+            for (const productDB of resposta){
+              this.search.productForProductDB(this.token.uid, productDB.PRIMARY_KEY).subscribe((product:any)=>{
+                if(Object.keys(product).length != 0 ){
+                  this.suggestedProductList.push(productDB)
+                  this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
+                }
+              })
             }
-          } 
-
-          if(Object.keys(resposta).length != 0){
             
-            for (const product of resposta) {
-              this.suggestedProductList.push(product)
-            }
             this.produto = true
             this.aguarde = false
             this.enter = false
             this.desculpe = false
-            $("#search-store-product-record").blur();
+            
           }else{
-            this.desculpe = true
-            this.aguarde = false
-            this.enter = false
+
+            if(Object.keys(resposta).length != 0){
+              
+              for(let index in resposta){
+                this.search.productForProductDB(this.token.uid, resposta[index].PRIMARY_KEY).subscribe((product:any)=>{
+                  if(Object.keys(product).length != 0 ){
+                    this.suggestedProductList.push(resposta[index])
+                  }
+                })
+              }
+
+              this.produto = true
+              this.aguarde = false
+              this.enter = false
+              this.desculpe = false
+              $("#search-store-product-record").blur();
+            }else{
+              this.desculpe = true
+              this.aguarde = false
+              this.enter = false
+            }
           }
 
           if(wordSuggestion.length == cont){
@@ -218,6 +235,14 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  
+  public toke(){
+    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe(async (res:any)=>{
+      this.token = await res
+    })
+  }
+
 
   ngOnDestroy(){
     this.unsubscribe$.next()

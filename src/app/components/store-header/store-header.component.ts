@@ -43,11 +43,19 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
               }
 
   async ngOnInit() {
-    await this.getRouter()
     await this.obterDadosToken()
     this.getComercio()
     this.getNewMessage()
-    
+    this.getRouterReloadPage()
+  }
+
+  public getRouterReloadPage(){
+    let router = window.location.href.split('/' ) 
+    if(router[3]  == 'store-product-registration' || router[3]  == 'store-product-record'){
+      this.url = `/${router[3]}` 
+    }else{
+      this.url = '/'
+    }
   }
 
   public getRouter(){

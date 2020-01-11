@@ -35,7 +35,7 @@ export class ProductComponent implements OnInit {
     this.searchEngineOptimization()
     this.haveOrderOpen()
     this.product()
-    this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB)) 
+    this.data.subject.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB)) 
   }
 
   public searchEngineOptimization(){
@@ -66,7 +66,6 @@ export class ProductComponent implements OnInit {
     this.result.productDataBase.push( ProductDB )
     this.productService.productSuggested(ProductDB.PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
       this.result.product = product
-       console.log(this.result)
        this.store()
     })
   }
@@ -79,7 +78,6 @@ export class ProductComponent implements OnInit {
       this.productService.productSuggested(ProductDB[index].PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
         this.result.productDataBase.push( ProductDB[index] )
         this.result.product.push( product[0] )
-         console.log(this.result)
          this.store()
       })
     }

@@ -43,6 +43,7 @@ export class SearchStoreProductRegistrationComponent implements OnInit, OnDestro
   constructor(private search:SearchStoreProductRegistrationService, private router: Router) {}
 
   ngOnInit() {
+    console.log('SearchStoreProductRegistrationComponent')
     this.clearTextSearch()
   }
 

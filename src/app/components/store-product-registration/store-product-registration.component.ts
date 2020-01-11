@@ -74,7 +74,7 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getToken()
     this.productDataBase()
-    this.data.getProductDB.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB))
+    this.data.subject.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB))
   }
 
   searchProductDB(ProductDB){
@@ -90,12 +90,11 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
-    this.result.productDataBase.push( ProductDB )
 
-    for(let index in this.result.productDataBase){
-      this.result.productDataBase[index].registration = false
-      this.result.productDataBase.push(this.result.productDataBase[index])
-    }
+
+    ProductDB.registration = false
+    this.result.productDataBase = [ProductDB]
+
 
     this.product()
   }
@@ -104,11 +103,12 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
-    this.result.productDataBase.push( ProductDB )
+   
+ 
+    this.result.productDataBase = ProductDB 
 
-    for(let index in this.result.productDataBase){
+    for(let index in ProductDB){
       this.result.productDataBase[index].registration = false
-      this.result.productDataBase.push(this.result.productDataBase[index])
     }
     
     this.product()

@@ -46,6 +46,11 @@ export class StoreProductRecordService {
   public product(FOREIGN_KEY, LIMIT) {
     return this.db.collection('product', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY).limit(LIMIT)).valueChanges();
   }
+
+  public productForProductDB(FOREIGN_KEY, PRIMARY_KEY) {
+    return this.db.collection('product', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)
+                                                   .where("PRIMARY_KEY_PRODUCT_DB", "==", PRIMARY_KEY)).valueChanges();
+  }
   
   public store(FOREIGN_KEY) {
     return this.db.collection('store', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges();

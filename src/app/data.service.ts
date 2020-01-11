@@ -1,18 +1,21 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
 
-  private productDBSource = new BehaviorSubject('false');
-  getProductDB = this.productDBSource.asObservable();
+  public subject = new Subject();
+
+  //private productDBSource = new BehaviorSubject('false');
+  //getProductDB = this.productDBSource.asObservable();
 
   constructor() { }
 
   setProductDB(message: any) {
-    this.productDBSource.next(message)
+    //this.productDBSource.next(message)
+    this.subject.next(message);
   }
 
 }
