@@ -28,6 +28,10 @@ export class SearchStoreProductRegistrationComponent implements OnInit, OnDestro
 
   public enter = false
 
+  public suggestion:string = "name-suggestion"
+
+  public searchRepeated:any
+
   public aguarde = false
 
   public desculpe = false
@@ -43,7 +47,6 @@ export class SearchStoreProductRegistrationComponent implements OnInit, OnDestro
   constructor(private search:SearchStoreProductRegistrationService, private router: Router) {}
 
   ngOnInit() {
-    console.log('SearchStoreProductRegistrationComponent')
     this.clearTextSearch()
   }
 
@@ -125,24 +128,37 @@ export class SearchStoreProductRegistrationComponent implements OnInit, OnDestro
   }
 
   public debounceTimeSuggestion(){
+
     var timer;
     var self = this;
+
     $('#store-product-registration').keyup(function(){
+
       clearTimeout(timer)
-      
+
       if ($('#store-product-registration').val) {
         timer = setTimeout(function(){
+
           var suggestion = $("#store-product-registration").val() 
-          if(this.suggestion != suggestion && suggestion.length >= 3){
-            this.suggestion = suggestion
+
+          if(self.suggestion != suggestion && suggestion.length >= 3){
+  
+            self.suggestion = suggestion
             var wordSuggestion = suggestion.split(" ")
 
             var wordSuggestionFilter = wordSuggestion.filter(function (el) {
               return el != null && el != "";
             });
-
             self.sendSearchSuggestion(wordSuggestionFilter)
-
+          }else if(Object.keys(self.searchRepeated).length != 0){
+            self.suggestedProductList = []
+            for (const product of self.searchRepeated){
+              self.suggestedProductList.push(product)
+            }
+            self.produto = true
+            self.aguarde = false
+            self.enter = false
+            self.desculpe = false
           }
         }, 1000);
       }
@@ -150,18 +166,22 @@ export class SearchStoreProductRegistrationComponent implements OnInit, OnDestro
   }
 
   public sendSearchSuggestion(wordSuggestion){
+
     this.suggestedProductList = []
     let cont = 1
     for (const word of wordSuggestion) {
       this.loadingSuggested = true
        this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
 
-    
           if(this.enter){
             if(Object.keys(resposta).length != 0){
+
+              this.searchRepeated = resposta
+              this.suggestedProductList = []
               for (const product of resposta){
                 this.suggestedProductList.push(product)
               }
+
               this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
               this.produto = true
               this.aguarde = false
@@ -171,7 +191,8 @@ export class SearchStoreProductRegistrationComponent implements OnInit, OnDestro
           } 
 
           if(Object.keys(resposta).length != 0){
-            
+            this.searchRepeated = resposta
+            this.suggestedProductList = []
             for (const product of resposta) {
               this.suggestedProductList.push(product)
             }

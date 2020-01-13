@@ -51,6 +51,9 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
 
   public getRouterReloadPage(){
     let router = window.location.href.split('/' ) 
+    console.log(router)
+    console.log(router[3])
+    console.log(this.url = `/${router[3]}` )
     if(router[3]  == 'store-product-registration' || router[3]  == 'store-product-record'){
       this.url = `/${router[3]}` 
     }else{
@@ -73,6 +76,7 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
   public searchProductDB_Output(productDB){
     $('#displaySearch-store-product-registration').modal('hide'); 
     $('#displaySearch-store-product-record').modal('hide'); 
+    $('#displaySearch').modal('hide'); 
     this.data.setProductDB(productDB)
   }
 
@@ -135,7 +139,6 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
   }
 
   storeOpenOrClosed(){
-    console.log( this.store )
     this.storeHeaderService.storeOpenOrClosed(this.store.PRIMARY_KEY, !this.store.storeOpenOrClosed)
   }
 

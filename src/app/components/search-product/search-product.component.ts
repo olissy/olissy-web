@@ -26,6 +26,10 @@ export class SearchProductComponent implements OnInit, OnDestroy {
 
   public digite = true
 
+  public suggestion:string = "name-suggestion"
+
+  public searchRepeated = []
+
   public enter = false
 
   public aguarde = false
@@ -132,8 +136,8 @@ export class SearchProductComponent implements OnInit, OnDestroy {
       if ($('#input-buscar-produto').val) {
         timer = setTimeout(function(){
           var suggestion = $("#input-buscar-produto").val() 
-          if(this.suggestion != suggestion && suggestion.length >= 3){
-            this.suggestion = suggestion
+          if(self.suggestion != suggestion && suggestion.length >= 3){
+            self.suggestion = suggestion
             var wordSuggestion = suggestion.split(" ")
 
             var wordSuggestionFilter = wordSuggestion.filter(function (el) {
@@ -142,6 +146,16 @@ export class SearchProductComponent implements OnInit, OnDestroy {
 
             self.sendSearchSuggestion(wordSuggestionFilter)
 
+          
+          }else if(Object.keys(self.searchRepeated).length != 0){
+            self.suggestedProductList = []
+            for (const product of self.searchRepeated){
+              self.suggestedProductList.push(product)
+            }
+            self.produto = true
+            self.aguarde = false
+            self.enter = false
+            self.desculpe = false
           }
         }, 1000);
       }
@@ -156,8 +170,9 @@ export class SearchProductComponent implements OnInit, OnDestroy {
        this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
 
     
-          if(this.enter){
-            if(Object.keys(resposta).length != 0){
+          if(this.enter && Object.keys(resposta).length != 0){
+              this.searchRepeated = resposta
+              this.suggestedProductList = []
               for (const product of resposta){
                 this.suggestedProductList.push(product)
               }
@@ -166,23 +181,28 @@ export class SearchProductComponent implements OnInit, OnDestroy {
               this.aguarde = false
               this.enter = false
               this.desculpe = false
-            }
-          } 
-
-          if(Object.keys(resposta).length != 0){
             
-            for (const product of resposta) {
-              this.suggestedProductList.push(product)
-            }
-            this.produto = true
-            this.aguarde = false
-            this.enter = false
-            this.desculpe = false
-            $("#input-buscar-produto").blur();
           }else{
-            this.desculpe = true
-            this.aguarde = false
-            this.enter = false
+            if(Object.keys(resposta).length != 0){
+              for(let index in resposta){
+                this.search.productForProductDB(resposta[index].PRIMARY_KEY).subscribe((product:any)=>{
+                  if(Object.keys(product).length != 0 ){
+                    this.searchRepeated.push(resposta[index])
+                    this.suggestedProductList = []
+                    this.suggestedProductList.push(resposta[index])
+                  }
+                })
+              }
+              this.produto = true
+              this.aguarde = false
+              this.enter = false
+              this.desculpe = false
+              $("#input-buscar-produto").blur();
+            }else{
+              this.desculpe = true
+              this.aguarde = false
+              this.enter = false
+            }
           }
 
           if(wordSuggestion.length == cont){

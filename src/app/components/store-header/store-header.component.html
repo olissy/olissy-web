@@ -141,7 +141,7 @@
   </nav>
 </header>
 <form>
-  <div class="modal fade" id="displaySearch">
+  <div *ngIf="url == '/' " class="modal fade" id="displaySearch">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
@@ -158,7 +158,7 @@
   </div>
 </form>
 <form> 
-  <div class="modal fade" id="displaySearch-store-product-registration">
+  <div *ngIf="url == '/store-product-registration' " class="modal fade" id="displaySearch-store-product-registration">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
@@ -175,7 +175,7 @@
   </div>
 </form>
 <form>
-  <div class="modal fade" id="displaySearch-store-product-record">
+  <div *ngIf="url == '/store-product-record' " class="modal fade" id="displaySearch-store-product-record">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
@@ -190,4 +190,4 @@
       </div>
     </div>
   </div>
-</form>
+</form> 

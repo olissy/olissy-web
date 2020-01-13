@@ -27,6 +27,10 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
 
   public digite = true
 
+  public suggestion:string = "name-suggestion"
+
+  public searchRepeated = []
+
   public enter = false
 
   public aguarde = false
@@ -46,7 +50,6 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
   constructor(private search:SearchStoreProductRecordService, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
-    console.log('SearchStoreProductRecordComponent')
     this.clearTextSearch()
     this.toke()
   }
@@ -137,8 +140,10 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
       if ($('#search-store-product-record').val) {
         timer = setTimeout(function(){
           var suggestion = $("#search-store-product-record").val() 
-          if(this.suggestion != suggestion && suggestion.length >= 3){
-            this.suggestion = suggestion
+          
+          if(self.suggestion != suggestion && suggestion.length >= 3){
+
+            self.suggestion = suggestion
             var wordSuggestion = suggestion.split(" ")
 
             var wordSuggestionFilter = wordSuggestion.filter(function (el) {
@@ -147,6 +152,15 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
 
             self.sendSearchSuggestion(wordSuggestionFilter)
 
+          }else if(Object.keys(self.searchRepeated).length != 0){
+            self.suggestedProductList = []
+            for (const product of self.searchRepeated){
+              self.suggestedProductList.push(product)
+            }
+            self.produto = true
+            self.aguarde = false
+            self.enter = false
+            self.desculpe = false
           }
         }, 1000);
       }
@@ -161,10 +175,11 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
         this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
           
           if(this.enter && Object.keys(resposta).length != 0){
-      
             for (const productDB of resposta){
               this.search.productForProductDB(this.token.uid, productDB.PRIMARY_KEY).subscribe((product:any)=>{
                 if(Object.keys(product).length != 0 ){
+                  this.searchRepeated.push(productDB)
+                  this.suggestedProductList = []
                   this.suggestedProductList.push(productDB)
                   this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
                 }
@@ -179,10 +194,11 @@ export class SearchStoreProductRecordComponent implements OnInit, OnDestroy {
           }else{
 
             if(Object.keys(resposta).length != 0){
-              
               for(let index in resposta){
                 this.search.productForProductDB(this.token.uid, resposta[index].PRIMARY_KEY).subscribe((product:any)=>{
                   if(Object.keys(product).length != 0 ){
+                    this.searchRepeated.push(resposta[index])
+                    this.suggestedProductList = []
                     this.suggestedProductList.push(resposta[index])
                   }
                 })
