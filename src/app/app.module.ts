@@ -25,7 +25,7 @@ import { UserColumnComponent } from './components/user-column/user-column.compon
 import { UserHeaderComponent } from './components/user-header/user-header.component';
 import { SearchStoreProductRegistrationComponent } from './components/search-store-product-registration/search-store-product-registration.component';
 import { SearchStoreProductRecordComponent } from './components/search-store-product-record/search-store-product-record.component';
-import { SearchProductComponent } from './components/search-product/search-product.component'
+import { SearchProductComponent } from './components/search-product/search-product.component';
 
 
 

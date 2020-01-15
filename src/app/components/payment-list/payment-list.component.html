@@ -1,0 +1,94 @@
+<div class="container">
+
+    <div *ngIf="paymentList.length == 0" class="notHaveOrder-main">
+        <img src="/assets/plataform/cart.png"/>
+        <span>Você não possui pagamentos</span>
+    </div>
+
+    <div *ngFor="let payment of paymentList" style="margin-top: 10px">
+      <a *ngIf="payment.statusPayment == 'open' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+        <div class="info-box">
+          <span class="info-box-icon info-box-icon-b info-box-icon-open">
+             <b>Pagamento</b>
+             <br>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text info-box-text-open">
+                <b>Aberto</b>
+            </span>
+            <span class="info-box-number">
+                {{ payment.value }}
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <a *ngIf="payment.statusPayment == 'inPayment' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+        <div class="info-box">
+          <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
+             <b>Vencimento</b>
+             <br>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text info-box-text-inPayment">
+                <b>Em Pagamento</b>
+            </span>
+            <span class="info-box-number">
+                {{ payment.value }}
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <a *ngIf="payment.statusPayment == 'delay' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+        <div class="info-box">
+          <span class="info-box-icon info-box-icon-b info-box-icon-delay">
+             <b>Atraso</b>
+             <br>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text info-box-text-delay">
+                <b>Em Atraso</b>
+            </span>
+            <span class="info-box-number">
+                {{ payment.value }}
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <a *ngIf="payment.statusPayment == 'paid' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+        <div class="info-box">
+          <span class="info-box-icon info-box-icon-b info-box-icon-paid">
+             <b>Pagamento</b>
+             <br>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text info-box-text-paid">
+                <b>Pagamento recebido</b>
+            </span>
+            <span class="info-box-number">
+                {{ payment.value }}
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  <div *ngIf="loading && paymentList.length != 0" class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;">
+    <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusPayment()">
+      Carregar mais
+    </button>
+  </div>
+
+  <div class="row" *ngIf="!loading && paymentList.length != 0">
+    <div class="login-logo">
+      <i class="fa fa-refresh fa-spin fa-2x"></i>
+    </div>
+  </div>
+
+</div> 

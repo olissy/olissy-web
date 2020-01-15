@@ -154,7 +154,17 @@ export const ROUTES: Routes = [
   {
     path: 'business-rule',
     loadChildren:'./components/business-rule/business-rule.module#BusinessRuleModule'
+  },
+  {
+    path: 'payment-list',
+    loadChildren:'./components/payment-list/payment-list.module#PaymentListModule'
+  },
+  {
+    path: 'payment-detail/:id',
+    loadChildren:'./components/payment-detail/payment-detail.module#PaymentDetailModule'
   }
+
+
 
 ];
 
