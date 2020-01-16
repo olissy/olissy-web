@@ -162,10 +162,19 @@ export const ROUTES: Routes = [
   {
     path: 'payment-detail/:id',
     loadChildren:'./components/payment-detail/payment-detail.module#PaymentDetailModule'
+  },
+  {
+    path: 'admin-payment',
+    loadChildren:'./components/admin-payment/admin-payment.module#AdminPaymentModule'
+  },
+  {
+    path: 'admin-payment-list/:id',
+    loadChildren:'./components/admin-payment-list/admin-payment-list.module#AdminPaymentListModule'
+  },
+  {
+    path: 'admin-payment-list-detail/:id',
+    loadChildren:'./components/admin-payment-list-detail/admin-payment-list-detail.module#AdminPaymentListDetailModule'
   }
-
-
-
 ];
 
 @NgModule({

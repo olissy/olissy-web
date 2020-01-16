@@ -29,7 +29,6 @@ import { SearchProductComponent } from './components/search-product/search-produ
 
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
