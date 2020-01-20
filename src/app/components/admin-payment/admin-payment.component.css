@@ -24,6 +24,17 @@ a:hover{
     color: rgb(15, 139, 21)
 }
 
+.btn-primary  {
+  color: #fff;
+  background-color: #c71581;
+  border-color: #b31374;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #c71581;
+  border-color: #b31374;
+}
 
 .info-box-icon{
     border-top-left-radius: 2px;
@@ -81,7 +92,7 @@ a:hover{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-around;
+    justify-content: space-between;
   }
   
   .info-box-number {

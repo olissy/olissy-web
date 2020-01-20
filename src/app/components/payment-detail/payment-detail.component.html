@@ -35,9 +35,9 @@
         </address>
       </div>
       <div class="col-sm-4  paymentDetail-col">
-        <b>Data da Abertura:</b> {{  formatterDateForPayment(paymentDetail.dataOpening) }}<br />
-        <b>Data do Pagamento:</b> {{  formatterDateForPayment(paymentDetail.dataPayment) }}<br />
-        <b>Data de vencimento:</b> {{  formatterDateForPayment(paymentDetail.dataDue) }}
+        <b>Data da Abertura:</b> {{  formatterDateForPayment(paymentDetail.openPaymentDay) }}<br />
+        <b>Data do Pagamento:</b> {{  formatterDateForPayment(paymentDetail.inPaymentDay) }}<br />
+        <b>Data de vencimento:</b> {{  formatterDateForPayment(paymentDetail.latePaymentDay) }}
       </div>
     </div>
     <div class="row">
@@ -68,27 +68,29 @@
     <div class="row" style="margin-bottom: 40px;">
       <div class="col-md-6 col-xs-12">
         <p class="lead">Observações:</p>
-        <p *ngIf="paymentDetail.statusPayment == 'open' " class="text-muted well well-sm no-shadow info-box-icon-open" style="margin-top: 10px;">
+        <p *ngIf="paymentDetail.statusPayment == 'openPayment' " class="text-muted well well-sm no-shadow info-box-icon-open" style="margin-top: 10px;">
           # Este pagamento esta em <b> aberto</b><br />
-          # Data de pagamento : <b> {{  formatterDateForPayment(paymentDetail.dataPayment) }}</b><br />
+          # Data da abertura : <b> {{  formatterDateForPayment(paymentDetail.openPaymentDay) }}</b><br />
+          # Data do Dia : <b> {{  formatterDateForPayment(today()) }}</b><br />
+          # Data de fechamento : <b> {{  formatterDateForPayment(paymentDetail.inPaymentDay) }}</b><br />
           # valor do pagamento <b>{{  paymentDetail.totalPayment | currency: "BRL" }}</b>
         </p>
         <p *ngIf="paymentDetail.statusPayment == 'inPayment' " class="text-muted well well-sm no-shadow info-box-icon-inPayment" style="margin-top: 10px;">
           # Este pagamento esta liberado<br />
-          # Data de pagamento : <b> {{  formatterDateForPayment(paymentDetail.dataPayment) }}</b><br />
-          # Data de vencimento : <b> {{  formatterDateForPayment(paymentDetail.dataDue) }}</b><br />
+          # Data de pagamento : <b> {{  formatterDateForPayment(paymentDetail.inPaymentDay) }}</b><br />
+          # Data de vencimento : <b> {{  formatterDateForPayment(paymentDetail.latePaymentDay) }}</b><br />
         </p>
-        <p *ngIf="paymentDetail.statusPayment == 'paid' " class="text-muted well well-sm no-shadow info-box-icon-paid" style="margin-top: 10px;">
+        <p *ngIf="paymentDetail.statusPayment == 'receivedPayment' " class="text-muted well well-sm no-shadow info-box-icon-paid" style="margin-top: 10px;">
           # Este pagamento foi <b>PAGO</b><br />
-          # Data do pagamento : <b> {{  formatterDateForPayment(paymentDetail.paid) }}</b><br />
+          # Data do pagamento : <b> {{  formatterDateForPayment(paymentDetail.receivedPaymentDay) }}</b><br />
           # valor do pagamento <b>{{  paymentDetail.totalPayment | currency: "BRL" }}</b>
         </p>
-        <p *ngIf="paymentDetail.statusPayment == 'delay' " class="text-muted well well-sm no-shadow info-box-icon-delay" style="margin-top: 10px;">
+        <p *ngIf="paymentDetail.statusPayment == 'latePayment' " class="text-muted well well-sm no-shadow info-box-icon-delay" style="margin-top: 10px;">
           # Este pagamento esta em <b>ATRASO</b><br />
-          # Data de vencimento : <b> {{  formatterDateForPayment(paymentDetail.dataDue) }}</b><br />
+          # Data de vencimento : <b> {{  formatterDateForPayment(paymentDetail.latePaymentDay) }}</b><br />
         </p>
       </div>
-      <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'delay'" class="col-md-6 col-xs-12">
+      <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'latePayment'" class="col-md-6 col-xs-12">
         <p class="lead">Montantes</p>
         <div class="table-responsive">
           <table class="table">
@@ -107,7 +109,7 @@
               </tr>
               <tr>
                 <th>vencimento:</th>
-                <td class="text-right">{{ formatterDateForPayment(paymentDetail.dataDue) }}</td>
+                <td class="text-right">{{ formatterDateForPayment(paymentDetail.latePaymentDay) }}</td>
               </tr>
               <tr>
                 <th>Total:</th>
@@ -124,7 +126,7 @@
         <a [routerLink]="['/ paymentDetail-list']" class="btn btn-default pull-left">
           <i class="fa fa-reply"></i> voltar
         </a>
-        <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'delay'" >
+        <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'latePayment'" >
           <button type="button" (click)="print()" class="btn btn-success pull-right">
             <i class="fa fa-print"></i> Imprimir
           </button>

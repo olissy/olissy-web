@@ -7,10 +7,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminPaymentListDetailComponent implements OnInit {
   
-  public paymentDetail = {
+  public paymentDetail =   {
     PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-    storeName :"ultrafarma",
     statusPayment:"inPayment",
+    storeName :"ultrafarma",
+    imageUrlStore:"/assets/plataform/avatar.png",
+    openPaymentDay:"Wed Jan 01 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
+    inPaymentDay:"Fri Jan 31 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
+    receivedPaymentDay:"Fri Feb 07 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
+    latePaymentDay:"Sat Feb 15 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
+    totalPayment:"945.25",
     storeCity :"guarapari",
     storeStreet :"rua itapemirim",
     storeNeighborhood :"praia do morro",
@@ -18,7 +24,6 @@ export class AdminPaymentListDetailComponent implements OnInit {
     storeEmail :"ultrafarma@mail.com",
     plataformaName :"olissy",
     plataformaCity :"vitoria",
-    totalPayment:"943.90",
     bank:"Bradesco",
     agency:"0005-13",
     account:"210393029",
@@ -26,71 +31,164 @@ export class AdminPaymentListDetailComponent implements OnInit {
     plataformaNeighborhood :"praia da costa",
     plataformaCellPhone :"27 33629009",
     plataformaEmail :"contato@olissy.com",
-    dataOpening:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-    dataPayment:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-    dataDue:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-    paid:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
     client:[
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
         name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maikelly bastista ramos",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "gebson bastista ramos",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "larisa ramos",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "paulo bastista",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "kaio",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "jao",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "vitoria",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maria",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "saulo",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "ricardo",
+        name: "maeli bastista ramos",
         price:"0.25"
       },
       {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
         data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "pedro",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
+        price:"0.25"
+      },
+      {
+        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
+        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
+        name: "maeli bastista ramos",
         price:"0.25"
       }
+      
     ]
   }
 
@@ -131,6 +229,10 @@ export class AdminPaymentListDetailComponent implements OnInit {
         this.listOrderClient.start = this.listOrderClient.totalOfOrders - 1
       }
     }
+  }
+
+  public registerPayment(){
+    
   }
 
 }

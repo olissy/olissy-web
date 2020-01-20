@@ -1,15 +1,17 @@
-<div class="div-start-new-open center">
-    <button type="button" (click)="startNewOpen()" class="btn btn-success btn-start-new-open">
-        Iniciar Nova Abertura
-    </button>
-</div>
-
 <div class="container">
-    <div style="margin-top: 10px">
-        <a  [routerLink]="['/admin-payment-list', '123456' ]">
-          <div class="info-box">
+
+    <div class="div-start-new-open center">
+        <button type="button" (click)="startNewOpen()" class="btn btn-success btn-start-new-open">
+            Iniciar Nova Abertura
+        </button>
+    </div>
+    
+    
+    <div *ngFor="let payment of paymentList" style="margin-top: 10px">
+        <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list', '123456' ]">
+            <div class="info-box">
             <span class="info-box-icon info-box-icon-b info-box-icon-open">
-               <b style=" font-size: 12px; ">R$95.845.25</b>
+                <b style=" font-size: 12px; ">{{ payment.value }}</b>
             </span>
             <div class="info-box-content">
                 <div class="box-start">
@@ -17,86 +19,98 @@
                         <b>Aberto</b>
                     </span>
                     <span class="info-box-number">
-                        01/02/2020 
+                        {{ formatterDateForPayment(payment.openPaymentDay) }}
                         <br>
-                        01/03/2020 
+                        {{ formatterDateForPayment(payment.inPaymentDay) }} 
                     </span>
                 </div>
                 <div class="box-end">
                     <span class="info-box-number">
-                        <b class="info-box-text-open">Aberto:</b> 4.894
+                        <b class="info-box-text-open">Aberto:</b> {{ payment.openPaymentStore }}
                         <br>
-                        <b class="info-box-text-paid">Pagos:</b> 0
+                        <b class="info-box-text-paid">Pagos:</b> {{ payment.receivedPaymentStore }}
                         <br>
-                        <b class="info-box-text-inPayment">Em pagamento:</b> 0
+                        <b class="info-box-text-inPayment">Em pagamento:</b> {{ payment.InPaymentStore }}
                         <br>
-                        <b class="info-box-text-delay">Atrazados:</b> 0
+                        <b class="info-box-text-delay">Atrazados:</b> {{ payment.latePaymentStore }}
                     </span>
                 </div>
             </div>
-          </div>
-        </a>
-
-        <a  [routerLink]="['/admin-payment-list', '123456' ]">
-            <div class="info-box">
-              <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
-                 <b style=" font-size: 12px; ">R$95.845.25</b>
-              </span>
-              <div class="info-box-content">
-                  <div class="box-start">
-                      <span class="info-box-text">
-                          <b>Em pagamento</b>
-                      </span>
-                      <span class="info-box-number">
-                          01/02/2020 
-                          <br>
-                          01/03/2020 
-                      </span>
-                  </div>
-                  <div class="box-end">
-                    <span class="info-box-number">
-                        <b class="info-box-text-open">Aberto:</b> 15.445
-                        <br>
-                        <b class="info-box-text-paid">Pagos:</b> 9.846
-                        <br>
-                        <b class="info-box-text-inPayment">Em pagamento:</b> 5.609
-                        <br>
-                        <b class="info-box-text-delay">Atrazados:</b> 0
-                    </span>
-                </div>
-              </div>
             </div>
         </a>
 
-        <a  [routerLink]="['/admin-payment-list', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'inPayment' " [routerLink]="['/admin-payment-list', '123456' ]">
             <div class="info-box">
-              <span class="info-box-icon info-box-icon-b info-box-icon-paid">
-                 <b style=" font-size: 12px; ">R$95.845.25</b>
-              </span>
-              <div class="info-box-content">
-                  <div class="box-start">
-                      <span class="info-box-text">
-                          <b>Feixado</b>
-                      </span>
-                      <span class="info-box-number">
-                          01/02/2020 
-                          <br>
-                          01/03/2020 
-                      </span>
-                  </div>
-                  <div class="box-end">
+                <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
+                    <b style=" font-size: 12px; ">R$95.845.25</b>
+                </span>
+                <div class="info-box-content">
+                    <div class="box-start">
+                        <span class="info-box-text">
+                            <b>Em pagamento</b>
+                        </span>
+                        <span class="info-box-number">
+                            {{ formatterDateForPayment(payment.inPaymentDay) }}
+                            <br>
+                            {{ formatterDateForPayment(payment.latePaymentDay) }} 
+                        </span>
+                    </div>
+                    <div class="box-end">
                     <span class="info-box-number">
-                        <b class="info-box-text-open">Aberto:</b> 15.445
+                        <b class="info-box-text-open">Aberto:</b> {{ payment.openPaymentStore }}
                         <br>
-                        <b class="info-box-text-paid">Pagos:</b> 9.846
+                        <b class="info-box-text-paid">Pagos:</b> {{ payment.receivedPaymentStore }}
                         <br>
-                        <b class="info-box-text-inPayment">Em pagamento:</b> 0
+                        <b class="info-box-text-inPayment">Em pagamento:</b> {{ payment.InPaymentStore }}
                         <br>
-                        <b class="info-box-text-delay">Atrazados:</b> 5.609
+                        <b class="info-box-text-delay">Atrazados:</b> {{ payment.latePaymentStore }}
                     </span>
                 </div>
-              </div>
+                </div>
             </div>
         </a>
+
+        <a *ngIf="payment.statusPayment == 'latePayment' " [routerLink]="['/admin-payment-list', '123456' ]">
+            <div class="info-box">
+                <span class="info-box-icon info-box-icon-b info-box-icon-paid">
+                    <b style=" font-size: 12px; ">R$95.845.25</b>
+                </span>
+                <div class="info-box-content">
+                    <div class="box-start">
+                        <span class="info-box-text">
+                            <b>Fechado</b>
+                        </span>
+                        <span class="info-box-number">
+                            {{ formatterDateForPayment(payment.openPaymentDay) }}
+                            <br>
+                            {{ formatterDateForPayment(payment.inPaymentDay) }} 
+                        </span>
+                    </div>
+                    <div class="box-end">
+                    <span class="info-box-number">
+                        <b class="info-box-text-open">Aberto:</b> {{ payment.openPaymentStore }}
+                        <br>
+                        <b class="info-box-text-paid">Pagos:</b> {{ payment.receivedPaymentStore }}
+                        <br>
+                        <b class="info-box-text-inPayment">Em pagamento:</b> {{ payment.InPaymentStore }}
+                        <br>
+                        <b class="info-box-text-delay">Atrazados:</b> {{ payment.latePaymentStore }}
+                    </span>
+                </div>
+                </div>
+            </div>
+        </a>
+    </div>
+ 
+    <div *ngIf="loading && paymentList.length != 0" class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;">
+        <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusPayment()">
+          Carregar mais
+        </button>
+    </div>
+    
+    <div class="row" *ngIf="!loading && paymentList.length != 0">
+        <div class="login-logo">
+          <i class="fa fa-refresh fa-spin fa-2x"></i>
+        </div>
     </div>
 </div>

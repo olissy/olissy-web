@@ -6,19 +6,19 @@
     </div>
 
     <div *ngFor="let payment of paymentList" style="margin-top: 10px">
-      <a *ngIf="payment.statusPayment == 'open' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+      <a *ngIf="payment.statusPayment == 'openPayment' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-open">
-             <b>Pagamento</b>
+             <b>aberto</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.openPaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-open">
                 <b>Aberto</b>
             </span>
             <span class="info-box-number">
-                {{ payment.value }}
+                {{ payment.totalPayment }}
             </span>
           </div>
         </div>
@@ -27,52 +27,52 @@
       <a *ngIf="payment.statusPayment == 'inPayment' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
-             <b>Vencimento</b>
+             <b>Pagamento</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.inPaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-inPayment">
                 <b>Em Pagamento</b>
             </span>
             <span class="info-box-number">
-                {{ payment.value }}
+                {{ payment.totalPayment }}
             </span>
           </div>
         </div>
       </a>
 
-      <a *ngIf="payment.statusPayment == 'delay' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+      <a *ngIf="payment.statusPayment == 'latePayment' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-delay">
              <b>Atraso</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.latePaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-delay">
                 <b>Em Atraso</b>
             </span>
             <span class="info-box-number">
-                {{ payment.value }}
+                {{ payment.totalPayment }}
             </span>
           </div>
         </div>
       </a>
 
-      <a *ngIf="payment.statusPayment == 'paid' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+      <a *ngIf="payment.statusPayment == 'receivedPayment' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-paid">
-             <b>Pagamento</b>
+             <b>Recebimento</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.dataPayment) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.receivedPaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-paid">
                 <b>Pagamento recebido</b>
             </span>
             <span class="info-box-number">
-                {{ payment.value }}
+                {{ payment.totalPayment }}
             </span>
           </div>
         </div>

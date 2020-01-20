@@ -1,18 +1,18 @@
 
 <div class="container">
-    <div style="margin-top: 10px">
-        <a  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+    <div *ngFor="let payment of paymentList"  style="margin-top: 10px">
+        <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list-detail', '123456' ]">
           <div class="info-box">
             <span class="info-box-icon">
-                <img class="box-img-detail" src="/assets/plataform/avatar.png"/>
+                <img class="box-img-detail" [src]="payment.imageUrlStore"/>
             </span>
             <div class="info-box-content">
                 <div class="box-start">
                     <span class="info-box-text">
-                        <b>Utrafarma</b>
+                        <b>{{ payment.storeName }}</b>
                     </span>
                     <span class="info-box-number">
-                        R$945.25
+                        {{ payment.totalPayment }}
                     </span>
                 </div>
                 <div class="box-end">
@@ -24,18 +24,18 @@
           </div>
         </a>
 
-        <a  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'inPayment' "  [routerLink]="['/admin-payment-list-detail', '123456' ]">
             <div class="info-box">
                 <span class="info-box-icon">
-                    <img class="box-img-detail" src="/assets/plataform/avatar.png"/>
+                    <img class="box-img-detail" [src]="payment.imageUrlStore"/>
                 </span>
               <div class="info-box-content">
                 <div class="box-start">
                     <span class="info-box-text">
-                        <b>Utrafarma</b>
+                        <b>{{ payment.storeName }}</b>
                     </span>
                     <span class="info-box-number">
-                        R$945.25
+                        {{ payment.totalPayment }}
                     </span>
                 </div>
                   <div class="box-end">
@@ -47,18 +47,18 @@
             </div>
         </a>
 
-        <a  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'latePayment' "  [routerLink]="['/admin-payment-list-detail', '123456' ]">
             <div class="info-box">
                 <span class="info-box-icon">
-                    <img class="box-img-detail" src="/assets/plataform/avatar.png"/>
+                    <img class="box-img-detail" [src]="payment.imageUrlStore"/>
                 </span>
               <div class="info-box-content">
                 <div class="box-start">
                     <span class="info-box-text">
-                        <b>Utrafarma</b>
+                        <b>{{ payment.storeName }}</b>
                     </span>
                     <span class="info-box-number">
-                        R$945.25
+                        {{ payment.totalPayment }}
                     </span>
                 </div>
                   <div class="box-end">
@@ -70,18 +70,18 @@
             </div>
         </a>
 
-        <a  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'receivedPayment' "  [routerLink]="['/admin-payment-list-detail', '123456' ]">
             <div class="info-box">
                 <span class="info-box-icon">
-                    <img class="box-img-detail" src="/assets/plataform/avatar.png"/>
+                    <img class="box-img-detail" [src]="payment.imageUrlStore"/>
                 </span>
               <div class="info-box-content">
                 <div class="box-start">
                     <span class="info-box-text">
-                        <b>Utrafarma</b>
+                        <b>{{ payment.storeName }}</b>
                     </span>
                     <span class="info-box-number">
-                        R$945.25
+                        {{ payment.totalPayment }}
                     </span>
                 </div>
                   <div class="box-end">
@@ -92,5 +92,16 @@
               </div>
             </div>
         </a>
+    </div>
+    <div *ngIf="loading && paymentList.length != 0" class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;">
+        <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusPayment()">
+          Carregar mais
+        </button>
+    </div>
+    
+    <div class="row" *ngIf="!loading && paymentList.length != 0">
+        <div class="login-logo">
+          <i class="fa fa-refresh fa-spin fa-2x"></i>
+        </div>
     </div>
 </div>
