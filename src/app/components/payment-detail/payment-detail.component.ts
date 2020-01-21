@@ -216,8 +216,12 @@ export class PaymentDetailComponent implements OnInit {
     return formatter
   }
 
-  today(){
+  public today(){
     return new Date()
+  }
+
+  public print(){
+    
   }
 
   public showMoreOrders(){

@@ -216,6 +216,10 @@ export class AdminPaymentListDetailComponent implements OnInit {
     return formatter
   }
 
+  public today(){
+    return new Date()
+  }
+
   public showMoreOrders(){
     if(this.listOrderClient.start <= this.listOrderClient.totalOfOrders){
       this.listOrderClient.start = this.listOrderClient.start + 2

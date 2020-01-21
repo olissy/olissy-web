@@ -1,10 +1,12 @@
 <div class="container">
 
     <div class="div-start-new-open center">
-        <button type="button" (click)="startNewOpen()" class="btn btn-success btn-start-new-open">
-            Iniciar Nova Abertura
+        <button type="button"class="btn btn-success btn-start-new-open">
+            <p>{{ clock.data }} - {{ clock.time }}</p>
         </button>
     </div>
+
+    
     
     
     <div *ngFor="let payment of paymentList" style="margin-top: 10px">
@@ -21,7 +23,7 @@
                     <span class="info-box-number">
                         {{ formatterDateForPayment(payment.openPaymentDay) }}
                         <br>
-                        {{ formatterDateForPayment(payment.inPaymentDay) }} 
+                        {{ formatterDateForPayment(payment.closedPaymentDay) }} 
                     </span>
                 </div>
                 <div class="box-end">
@@ -83,7 +85,7 @@
                         <span class="info-box-number">
                             {{ formatterDateForPayment(payment.openPaymentDay) }}
                             <br>
-                            {{ formatterDateForPayment(payment.inPaymentDay) }} 
+                            {{ formatterDateForPayment(payment.closedPaymentDay) }} 
                         </span>
                     </div>
                     <div class="box-end">
