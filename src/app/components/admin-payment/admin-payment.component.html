@@ -1,14 +1,11 @@
 <div class="container">
 
     <div class="div-start-new-open center">
-        <button type="button"class="btn btn-success btn-start-new-open">
-            <p>{{ clock.data }} - {{ clock.time }}</p>
+        <button type="button" class="btn btn-success btn-start-new-open">
+            {{ clock.data }} - {{ clock.time }}
         </button>
     </div>
 
-    
-    
-    
     <div *ngFor="let payment of paymentList" style="margin-top: 10px">
         <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list', '123456' ]">
             <div class="info-box">
@@ -44,7 +41,7 @@
         <a *ngIf="payment.statusPayment == 'inPayment' " [routerLink]="['/admin-payment-list', '123456' ]">
             <div class="info-box">
                 <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
-                    <b style=" font-size: 12px; ">R$95.845.25</b>
+                    <b style=" font-size: 12px; ">{{ payment.value }}</b>
                 </span>
                 <div class="info-box-content">
                     <div class="box-start">
@@ -75,7 +72,7 @@
         <a *ngIf="payment.statusPayment == 'latePayment' " [routerLink]="['/admin-payment-list', '123456' ]">
             <div class="info-box">
                 <span class="info-box-icon info-box-icon-b info-box-icon-paid">
-                    <b style=" font-size: 12px; ">R$95.845.25</b>
+                    <b style=" font-size: 12px; ">{{ payment.value }}</b>
                 </span>
                 <div class="info-box-content">
                     <div class="box-start">

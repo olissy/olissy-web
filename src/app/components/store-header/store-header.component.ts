@@ -51,9 +51,6 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
 
   public getRouterReloadPage(){
     let router = window.location.href.split('/' ) 
-    console.log(router)
-    console.log(router[3])
-    console.log(this.url = `/${router[3]}` )
     if(router[3]  == 'store-product-registration' || router[3]  == 'store-product-record'){
       this.url = `/${router[3]}` 
     }else{

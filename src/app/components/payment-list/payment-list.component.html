@@ -6,7 +6,7 @@
     </div>
 
     <div *ngFor="let payment of paymentList" style="margin-top: 10px">
-      <a *ngIf="payment.statusPayment == 'openPayment' "  [routerLink]="['/payment-detail', payment.PRIMARY_KEY]">
+      <a *ngIf="payment.statusPayment == 'openPayment' "  [routerLink]="['/payment-detail', payment?.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-open">
              <b>aberto</b>

@@ -14,7 +14,8 @@ export class AdminPaymentComponent implements OnInit {
     time:"00:00:00"
   }
 
-  public createNewPaymentStatus:boolean = true
+  public createOnePaymentByDate:boolean = true
+  public lateOnePaymentByDate:boolean = true
 
   public paymentList:any = []
 
@@ -41,6 +42,7 @@ export class AdminPaymentComponent implements OnInit {
     setInterval(() => {
       this.setClock()
       this.createNewPayment()
+      this.periodPayment()
     },1000)
   }
 
@@ -53,17 +55,33 @@ export class AdminPaymentComponent implements OnInit {
   }
 
   public createNewPayment(){
-    if(Object.keys(this.paymentList[0].closedPaymentDay).length != 0){
-      if(new Date() > new Date(this.paymentList[0].closedPaymentDay) && this.createNewPaymentStatus){
-        this.createNewPaymentStatus = false
+    if(Object.keys(this.paymentList).length != 0){
+      if(new Date() > new Date(this.paymentList[0].closedPaymentDay) && this.createOnePaymentByDate && this.paymentList[0].statusPayment == "openPayment"){
+        this.createOnePaymentByDate = false
+        this.setFormPayment()
         this.adminPaymentService.updateStatusPayment(this.paymentList[0].PRIMARY_KEY, {statusPayment:'inPayment'}).then((payment:any)=>{
           this.adminPaymentService.setAdminPayment(this.formPayment.value).then((payment:any)=>{
             console.log(payment)
-            this.createNewPaymentStatus = true
+            this.createOnePaymentByDate = true
           })
         })
       }
     }
+  }
+
+  public periodPayment(){
+    if(Object.keys(this.paymentList).length != 0){
+      if(new Date() > new Date(this.paymentList[1].latePaymentDay) && this.lateOnePaymentByDate && this.paymentList[1].statusPayment == "inPayment"){
+        this.lateOnePaymentByDate = false
+        this.adminPaymentService.updateStatusPayment(this.paymentList[1].PRIMARY_KEY, {statusPayment:'latePayment'}).then((payment:any)=>{
+          this.lateOnePaymentByDate = false
+        })
+      }
+    }
+  }
+
+  startPrimaryPayment(){
+    this.adminPaymentService.setAdminPayment(this.formPayment.value)
   }
 
   public setFormPayment(){

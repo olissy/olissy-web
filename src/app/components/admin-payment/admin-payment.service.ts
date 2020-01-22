@@ -17,14 +17,10 @@ export class AdminPaymentService {
   }
 
   getAdminPayment(){
-    return this.db.collection('adminPayment', ref => ref.orderBy("indexDay").limit(5)).valueChanges()
+    return this.db.collection('adminPayment', ref => ref.orderBy("indexDay", "desc").limit(10)).valueChanges()
   }
 
-  public async updateStatusPayment(pk:string, data:any) {
-    var res:any = false
-    await this.db.collection('adminPayment').doc(pk).update(data).then( r =>{
-      res = r
-    })
-    return res
+  public async updateStatusPayment(pk:string, data:any){
+    return await this.db.collection('adminPayment').doc(pk).update(data)
   }
 }

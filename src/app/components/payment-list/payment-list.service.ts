@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/firestore";
-import { firebase } from '@firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +7,24 @@ import { firebase } from '@firebase/app';
 export class PaymentListService {
 
   constructor(private db: AngularFirestore){}
+
+  public getAdminPayment(){
+    return this.db.collection('adminPayment', ref => ref.orderBy("indexDay", "desc").limit(1)).valueChanges()
+  }
+
+  public getByFOREIGN_KEY(collection, FOREIGN_KEY){
+    return this.db.collection(collection, ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
+  }
+
+  async setClientPayment(payment){
+    return await this.db.collection('clientPayment').add(payment).then(res => {
+      this.db.collection('clientPayment').doc(res.id).update({ PRIMARY_KEY:res.id })
+    })
+  }
+
+  public getClientPayment(){
+    return this.db.collection('clientPayment', ref => ref.orderBy("indexDay", "desc").limit(1)).valueChanges()
+  }
 
   /*
 
