@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs'; 
+import { PaymentDetailService } from './payment-detail.service'
+import { AuthService  } from '../../AuthService';
 
 @Component({
   selector: 'app-payment-detail',
@@ -7,189 +12,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PaymentDetailComponent implements OnInit {
 
+  public PRIMARY_KEY_INVOICE:any = false
+
+  public loadingPayment:boolean = true
+
+  private unsubscribe$ = new Subject();
+
   public paymentDetail =   {
-    PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-    statusPayment:"receivedPayment",
-    storeName :"ultrafarma",
-    imageUrlStore:"/assets/plataform/avatar.png",
-    openPaymentDay:"Wed Jan 01 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
-    inPaymentDay:"Fri Jan 31 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
-    receivedPaymentDay:"Fri Feb 07 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
-    latePaymentDay:"Sat Feb 15 2020 21:00:00 GMT-0300 (Horário Padrão de Brasília)",
-    totalPayment:"945.25",
-    storeCity :"guarapari",
-    storeStreet :"rua itapemirim",
-    storeNeighborhood :"praia do morro",
-    storeCellPhone :"27 9 98292939",
-    storeEmail :"ultrafarma@mail.com",
-    plataformaName :"olissy",
-    plataformaCity :"vitoria",
-    bank:"Bradesco",
-    agency:"0005-13",
-    account:"210393029",
-    plataformaStreet :"av. princesa isabel",
-    plataformaNeighborhood :"praia da costa",
-    plataformaCellPhone :"27 33629009",
-    plataformaEmail :"contato@olissy.com",
-    client:[
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      },
-      {
-        PRIMARY_KEY:"dfFF567BVNnnfk95Bt",
-        data:"Tue Jan 14 2020 14:03:46 GMT-0300 (Horário Padrão de Brasília)",
-        name: "maeli bastista ramos",
-        price:"0.25"
-      }
-      
-    ]
+    PRIMARY_KEY:"",
+    statusPayment:"",
+    storeName :"",
+    imageUrlStore:"",
+    openPaymentDay:"",
+    inPaymentDay:"",
+    receivedPaymentDay:"",
+    latePaymentDay:"",
+    totalPayment:"",
+    storeCity :"",
+    storeStreet :"",
+    storeNeighborhood :"",
+    storeCellPhone :"",
+    storeEmail :"",
+    plataformaName :"",
+    plataformaCity :"",
+    bank:"",
+    agency:"",
+    account:"",
+    plataformaStreet :"",
+    plataformaNeighborhood :"",
+    plataformaCellPhone :"",
+    plataformaEmail :"c",
+    client:[]
   }
 
   public listOrderClient = {
@@ -197,11 +50,18 @@ export class PaymentDetailComponent implements OnInit {
     totalOfOrders:0,
     orders:[]
   }
-  constructor() { }
+  constructor(private authService: AuthService, private paymentDetailService:PaymentDetailService, private route:ActivatedRoute) {  }
 
   ngOnInit() {
-    this.listOrderClient.totalOfOrders = this.paymentDetail.client.length
-    this.showMoreOrders()
+    this.PRIMARY_KEY_INVOICE = this.route.snapshot.params['id']
+    if(this.PRIMARY_KEY_INVOICE){
+      this.paymentDetailService.getStorePayment(this.PRIMARY_KEY_INVOICE).subscribe((payment:any)=>{
+        this.paymentDetail = payment[0]
+        this.listOrderClient.totalOfOrders = this.paymentDetail.client.length
+        this.showMoreOrders()
+        this.loadingPayment = false
+      })
+    }
   }
 
   public formatterDateForPayment(date){
@@ -237,6 +97,11 @@ export class PaymentDetailComponent implements OnInit {
         this.listOrderClient.start = this.listOrderClient.totalOfOrders - 1
       }
     }
+  }
+
+  ngOnDestroy(){
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

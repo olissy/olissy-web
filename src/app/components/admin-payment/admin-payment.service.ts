@@ -22,5 +22,10 @@ export class AdminPaymentService {
 
   public async updateStatusPayment(pk:string, data:any){
     return await this.db.collection('adminPayment').doc(pk).update(data)
+  } 
+
+  public getStoreListStatePayment(PRIMARY_KEY_KEY_ADMIN_PAYMENT, statusPayment){
+    return this.db.collection('storeListStatePayment', ref => ref.where("PRIMARY_KEY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_KEY_ADMIN_PAYMENT).where("statusPayment", "==", statusPayment)).valueChanges()
   }
+
 }

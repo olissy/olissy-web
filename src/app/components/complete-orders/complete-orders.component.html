@@ -149,7 +149,7 @@
                   <tr>
                     <th>Subtotal:</th>
                     <td class="text-right">
-                      {{ TotalValorDoPedido() | currency: "BRL" }}
+                      {{ TotalValorDoPedido() - 0.25 | currency: "BRL" }}
                     </td>
                   </tr>
                   <tr>
@@ -158,7 +158,7 @@
                   </tr>
                   <tr>
                     <th>Plataforma:</th>
-                    <td class="text-right">{{ 0 | currency: "BRL" }}</td>
+                    <td class="text-right">{{ 0.25 | currency: "BRL" }}</td>
                   </tr>
                   <tr>
                     <th>Entrega:</th>

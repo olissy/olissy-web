@@ -74,7 +74,7 @@
                         <tbody>
                             <tr>
                                 <th style="width:50%">Subtotal:</th>
-                                <td class="text-right">{{ order?.totalOrderValue }}</td>
+                                <td class="text-right">{{ order?.totalOrderValue - order?.taxing }}</td>
                             </tr>
                             <tr>
                                 <th>Tax (0.0%)</th>
@@ -82,7 +82,7 @@
                             </tr>
                             <tr>
                                 <th>Plataforma:</th>
-                                <td class="text-right">0.0</td>
+                                <td class="text-right">{{ order?.taxing }}</td>
                             </tr>
                             <tr>
                                 <th>Entrega:</th>
@@ -132,7 +132,9 @@
                     </button>
                 </div>
                 <div *ngIf="order?.orderState == 'Finalizado' ||  order?.orderState == 'Desistência'">
-                    <button type="button" class="btn btn-danger pull-right" (click)="RemoverPedido(order)">   Finalizar   </button>
+                    <button type="button" class="btn btn-danger pull-right" (click)="RemoverPedido(order)">  
+                         Finalizar   
+                    </button>
                 </div>
             </div>
         </div>

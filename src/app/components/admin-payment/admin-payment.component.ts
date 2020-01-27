@@ -50,7 +50,7 @@ export class AdminPaymentComponent implements OnInit {
     this.setFormPayment()
     this.adminPaymentService.getAdminPayment().subscribe((payment:any)=>{
       this.paymentList = payment
-      console.log(payment)
+      this.getStatusPayment(payment)
     })
   }
 
@@ -106,8 +106,6 @@ export class AdminPaymentComponent implements OnInit {
       latePaymentDay: latePaymentDay.toString(),
       indexDay: new Date()
     })
-
-
   }
 
   public formatterDateForPayment(date){
@@ -145,6 +143,23 @@ export class AdminPaymentComponent implements OnInit {
 
     this.clock.data = diaF+"/"+mesF+"/"+anoF;
     this.clock.time = hours+":"+minutes+":"+seconds;
+  }
+
+  public getStatusPayment(payment){
+    for (const pay in payment) {
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'openPayment').subscribe((store:any)=>{
+        payment[pay].openPaymentStore = store.length
+      })
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'receivedPayment').subscribe((store:any)=>{
+        payment[pay].receivedPaymentStore = store.length
+      })
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'InPayment').subscribe((store:any)=>{
+        payment[pay].InPaymentStore = store.length
+      })
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'latePayment').subscribe((store:any)=>{
+        payment[pay].latePaymentStore = store.length
+      })
+    }
   }
 
 }

@@ -1,12 +1,25 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/firestore";
+import { firebase } from '@firebase/app';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentListService {
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore, private http: HttpClient){}
+
+  public AddStoreListStatePayment(store){
+    return this.db.collection('storeListStatePayment').add(store).then(res => {
+      this.db.collection('storeListStatePayment').doc(res.id).update({ PRIMARY_KEY:res.id })
+    })
+  }
+
+  public getStoreListStatePayment(PRIMARY_KEY_KEY_ADMIN_PAYMENT, FOREIGN_KEY_STORE){
+    return this.db.collection('storeListStatePayment', ref => ref.where("PRIMARY_KEY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_KEY_ADMIN_PAYMENT)
+                                                                 .where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).limit(1)).valueChanges()
+  }
 
   public getAdminPayment(){
     return this.db.collection('adminPayment', ref => ref.orderBy("indexDay", "desc").limit(1)).valueChanges()
@@ -16,72 +29,34 @@ export class PaymentListService {
     return this.db.collection(collection, ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
   }
 
-  async setClientPayment(payment){
-    return await this.db.collection('clientPayment').add(payment).then(res => {
-      this.db.collection('clientPayment').doc(res.id).update({ PRIMARY_KEY:res.id })
+  async setStorePayment(payment){
+    return await this.db.collection('storePayment').add(payment).then(res => {
+      this.db.collection('storePayment').doc(res.id).update({ PRIMARY_KEY:res.id })
     })
   }
 
-  public getClientPayment(){
-    return this.db.collection('clientPayment', ref => ref.orderBy("indexDay", "desc").limit(1)).valueChanges()
+  public getStorePayment(FOREIGN_KEY_STORE){
+    return this.db.collection('storePayment', ref => ref.where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).orderBy("indexDay", "desc").limit(10)).valueChanges()
   }
 
-  /*
-
-  public getByOrderFOREIGN_KEY(PRIMARY_KEY){
-    return this.db.collection('order', ref => ref.where("PRIMARY_KEY", "==", PRIMARY_KEY)).valueChanges()
+  public async updateStatusPayment(pk:string, data:any){
+    return await this.db.collection('storePayment').doc(pk).update(data)
   }
 
-  public getProductDataBase(PRIMARY_KEY_PRODUCT_DB){
-    return this.db.collection('productDataBase', ref => ref.where("PRIMARY_KEY", "==", PRIMARY_KEY_PRODUCT_DB)).valueChanges()
+  public async AddStoreListPayment(PRIMARY_KEY, data) {
+    await this.db.collection("storePayment").doc(PRIMARY_KEY).update({'client':firebase.firestore.FieldValue.arrayUnion(data)})
+    
+    const increment = firebase.firestore.FieldValue.increment(0.25);
+    await this.db.collection('storePayment').doc(PRIMARY_KEY).update({ totalPayment: increment })
   }
 
-  public getByClientFOREIGN_KEY(FOREIGN_KEY){
-    return this.db.collection('user', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
+  public async addTaxingAdmin(PRIMARY_KEY){
+    const increment = firebase.firestore.FieldValue.increment(0.25);
+    await this.db.collection('adminPayment').doc(PRIMARY_KEY).update({ value: increment })
   }
 
-  public async update(collection:string, pk:string, data:any) {
-    await this.db.collection(collection).doc(pk).update(data)
+  public getTimeZone() {
+    return this.http.get<any[]>("http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
   }
 
-  public async updateSales(pk:string) {
-    var res:any = false
-    const increment = firebase.firestore.FieldValue.increment(1);
-    await this.db.collection('product').doc(pk).update({ sale: increment }).then( r =>{
-      res = r
-    })
-    return res
-  }
-
-  public getReactionsProduct(FOREIGN_KEY_CLIENT, FOREIGN_KEY_PRODUCT){
-    return this.db.collection('reactionsProduct', ref => ref.where("FOREIGN_KEY_CLIENT", "==", FOREIGN_KEY_CLIENT)
-                                                            .where("FOREIGN_KEY_PRODUCT", "==", FOREIGN_KEY_PRODUCT))
-                                                            .valueChanges()
-  }
-
-  public async deleterCollectionStorage(collection, pk) {
-    let res:any = false
-    await this.db.collection(collection).doc(pk).delete().then( function(r){
-      res = r
-    })
-    return res
-  }
-
-  public async createInvoice(data) {
-    var res:any = false
-    await this.db.collection('invoice').add(data).then(res => {
-      this.update('invoice', res.id, { PRIMARY_KEY:res.id })
-    })
-    return res
-  }
-
-  public async incrementProductQuantities(pk, quantities){
-    var res:any = false
-    const increment = firebase.firestore.FieldValue.increment(quantities);
-    await this.db.collection('product').doc(pk).update({ productQuantities: increment }).then( r =>{
-      res = r
-    })
-    return res
-  }
-  */
 }

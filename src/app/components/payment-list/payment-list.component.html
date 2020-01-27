@@ -1,17 +1,24 @@
 <div class="container">
 
-    <div *ngIf="paymentList.length == 0" class="notHaveOrder-main">
+    <div *ngIf="paymentList.length == 0 && loadingPayment == false" class="notHaveOrder-main">
         <img src="/assets/plataform/cart.png"/>
         <span>Você não possui pagamentos</span>
     </div>
 
+    <div *ngIf="loadingPayment" class="notHaveOrder-main">
+      <div class="login-logo">
+        <i class="fa fa-refresh fa-spin fa-2x"></i>
+      </div>
+      <span>Carregando Pagamentos</span>
+    </div>
+
     <div *ngFor="let payment of paymentList" style="margin-top: 10px">
-      <a *ngIf="payment.statusPayment == 'openPayment' "  [routerLink]="['/payment-detail', payment?.PRIMARY_KEY]">
+      <a *ngIf="payment?.statusPayment == 'openPayment' "  [routerLink]="['/payment-detail', payment?.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-open">
              <b>aberto</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.openPaymentDay) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.closedPaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-open">
@@ -29,7 +36,7 @@
           <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
              <b>Pagamento</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.inPaymentDay) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.latePaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-inPayment">
@@ -65,7 +72,7 @@
           <span class="info-box-icon info-box-icon-b info-box-icon-paid">
              <b>Recebimento</b>
              <br>
-             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.receivedPaymentDay) }}</b>
+             <b style=" font-size: 22px; ">{{ formatterDateForPayment(payment.openPaymentDay) }}</b>
           </span>
           <div class="info-box-content">
             <span class="info-box-text info-box-text-paid">

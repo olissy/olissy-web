@@ -90,3 +90,33 @@
   color: #fff;
   border: 1px solid #941202;
 }
+
+.notHaveOrder-main{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 0px;
+  margin-top: 10%;
+}
+
+.notHaveOrder-main img {
+  width: 200px;
+}
+
+.notHaveOrder-main span {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 20px;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd) {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.table-striped>tbody>tr:nth-of-type(odd):hover {
+  background-color: #dbd5d5;
+  cursor: pointer;
+}

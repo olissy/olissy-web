@@ -86,6 +86,7 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     "clientNeighborhood": new FormControl(null),
     "clientStreet": new FormControl(null),
     "clientEmail": new FormControl(null),
+    "taxing": new FormControl('0.25'),
     "totalOrderValue": new FormControl(null),
     "orderDate": new FormControl(`${new Date()}`),
     "orderState": new FormControl("Enviado"),
@@ -213,8 +214,8 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public TotalValorDoPedido(){
     return this.produtos.reduce( (sum, item:any)=>{
-      return new Number(sum).valueOf() + new Number(item.productPrice).valueOf()
-    },0)
+      return new Number(sum).valueOf() + new Number(item.productPrice).valueOf() 
+    },0) + new Number(this.formularioPedido.get('taxing').value)
   }
 
   public removerItem(indice){

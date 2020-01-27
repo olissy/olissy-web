@@ -49,11 +49,7 @@ export class OrderDetailService {
   }
 
   public async createInvoice(data) {
-    var res:any = false
-    await this.db.collection('invoice').add(data).then(res => {
-      this.update('invoice', res.id, { PRIMARY_KEY:res.id })
-    })
-    return res
+    return await this.db.collection('invoice').add(data)
   }
 
   public async incrementProductQuantities(pk, quantities){

@@ -1,5 +1,13 @@
 <div class="container">
-  <section class="paymentDetail box box-widget" id="print-section">
+
+  <div *ngIf="loadingPayment" class="notHaveOrder-main">
+    <div class="login-logo">
+      <i class="fa fa-refresh fa-spin fa-2x"></i>
+    </div>
+    <span>Carregando Pagamentos</span>
+  </div>
+
+  <section *ngIf="loadingPayment == false"  class="paymentDetail box box-widget" id="print-section">
     <div class="row ">
       <div class="col-xs-12">
         <h2 class="page-header">
@@ -51,7 +59,7 @@
             </tr>
           </thead>
           <tbody *ngFor="let  client of listOrderClient.orders">
-            <tr>
+            <tr [routerLink]="['/invoice-detail', client.PRIMARY_KEY_INVOICE]">
               <td>{{  formatterDateForPayment(client.data) }}</td>
               <td>{{  client.name }}</td>
               <td>{{  client.price | currency: "BRL" }}</td>

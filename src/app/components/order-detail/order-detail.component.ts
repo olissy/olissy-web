@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService  } from '../../AuthService';
 import { OrderDetailService } from './order-detail.service'
-
+import { PaymentListComponent } from '../payment-list/payment-list.component'
 
 @Component({
   selector: 'app-order-detail',
@@ -27,7 +27,10 @@ export class OrderDetailComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private orderDetailService:OrderDetailService,
-              private route:ActivatedRoute,) { }
+              private route:ActivatedRoute,
+              private PaymentListComponent:PaymentListComponent) {
+
+              }
 
   ngOnInit() {
     this.authToken()
@@ -49,6 +52,7 @@ export class OrderDetailComponent implements OnInit {
         this.order = order[0]
         if(this.userType == 2){
           this.macarComoVisto()
+          this.PaymentListComponent.ngOnInit()
         }
       })
     })
@@ -108,6 +112,11 @@ export class OrderDetailComponent implements OnInit {
       }
     }
     if(order.orderState == 'Finalizado'){
+
+      this.PaymentListComponent.addPayment(order.PRIMARY_KEY, order.clientName+" "+order.clientLastName, order.totalOrderValue - 0.25)
+
+
+    /*  
       delete this.order.message
       delete this.order.storeViewedTheOrder
       await this.salesIncrement().then(()=>{
@@ -116,7 +125,7 @@ export class OrderDetailComponent implements OnInit {
             this.historyNavigateBack()
           })
         })
-      })
+      })*/
     }
   }
 
