@@ -7,7 +7,7 @@
     </div>
 
     <div *ngFor="let payment of paymentList" style="margin-top: 10px">
-        <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list', payment.PRIMARY_KEY ]">
             <div class="info-box">
             <span class="info-box-icon info-box-icon-b info-box-icon-open">
                 <b style=" font-size: 12px; ">{{ payment.value }}</b>
@@ -38,7 +38,7 @@
             </div>
         </a>
 
-        <a *ngIf="payment.statusPayment == 'inPayment' " [routerLink]="['/admin-payment-list', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'inPayment' " [routerLink]="['/admin-payment-list', payment.PRIMARY_KEY ]">
             <div class="info-box">
                 <span class="info-box-icon info-box-icon-b info-box-icon-inPayment">
                     <b style=" font-size: 12px; ">{{ payment.value }}</b>
@@ -69,7 +69,7 @@
             </div>
         </a>
 
-        <a *ngIf="payment.statusPayment == 'latePayment' " [routerLink]="['/admin-payment-list', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'latePayment' " [routerLink]="['/admin-payment-list', payment.PRIMARY_KEY ]">
             <div class="info-box">
                 <span class="info-box-icon info-box-icon-b info-box-icon-paid">
                     <b style=" font-size: 12px; ">{{ payment.value }}</b>

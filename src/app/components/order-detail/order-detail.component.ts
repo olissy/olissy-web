@@ -112,11 +112,8 @@ export class OrderDetailComponent implements OnInit {
       }
     }
     if(order.orderState == 'Finalizado'){
-
       this.PaymentListComponent.addPayment(order.PRIMARY_KEY, order.clientName+" "+order.clientLastName, order.totalOrderValue - 0.25)
-
-
-    /*  
+      /** 
       delete this.order.message
       delete this.order.storeViewedTheOrder
       await this.salesIncrement().then(()=>{

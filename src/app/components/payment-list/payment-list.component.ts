@@ -37,12 +37,13 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   public formStoreListStatePayment: FormGroup = new FormGroup({
     'PRIMARY_KEY' :new FormControl(null),
     'FOREIGN_KEY_STORE' :new FormControl(null),
-    'PRIMARY_KEY_KEY_ADMIN_PAYMENT' :new FormControl(null),
+    'PRIMARY_KEY_ADMIN_PAYMENT' :new FormControl(null),
     'statusPayment' :new FormControl('openPayment')
   })
 
   public formPayment: FormGroup = new FormGroup({
     'PRIMARY_KEY' :new FormControl(null),
+    'PRIMARY_KEY_ADMIN_PAYMENT' :new FormControl(null),
     'FOREIGN_KEY_STORE' :new FormControl(null),
     'indexDay' :new FormControl(null),
     'statusPayment' :new FormControl('openPayment'),
@@ -79,7 +80,6 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((token:any)=>{
       this.getPayment(token.uid)
       this.setInfoAdminPayment()
@@ -90,10 +90,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   public getPayment(token){
     this.paymentListService.getStorePayment(token).subscribe((payment:any)=>{
-      
-      if(Object.keys(payment).length == 0 && 
-        this.formPayment.get('openPaymentDay').value != null && 
-        this.formPayment.get('storeName').value != null){
+      if(Object.keys(payment).length == 0 && this.formPayment.get('openPaymentDay').value != null && this.formPayment.get('storeName').value != null){
         this.createClientPayment()
       }else{
         this.paymentList = payment
@@ -109,11 +106,17 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     if(Object.keys(this.paymentList).length != 0){
       if(new Date() > new Date(this.paymentList[0].closedPaymentDay) && this.createOnePaymentByDate && this.paymentList[0].statusPayment == "openPayment"){
         this.createOnePaymentByDate = false
-        this.setFormPayment()
-        this.paymentListService.updateStatusPayment(this.paymentList[0].PRIMARY_KEY, {statusPayment:'inPayment'}).then((payment:any)=>{
-          this.paymentListService.setStorePayment(this.formPayment.value).then((payment:any)=>{
-            this.createOnePaymentByDate = true
+        this.paymentListService.getAdminPayment().subscribe((payment:any)=>{
+          this.setFormPayment(payment)
+          console.log(this.formPayment.value)
+          console.log(this.paymentList[0])
+          
+          this.paymentListService.updateStatusPayment(this.paymentList[0].PRIMARY_KEY, {statusPayment:'inPayment'}).then((payment:any)=>{
+            this.paymentListService.setStorePayment(this.formPayment.value).then((payment:any)=>{
+              this.createOnePaymentByDate = true
+            })
           })
+          
         })
       }
     }
@@ -135,10 +138,11 @@ export class PaymentListComponent implements OnInit, OnDestroy {
       this.PRIMARY_KEY_ADMIN_PAYMENT = payment[0].PRIMARY_KEY
 
       this.formStoreListStatePayment.patchValue({
-        PRIMARY_KEY_KEY_ADMIN_PAYMENT : payment[0].PRIMARY_KEY,
+        PRIMARY_KEY_ADMIN_PAYMENT : payment[0].PRIMARY_KEY,
       })
 
       this.formPayment.patchValue({
+        PRIMARY_KEY_ADMIN_PAYMENT : payment[0].PRIMARY_KEY,
         openPaymentDay : payment[0].openPaymentDay,
         closedPaymentDay : payment[0].closedPaymentDay,
         inPaymentDay : payment[0].inPaymentDay,
@@ -180,27 +184,15 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     return formatter
   }
 
-  public setFormPayment(){
-    let date = new Date();
-    let nextMonth = new Date();
-
-    let openPaymentDay:any = new Date(date.getFullYear(), date.getMonth(), 1);
-    let closedPaymentDay:any = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    let inPaymentDay:any = null
-    const latePaymentDay = new Date(date.setDate(46));
-
-    if(nextMonth.getMonth() == 11){
-      inPaymentDay = new Date(nextMonth.getFullYear() + 1, 0, 1);
-    }else{
-      inPaymentDay = new Date(nextMonth.getFullYear(), nextMonth.getMonth() + 1, 1);
-    }
-
+  public setFormPayment(payment){
     this.formPayment.patchValue({
-      openPaymentDay:openPaymentDay.toString(),
-      closedPaymentDay:closedPaymentDay.toString(),
-      inPaymentDay: inPaymentDay.toString(),
-      latePaymentDay: latePaymentDay.toString(),
-      indexDay: new Date()
+      PRIMARY_KEY_ADMIN_PAYMENT : payment[0].PRIMARY_KEY,
+      openPaymentDay : payment[0].openPaymentDay,
+      closedPaymentDay : payment[0].closedPaymentDay,
+      inPaymentDay : payment[0].inPaymentDay,
+      receivedPaymentDay : payment[0].receivedPaymentDay,
+      latePaymentDay : payment[0].latePaymentDay,
+      indexDay : new Date()
     })
   }
 
@@ -224,7 +216,10 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
     this.paymentListService.addTaxingAdmin(this.PRIMARY_KEY_ADMIN_PAYMENT)
 
-    this.paymentListService.getStoreListStatePayment(this.formStoreListStatePayment.get('PRIMARY_KEY_KEY_ADMIN_PAYMENT').value, this.formStoreListStatePayment.get('FOREIGN_KEY_STORE').value).subscribe((store:any)=>{
+
+    //Pagina administrador, para contar as lojas por perildo em "/admin-payment"
+    this.paymentListService.getStoreListStatePayment(this.formStoreListStatePayment.get('PRIMARY_KEY_ADMIN_PAYMENT').value, 
+                                                    this.formStoreListStatePayment.get('FOREIGN_KEY_STORE').value).subscribe((store:any)=>{
        if(Object.keys(store).length == 0){
         console.log('cadastar historico de pagamento da loja', this.formStoreListStatePayment.value)
         this.paymentListService.AddStoreListStatePayment(this.formStoreListStatePayment.value)

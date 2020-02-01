@@ -16,8 +16,8 @@ export class PaymentListService {
     })
   }
 
-  public getStoreListStatePayment(PRIMARY_KEY_KEY_ADMIN_PAYMENT, FOREIGN_KEY_STORE){
-    return this.db.collection('storeListStatePayment', ref => ref.where("PRIMARY_KEY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_KEY_ADMIN_PAYMENT)
+  public getStoreListStatePayment(PRIMARY_KEY_ADMIN_PAYMENT, FOREIGN_KEY_STORE){
+    return this.db.collection('storeListStatePayment', ref => ref.where("PRIMARY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_ADMIN_PAYMENT)
                                                                  .where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).limit(1)).valueChanges()
   }
 

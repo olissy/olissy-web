@@ -1,7 +1,7 @@
 
 <div class="container">
     <div *ngFor="let payment of paymentList"  style="margin-top: 10px">
-        <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'openPayment' " [routerLink]="['/admin-payment-list-detail', payment.PRIMARY_KEY ]">
           <div class="info-box">
             <span class="info-box-icon">
                 <img class="box-img-detail" [src]="payment.imageUrlStore"/>
@@ -24,7 +24,7 @@
           </div>
         </a>
 
-        <a *ngIf="payment.statusPayment == 'inPayment' "  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'inPayment' "  [routerLink]="['/admin-payment-list-detail', payment.PRIMARY_KEY ]">
             <div class="info-box">
                 <span class="info-box-icon">
                     <img class="box-img-detail" [src]="payment.imageUrlStore"/>
@@ -47,7 +47,7 @@
             </div>
         </a>
 
-        <a *ngIf="payment.statusPayment == 'latePayment' "  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'latePayment' "  [routerLink]="['/admin-payment-list-detail', payment.PRIMARY_KEY ]">
             <div class="info-box">
                 <span class="info-box-icon">
                     <img class="box-img-detail" [src]="payment.imageUrlStore"/>
@@ -70,7 +70,7 @@
             </div>
         </a>
 
-        <a *ngIf="payment.statusPayment == 'receivedPayment' "  [routerLink]="['/admin-payment-list-detail', '123456' ]">
+        <a *ngIf="payment.statusPayment == 'receivedPayment' "  [routerLink]="['/admin-payment-list-detail', payment.PRIMARY_KEY ]">
             <div class="info-box">
                 <span class="info-box-icon">
                     <img class="box-img-detail" [src]="payment.imageUrlStore"/>

@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators  }  from '@angular/forms';
 import {AdminPaymentService } from './admin-payment.service'
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-admin-payment',
   templateUrl: './admin-payment.component.html',
   styleUrls: ['./admin-payment.component.css']
 })
-export class AdminPaymentComponent implements OnInit {
+export class AdminPaymentComponent implements OnInit, OnDestroy {
+
+  private unsubscribe$ = new Subject();
 
   public clock = {
     data:"dd/mm/yyyy",
@@ -48,7 +52,7 @@ export class AdminPaymentComponent implements OnInit {
 
   ngOnInit() {
     this.setFormPayment()
-    this.adminPaymentService.getAdminPayment().subscribe((payment:any)=>{
+    this.adminPaymentService.getAdminPayment().pipe(takeUntil(this.unsubscribe$)).subscribe((payment:any)=>{
       this.paymentList = payment
       this.getStatusPayment(payment)
     })
@@ -69,8 +73,8 @@ export class AdminPaymentComponent implements OnInit {
     }
   }
 
-  public periodPayment(){
-    if(Object.keys(this.paymentList).length != 0){
+  public periodPayment(){ 
+    if(this.paymentList[1]){
       if(new Date() > new Date(this.paymentList[1].latePaymentDay) && this.lateOnePaymentByDate && this.paymentList[1].statusPayment == "inPayment"){
         this.lateOnePaymentByDate = false
         this.adminPaymentService.updateStatusPayment(this.paymentList[1].PRIMARY_KEY, {statusPayment:'latePayment'}).then((payment:any)=>{
@@ -147,19 +151,24 @@ export class AdminPaymentComponent implements OnInit {
 
   public getStatusPayment(payment){
     for (const pay in payment) {
-      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'openPayment').subscribe((store:any)=>{
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'openPayment').pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
         payment[pay].openPaymentStore = store.length
       })
-      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'receivedPayment').subscribe((store:any)=>{
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'receivedPayment').pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
         payment[pay].receivedPaymentStore = store.length
       })
-      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'InPayment').subscribe((store:any)=>{
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'inPayment').pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
         payment[pay].InPaymentStore = store.length
       })
-      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'latePayment').subscribe((store:any)=>{
+      this.adminPaymentService.getStoreListStatePayment(payment[pay].PRIMARY_KEY,'latePayment').pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
         payment[pay].latePaymentStore = store.length
       })
     }
+  }
+
+  ngOnDestroy(){
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }
