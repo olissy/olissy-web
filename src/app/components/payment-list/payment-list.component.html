@@ -1,6 +1,6 @@
 <div class="container">
 
-    <div *ngIf="paymentList.length == 0 && loadingPayment == false" class="notHaveOrder-main">
+    <div *ngIf="storePayment.length == 0 && loadingPayment == false" class="notHaveOrder-main">
         <img src="/assets/plataform/cart.png"/>
         <span>Você não possui pagamentos</span>
     </div>
@@ -12,7 +12,7 @@
       <span>Carregando Pagamentos</span>
     </div>
 
-    <div *ngFor="let payment of paymentList" style="margin-top: 10px">
+    <div *ngFor="let payment of storePayment" style="margin-top: 10px">
       <a *ngIf="payment?.statusPayment == 'openPayment' "  [routerLink]="['/payment-detail', payment?.PRIMARY_KEY]">
         <div class="info-box">
           <span class="info-box-icon info-box-icon-b info-box-icon-open">
@@ -86,16 +86,27 @@
       </a>
     </div>
 
-  <div *ngIf="loading && paymentList.length != 0" class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;">
+  <div *ngIf="loading && storePayment.length != 0" class="col-md-12 col-xs-12" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;">
     <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusPayment()">
       Carregar mais
     </button>
   </div>
 
-  <div class="row" *ngIf="!loading && paymentList.length != 0">
+  <div class="row" *ngIf="!loading && storePayment.length != 0">
     <div class="login-logo">
       <i class="fa fa-refresh fa-spin fa-2x"></i>
     </div>
   </div>
 
 </div> 
+
+
+<!-- A {{ this.console.a }}<br><br>
+
+B {{ this.console.b }}<br><br>
+
+C {{ this.console.c }}<br><br>
+
+
+D {{ this.console.d }}<br><br> -->
+

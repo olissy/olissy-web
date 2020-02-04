@@ -7,7 +7,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 })
 export class AdminPaymentListDetailService {
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore){} 
 
   public getStorePayment(PRIMARY_KEY){
     return this.db.collection('storePayment', ref => ref.where("PRIMARY_KEY", "==", PRIMARY_KEY).limit(1)).valueChanges()
@@ -17,15 +17,11 @@ export class AdminPaymentListDetailService {
     return await this.db.collection('storePayment').doc(PRIMARY_KEY).update({statusPayment:"receivedPayment"})
   }
 
-  public async AddInPayment(PRIMARY_KEY){
-    return await this.db.collection('storePayment').doc(PRIMARY_KEY).update({statusPayment:"inPayment"})
+  public async AddStatusPayment(PRIMARY_KEY){
+    return await this.db.collection('storeListStatePayment').doc(PRIMARY_KEY).update({statusPayment:"receivedPayment"})
   }
 
-  public async AddLatePayment(PRIMARY_KEY){
-    return await this.db.collection('storePayment').doc(PRIMARY_KEY).update({statusPayment:"latePayment"})
-  }
-  
-  public async AddOpenPayment(PRIMARY_KEY){
-    return await this.db.collection('storePayment').doc(PRIMARY_KEY).update({statusPayment:"openPayment"})
+  public getByPRIMARY_KEY_ADMIN_PAYMENT(PRIMARY_KEY_ADMIN_PAYMENT) {
+    return this.db.collection('storeListStatePayment', ref =>ref.where('PRIMARY_KEY_ADMIN_PAYMENT', '==', PRIMARY_KEY_ADMIN_PAYMENT)).valueChanges();
   }
 }

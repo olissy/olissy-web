@@ -15,6 +15,8 @@ export class OrderDetailComponent implements OnInit {
 
   public ID:any = "";
 
+  public buttonRemoverPedido:boolean = true
+
   public userType = 0
 
   public product:any;
@@ -100,6 +102,9 @@ export class OrderDetailComponent implements OnInit {
   }
 
   public async RemoverPedido(order){
+
+    this.buttonRemoverPedido = false
+
     if(order.orderState == 'Desistência'){
       let productDecrement = 1
       this.orderDetailService.deleterCollectionStorage('order', this.order.PRIMARY_KEY)
@@ -111,18 +116,22 @@ export class OrderDetailComponent implements OnInit {
         productDecrement++
       }
     }
+
     if(order.orderState == 'Finalizado'){
-      this.PaymentListComponent.addPayment(order.PRIMARY_KEY, order.clientName+" "+order.clientLastName, order.totalOrderValue - 0.25)
-      /** 
-      delete this.order.message
-      delete this.order.storeViewedTheOrder
-      await this.salesIncrement().then(()=>{
-        this.orderDetailService.createInvoice(this.order).then(()=>{
-          this.orderDetailService.deleterCollectionStorage('order', this.order.PRIMARY_KEY).then(()=>{
-            this.historyNavigateBack()
+      this.PaymentListComponent.addPayment(order.PRIMARY_KEY, order.clientName+" "+order.clientLastName, order.totalOrderValue - 0.25).then(async(res:any) => {
+        if(res != null){
+          delete this.order.message
+          delete this.order.storeViewedTheOrder
+          await this.salesIncrement().then(()=>{
+            this.orderDetailService.createInvoice(this.order).then(()=>{
+              this.orderDetailService.deleterCollectionStorage('order', this.order.PRIMARY_KEY).then(()=>{
+                this.buttonRemoverPedido = true
+                this.historyNavigateBack()
+              })
+            })
           })
-        })
-      })*/
+        }
+      })
     }
   }
 

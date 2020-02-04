@@ -254,5 +254,4 @@ export class StoreUserChangeRegistrationComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
 }

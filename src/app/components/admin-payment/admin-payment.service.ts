@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/firestore";
-import { firebase } from '@firebase/app';
 import '@firebase/storage';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminPaymentService {
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore, private http: HttpClient){}
 
   async setAdminPayment(payment){
     return await this.db.collection('adminPayment').add(payment).then(res => {
@@ -24,8 +24,12 @@ export class AdminPaymentService {
     return await this.db.collection('adminPayment').doc(pk).update(data)
   } 
 
-  public getStoreListStatePayment(PRIMARY_KEY_KEY_ADMIN_PAYMENT, statusPayment){
-    return this.db.collection('storeListStatePayment', ref => ref.where("PRIMARY_KEY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_KEY_ADMIN_PAYMENT).where("statusPayment", "==", statusPayment)).valueChanges()
+  public getStoreListStatePayment(PRIMARY_KEY_ADMIN_PAYMENT, statusPayment){
+    return this.db.collection('storeListStatePayment', ref => ref.where("PRIMARY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_ADMIN_PAYMENT).where("statusPayment", "==", statusPayment)).valueChanges()
+  }
+
+  public getTimeZone() {
+    return this.http.get<any[]>("http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
   }
 
 }

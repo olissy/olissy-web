@@ -15,6 +15,7 @@ export class AdminPaymentListDetailComponent implements OnInit {
     storeName :"",
     imageUrlStore:"",
     openPaymentDay:"",
+    PRIMARY_KEY_ADMIN_PAYMENT:"",
     inPaymentDay:"",
     receivedPaymentDay:"",
     latePaymentDay:"",
@@ -98,18 +99,9 @@ export class AdminPaymentListDetailComponent implements OnInit {
 
   public registerPayment(){
     this.adminPaymentListDetailService.AddRegisterPayment(this.paymentDetail.PRIMARY_KEY)
-  }
-
-  public inPayment(){
-    this.adminPaymentListDetailService.AddInPayment(this.paymentDetail.PRIMARY_KEY)
-  }
-
-  public latePayment(){
-    this.adminPaymentListDetailService.AddLatePayment(this.paymentDetail.PRIMARY_KEY)
-  }
-
-  public openPayment(){
-    this.adminPaymentListDetailService.AddOpenPayment(this.paymentDetail.PRIMARY_KEY)
+    this.adminPaymentListDetailService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.paymentDetail.PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+      this.adminPaymentListDetailService.AddStatusPayment(res[0].PRIMARY_KEY)
+    })
   }
 
 }

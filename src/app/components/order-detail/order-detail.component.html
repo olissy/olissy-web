@@ -100,7 +100,7 @@
         <!-- CLIENYE -->
         <div *ngIf="userType == 1" class="row no-print">
             <div class="col-xs-12">
-                <a class="btn btn-default pull-left" (click)="historyNavigateBack()">
+                <a class="btn btn-default pull-left" [routerLink]="['/store-order']">
                     <i class="fa fa fa-reply"></i> Voltar
                 </a>
                 <div *ngIf="order?.orderState == 'Entregando'">
@@ -118,7 +118,7 @@
         <!-- LOJA -->
         <div *ngIf="userType == 2" class="row no-print">
             <div class="col-xs-12">
-                <a [routerLink]="['/invoice-list']" class="btn btn-default pull-left">
+                <a [routerLink]="['/store-order']" class="btn btn-default pull-left">
                     <i class="fa fa fa-reply"></i> Voltar
                 </a>
                 <div *ngIf="order?.orderState == 'Enviado' ">
@@ -132,8 +132,13 @@
                     </button>
                 </div>
                 <div *ngIf="order?.orderState == 'Finalizado' ||  order?.orderState == 'Desistência'">
-                    <button type="button" class="btn btn-danger pull-right" (click)="RemoverPedido(order)">  
-                         Finalizar   
+                    <button type="button" class="btn btn-danger pull-right" [ngClass]="{'btn-finish': buttonRemoverPedido == false}" (click)="RemoverPedido(order)">  
+                       <div *ngIf="!buttonRemoverPedido">
+                            <i class="fa fa-refresh fa-spin fa-1x"></i>
+                       </div>
+                       <div *ngIf="buttonRemoverPedido">
+                            Finalizar
+                       </div>   
                     </button>
                 </div>
             </div>

@@ -81,7 +81,7 @@ export class PaymentDetailComponent implements OnInit {
   }
 
   public print(){
-    
+    window.print();
   }
 
   public showMoreOrders(){

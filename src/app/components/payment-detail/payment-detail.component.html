@@ -48,7 +48,7 @@
         <b>Data de vencimento:</b> {{  formatterDateForPayment(paymentDetail.latePaymentDay) }}
       </div>
     </div>
-    <div class="row">
+    <div class="row printable">
       <div class="col-xs-12 table-responsive">
         <table class="table table-striped">
           <thead>
@@ -68,7 +68,7 @@
         </table>
       </div>
     </div>
-    <div class="order-list">
+    <div class="order-list printable">
       <button type="button" class="btn btn-order btn-block btn-social" (click)="showMoreOrders()">
         <i class="fa  fa-sort-desc"></i> {{ listOrderClient.start + 1 }} - {{paymentDetail.client.length }} Pedidos
       </button>
@@ -131,7 +131,7 @@
 
     <div class="row no-print">
       <div class="col-xs-12">
-        <a [routerLink]="['/ paymentDetail-list']" class="btn btn-default pull-left">
+        <a [routerLink]="['/payment-list']" class="btn btn-default pull-left">
           <i class="fa fa-reply"></i> voltar
         </a>
         <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'latePayment'" >

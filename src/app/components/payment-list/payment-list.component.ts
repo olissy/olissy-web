@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl }  from '@angular/forms';
 import { PaymentListService } from './payment-list.service'
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { AuthService  } from '../../AuthService';
 
 @Injectable({
@@ -18,15 +18,26 @@ import { AuthService  } from '../../AuthService';
 
 export class PaymentListComponent implements OnInit, OnDestroy {
 
+  public console = {
+    a:null,
+    b:null,
+    c:null,
+    d:null,
+  }
+
   private unsubscribe$ = new Subject();
+
+  private subscription = new Subscription();
 
   public createOnePaymentByDate:boolean = true
 
   public token
 
-  public PRIMARY_KEY_ADMIN_PAYMENT = null
+  public DateTimeZone = null
 
-  public paymentList = []
+  public storePayment = []
+
+  public adminPayment = []
 
   public loading:boolean = true
 
@@ -74,68 +85,39 @@ export class PaymentListComponent implements OnInit, OnDestroy {
  
   constructor(private authService: AuthService, private paymentListService:PaymentListService) { 
     setInterval(() => {
-      this.createNewPayment()
-      this.periodPayment()
+      this.updateDateTimeZone()
+      this.paymentInOpen()
+      this.paymentInLate()
     },1000)
   }
 
   public ngOnInit() {
+    this.paymentListService.getTimeZone().subscribe((times:any)=>{
+         this.DateTimeZone =  new Date()//times.datetime
+    })
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((token:any)=>{
       this.getPayment(token.uid)
-      this.setInfoAdminPayment()
+      this.setInfoAdmin()
       this.setInfoStore(token.uid)
       this.loadingPayment = false
     })
   }
 
+  public updateDateTimeZone(){
+    let d = new Date(this.DateTimeZone);
+    this.DateTimeZone = d.setSeconds(d.getSeconds() + 1);
+  }
+
   public getPayment(token){
     this.paymentListService.getStorePayment(token).subscribe((payment:any)=>{
-      if(Object.keys(payment).length == 0 && this.formPayment.get('openPaymentDay').value != null && this.formPayment.get('storeName').value != null){
-        this.createClientPayment()
-      }else{
-        this.paymentList = payment
-      }
+      this.storePayment = payment
     })
   }
 
-  public createClientPayment(){
-    this.paymentListService.setStorePayment(this.formPayment.value)
-  }
-
-  public createNewPayment(){
-    if(Object.keys(this.paymentList).length != 0){
-      if(new Date() > new Date(this.paymentList[0].closedPaymentDay) && this.createOnePaymentByDate && this.paymentList[0].statusPayment == "openPayment"){
-        this.createOnePaymentByDate = false
-        this.paymentListService.getAdminPayment().subscribe((payment:any)=>{
-          this.setFormPayment(payment)
-          console.log(this.formPayment.value)
-          console.log(this.paymentList[0])
-          
-          this.paymentListService.updateStatusPayment(this.paymentList[0].PRIMARY_KEY, {statusPayment:'inPayment'}).then((payment:any)=>{
-            this.paymentListService.setStorePayment(this.formPayment.value).then((payment:any)=>{
-              this.createOnePaymentByDate = true
-            })
-          })
-          
-        })
-      }
-    }
-  }
-
-  public periodPayment(){
-    if(this.paymentList[1]){
-      if(new Date() > new Date(this.paymentList[1].latePaymentDay) && this.lateOnePaymentByDate && this.paymentList[1].statusPayment == "inPayment"){
-        this.lateOnePaymentByDate = false
-        this.paymentListService.updateStatusPayment(this.paymentList[1].PRIMARY_KEY, {statusPayment:'latePayment'}).then((payment:any)=>{
-          this.lateOnePaymentByDate = false
-        })
-      }
-    }
-  }
-
-  public setInfoAdminPayment(){
+  public setInfoAdmin(){
     this.paymentListService.getAdminPayment().subscribe((payment:any)=>{
-      this.PRIMARY_KEY_ADMIN_PAYMENT = payment[0].PRIMARY_KEY
+
+      this.adminPayment = payment
 
       this.formStoreListStatePayment.patchValue({
         PRIMARY_KEY_ADMIN_PAYMENT : payment[0].PRIMARY_KEY,
@@ -173,6 +155,53 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     })
   }
 
+  public paymentInOpen(){
+
+
+
+    if(Object.keys(this.storePayment).length != 0){
+      if(new Date() > new Date(this.storePayment[0].inPaymentDay) && this.storePayment[0].statusPayment == "openPayment"){
+        this.setFormPayment(this.adminPayment)
+        this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'inPayment'})
+        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+          this.subscription.unsubscribe()
+          this.paymentListService.updateStoreListStatePayment(res[0].PRIMARY_KEY, {statusPayment:'inPayment'})
+        })
+      }
+    }
+  }
+
+  public paymentInLate(){
+
+    this.console.a = new Date()
+    this.console.b =  new Date(this.storePayment[0].latePaymentDay)
+    this.console.c = new Date() > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"
+
+
+
+
+    if(this.storePayment[0]){
+      this.console.d = 0
+      if(new Date() > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"){
+        this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'latePayment'})
+        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+          this.subscription.unsubscribe()
+          this.paymentListService.updateStoreListStatePayment(res[0].PRIMARY_KEY, {statusPayment:'latePayment'})
+        })
+      }
+    } 
+    if(this.storePayment[1]){
+      this.console.d = 1
+      if(new Date() > new Date(this.storePayment[1].latePaymentDay) && this.storePayment[1].statusPayment == "inPayment"){
+        this.paymentListService.updateStatusPayment(this.storePayment[1].PRIMARY_KEY, {statusPayment:'latePayment'})
+        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[1].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+          this.subscription.unsubscribe()
+          this.paymentListService.updateStoreListStatePayment(res[0].PRIMARY_KEY, {statusPayment:'latePayment'})
+        })
+      }
+    }
+  }
+
   public formatterDateForPayment(date){
     let data = new Date(date),
         dia  = data.getDate().toString(),
@@ -196,6 +225,41 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     })
   }
 
+  public addPayment(PRIMARY_KEY_INVOICE, name, price): Promise<any>{
+
+    let data = [];
+    
+    let store = {
+      PRIMARY_KEY_INVOICE : PRIMARY_KEY_INVOICE,
+      data : new Date(this.DateTimeZone).toString(),
+      name : name,
+      price : price
+    }
+
+    return new Promise(resolve => {
+      this.subscription = this.paymentListService.getOneStorePayment(this.formPayment.value.PRIMARY_KEY_ADMIN_PAYMENT, this.formPayment.value.FOREIGN_KEY_STORE ).subscribe((payment:any)=>{
+        this.subscription.unsubscribe()
+        if(Object.keys(payment).length == 0){
+          this.paymentListService.AddStoreListStatePayment(this.formStoreListStatePayment.value).then(res => {
+            data.push(res)
+            this.createClientPayment(store).then(res => {
+              data.push(res)
+              resolve(data)
+            })
+          })
+        }else{
+          this.paymentListService.AddStoreListPayment(payment[0].PRIMARY_KEY, store).then(res => {
+            data.push(res)
+            this.paymentListService.addTaxingAdmin(payment[0].PRIMARY_KEY_ADMIN_PAYMENT).then(res => {
+              data.push(res)
+              resolve(data)
+            })
+          })
+        }
+      })
+    });
+  }
+
   public loadingPlusPayment(){
     this.loading = false
       setTimeout(() => {
@@ -203,36 +267,22 @@ export class PaymentListComponent implements OnInit, OnDestroy {
       }, 1000);
   }
 
-  public addPayment(PRIMARY_KEY_INVOICE, name, price){
-
-    let store = {
-      PRIMARY_KEY_INVOICE : PRIMARY_KEY_INVOICE,
-      data : new Date().toString(),
-      name : name,
-      price : price
-    }
-
-    this.paymentListService.AddStoreListPayment(this.paymentList[0].PRIMARY_KEY, store) 
-
-    this.paymentListService.addTaxingAdmin(this.PRIMARY_KEY_ADMIN_PAYMENT)
-
-
-    //Pagina administrador, para contar as lojas por perildo em "/admin-payment"
-    this.paymentListService.getStoreListStatePayment(this.formStoreListStatePayment.get('PRIMARY_KEY_ADMIN_PAYMENT').value, 
-                                                    this.formStoreListStatePayment.get('FOREIGN_KEY_STORE').value).subscribe((store:any)=>{
-       if(Object.keys(store).length == 0){
-        console.log('cadastar historico de pagamento da loja', this.formStoreListStatePayment.value)
-        this.paymentListService.AddStoreListStatePayment(this.formStoreListStatePayment.value)
-       }else{
-        console.log(store)
-       }
-    })
-  }
-
-  public getTimeZone(){
-    this.paymentListService.getTimeZone().subscribe((times:any)=>{
-      let data = new Date(times.datetime)
-      return data
+  public createClientPayment(store): Promise<any>{
+    let data = [];
+    return new Promise(resolve => {
+      this.paymentListService.setStorePayment(this.formPayment.value).then((res)=>{
+        this.subscription = this.paymentListService.getOneStorePayment(this.formPayment.value.PRIMARY_KEY_ADMIN_PAYMENT, this.formPayment.value.FOREIGN_KEY_STORE).subscribe((payment:any)=>{
+          data.push(res)
+          this.subscription.unsubscribe()
+          this.paymentListService.AddStoreListPayment(payment[0].PRIMARY_KEY, store).then(res => {
+            data.push(res)
+            this.paymentListService.addTaxingAdmin(payment[0].PRIMARY_KEY_ADMIN_PAYMENT).then(res => {
+              data.push(res)
+              resolve(data)
+            })
+          })
+        })
+      })
     })
   }
 
@@ -240,4 +290,4 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-}
+} 

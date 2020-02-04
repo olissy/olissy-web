@@ -10,9 +10,20 @@ export class PaymentListService {
 
   constructor(private db: AngularFirestore, private http: HttpClient){}
 
-  public AddStoreListStatePayment(store){
-    return this.db.collection('storeListStatePayment').add(store).then(res => {
-      this.db.collection('storeListStatePayment').doc(res.id).update({ PRIMARY_KEY:res.id })
+  public async AddStoreListStatePayment(store){
+    return await this.db.collection('storeListStatePayment').add(store).then(async(res:any) => {
+      return await this.db.collection('storeListStatePayment').doc(res.id).update({ PRIMARY_KEY:res.id }).then(async(res:any) => {
+        return await "santos"
+      })
+    })
+  }
+
+  public async AddStoreListPayment(PRIMARY_KEY, data) {
+    return await this.db.collection("storePayment").doc(PRIMARY_KEY).update({'client':firebase.firestore.FieldValue.arrayUnion(data)}).then(async(res) => {
+      const increment = firebase.firestore.FieldValue.increment(0.25);
+      return await this.db.collection('storePayment').doc(PRIMARY_KEY).update({ totalPayment: increment }).then(async(res:any) => {
+        return await "saulo"
+      })
     })
   }
 
@@ -21,8 +32,13 @@ export class PaymentListService {
                                                                  .where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).limit(1)).valueChanges()
   }
 
+  public getOneStorePayment(PRIMARY_KEY_ADMIN_PAYMENT, FOREIGN_KEY_STORE){
+    return this.db.collection('storePayment', ref => ref.where("PRIMARY_KEY_ADMIN_PAYMENT", "==", PRIMARY_KEY_ADMIN_PAYMENT)
+                                                                 .where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).limit(1)).valueChanges()
+  }
+
   public getAdminPayment(){
-    return this.db.collection('adminPayment', ref => ref.orderBy("indexDay", "desc").limit(1)).valueChanges()
+    return this.db.collection('adminPayment', ref => ref.orderBy("indexDay", "desc").limit(2)).valueChanges()
   }
 
   public getByFOREIGN_KEY(collection, FOREIGN_KEY){
@@ -43,16 +59,19 @@ export class PaymentListService {
     return await this.db.collection('storePayment').doc(pk).update(data)
   }
 
-  public async AddStoreListPayment(PRIMARY_KEY, data) {
-    await this.db.collection("storePayment").doc(PRIMARY_KEY).update({'client':firebase.firestore.FieldValue.arrayUnion(data)})
-    
-    const increment = firebase.firestore.FieldValue.increment(0.25);
-    await this.db.collection('storePayment').doc(PRIMARY_KEY).update({ totalPayment: increment })
+  public async updateStoreListStatePayment(pk:string, data:any){
+    return await this.db.collection('storeListStatePayment').doc(pk).update(data)
+  }
+
+  public getByPRIMARY_KEY_ADMIN_PAYMENT(PRIMARY_KEY_ADMIN_PAYMENT) {
+    return this.db.collection('storeListStatePayment', ref =>ref.where('PRIMARY_KEY_ADMIN_PAYMENT', '==', PRIMARY_KEY_ADMIN_PAYMENT)).valueChanges();
   }
 
   public async addTaxingAdmin(PRIMARY_KEY){
     const increment = firebase.firestore.FieldValue.increment(0.25);
-    await this.db.collection('adminPayment').doc(PRIMARY_KEY).update({ value: increment })
+    return await this.db.collection('adminPayment').doc(PRIMARY_KEY).update({ value: increment }).then(async(res:any) => {
+      return await "silva"
+    })
   }
 
   public getTimeZone() {
