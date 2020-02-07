@@ -20,11 +20,9 @@ export class AdminPaymentListComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.url)
     if(this.url != "/"){
       this.adminPaymentListService.getStorePayment(this.url).subscribe((store:any)=>{
         this.paymentList = store
-        console.log(store)
       })
     }
   }

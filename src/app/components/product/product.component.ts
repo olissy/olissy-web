@@ -50,7 +50,8 @@ export class ProductComponent implements OnInit {
     );
   }
 
-  searchProductDB(ProductDB){
+  public searchProductDB(ProductDB){
+    console.log(ProductDB)
     if(ProductDB.search == "suggestion"){
       this.searchProductDBSuggested(ProductDB.product)
     }
@@ -59,7 +60,7 @@ export class ProductComponent implements OnInit {
     }
   }
 
-  searchProductDBSuggested(ProductDB){
+  public searchProductDBSuggested(ProductDB){
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
@@ -70,7 +71,7 @@ export class ProductComponent implements OnInit {
     })
   }
 
-  searchProductDBTyping(ProductDB){
+  public searchProductDBTyping(ProductDB){
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []

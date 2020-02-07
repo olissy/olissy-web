@@ -18,13 +18,6 @@ import { AuthService  } from '../../AuthService';
 
 export class PaymentListComponent implements OnInit, OnDestroy {
 
-  public console = {
-    a:null,
-    b:null,
-    c:null,
-    d:null,
-  }
-
   private unsubscribe$ = new Subject();
 
   private subscription = new Subscription();
@@ -172,16 +165,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   }
 
   public paymentInLate(){
-
-    this.console.a = new Date()
-    this.console.b =  new Date(this.storePayment[0].latePaymentDay)
-    this.console.c = new Date() > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"
-
-
-
-
     if(this.storePayment[0]){
-      this.console.d = 0
       if(new Date() > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"){
         this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'latePayment'})
         this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
@@ -191,7 +175,6 @@ export class PaymentListComponent implements OnInit, OnDestroy {
       }
     } 
     if(this.storePayment[1]){
-      this.console.d = 1
       if(new Date() > new Date(this.storePayment[1].latePaymentDay) && this.storePayment[1].statusPayment == "inPayment"){
         this.paymentListService.updateStatusPayment(this.storePayment[1].PRIMARY_KEY, {statusPayment:'latePayment'})
         this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[1].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{

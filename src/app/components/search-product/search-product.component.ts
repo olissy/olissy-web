@@ -20,15 +20,9 @@ export class SearchProductComponent implements OnInit, OnDestroy {
 
   public Digite_tres_ou_mais_caracteres_total = 3
 
-  public wordDoDeepSearch
-
-  public wordDoDeepSearchStatus:boolean = true
-
   public digite = true
 
   public suggestion:string = "name-suggestion"
-
-  public searchRepeated = []
 
   public enter = false
 
@@ -40,63 +34,16 @@ export class SearchProductComponent implements OnInit, OnDestroy {
 
   public suggestedProductList = []
 
-  public TypingProductList = []
-
-  public loadingSuggested:boolean = false
+  public interval;
 
   constructor(private search:SearchProductService, private router: Router) {}
 
   ngOnInit() {
-    this.clearTextSearch()
-  }
-
-  public clearTextSearchCaracter(){
-
-    $("#input-buscar-produto").focus()
-    $('#input-buscar-produto').val('')
-
-    this.Digite_tres_ou_mais_caracteres_total = 3
-
-    this.loadingSuggested = false
-
-    this.digite = true
-      
-    this.aguarde = false
-
-    this.desculpe = false
-
-    this.produto = false
-
-    this.suggestedProductList = []
-
-    this.TypingProductList = []
-
-  }
-
-  public clearTextSearch(){
-    
-    $(".clearable").each(function() {
-
-      $("#input-buscar-produto").focus()
-      
-      var $inp = $(this).find("input:text")
-
-      var  $cle = $(this).find(".clearable__clear");
-    
-      $inp.on("input", function(){
-        $cle.toggle(!!this.value);
-      });
-      
-      $cle.on("touchstart click", function(e) {
-        e.preventDefault();
-        $inp.val("").trigger("input");
-      });
-      
-    });
+    this.autoFocus()
   }
 
   public SearchBySuggestions(suggestion, event){
-  
+
     if(event.key != 'Enter' && event.key != 'Backspace' && this.Digite_tres_ou_mais_caracteres_total <= 3 && this.Digite_tres_ou_mais_caracteres_total > 0){
       if(suggestion != false){
         this.Digite_tres_ou_mais_caracteres_total --
@@ -115,130 +62,133 @@ export class SearchProductComponent implements OnInit, OnDestroy {
       this.Digite_tres_ou_mais_caracteres_total = 3
     }
 
-    if(this.Digite_tres_ou_mais_caracteres_total <= 0 && suggestion.length >= 2){
+    if((this.Digite_tres_ou_mais_caracteres_total <= 0 && suggestion.length >= 2) ||  (suggestion.length >= 3)){
+      this.Digite_tres_ou_mais_caracteres_total = 0
       this.produto  = false
       this.digite   = false
       this.desculpe = false
-      this.aguarde  = true
-      this.debounceTimeSuggestion()
+      this.aguarde  = false
+      this.enter = true
+      clearInterval(this.interval);
     }else{
       this.digite = true
+      this.desculpe = false
+      this.enter = false
     }
-     
+
+    if(Object.keys(this.suggestedProductList).length != 0){
+      this.produto  = true
+      this.enter = false
+    }
   }
 
-  public debounceTimeSuggestion(){
-    var timer;
-    var self = this;
-    $('#input-buscar-produto').keyup(function(){
-      clearTimeout(timer)
-      
-      if ($('#input-buscar-produto').val) {
-        timer = setTimeout(function(){
-          var suggestion = $("#input-buscar-produto").val() 
-          if(self.suggestion != suggestion && suggestion.length >= 3){
-            self.suggestion = suggestion
-            var wordSuggestion = suggestion.split(" ")
+  public searchByTyping(suggestion, event){
+    if((this.Digite_tres_ou_mais_caracteres_total <= 0 && suggestion.length >= 2) ||  (suggestion.length >= 3)){
+      this.aguarde  = true
+      this.enter = false
+      this.produto  = false
+      this.validateRepetedSuggestionOfUser()
+    }
+  }
 
-            var wordSuggestionFilter = wordSuggestion.filter(function (el) {
-              return el != null && el != "";
-            });
-
-            self.sendSearchSuggestion(wordSuggestionFilter)
-
-          
-          }else if(Object.keys(self.searchRepeated).length != 0){
-            self.suggestedProductList = []
-            for (const product of self.searchRepeated){
-              self.suggestedProductList.push(product)
-            }
-            self.produto = true
-            self.aguarde = false
-            self.enter = false
-            self.desculpe = false
-          }
-        }, 1000);
+  public validateRepetedSuggestionOfUser(){
+    let suggestion = $("#input-buscar-produto").val() 
+    if(this.suggestion != suggestion && suggestion.length >= 3){
+      this.suggestion = suggestion
+      let wordSuggestion = suggestion.split(" ")
+      let wordSuggestionFilter = wordSuggestion.filter( (el) =>  el != null && el != "");
+      this.sendSearchSuggestion(wordSuggestionFilter)
+    }else{
+      if(Object.keys(this.suggestedProductList).length == 0){
+        this.desculpe = true
+        this.produto = false
+        this.aguarde = false
+      }else{
+        this.produto = true
+        this.aguarde = false
+        this.desculpe = false
       }
-    });
+    }
   }
 
   public sendSearchSuggestion(wordSuggestion){
     this.suggestedProductList = []
-    let cont = 1
     for (const word of wordSuggestion) {
-      this.loadingSuggested = true
-       this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+      this.search.searchProductsByRegex(word).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+        if(Object.keys(resposta).length != 0){
+          this.searchProductOfProductDB(wordSuggestion, resposta)
+        }else{
+          this.desculpe = true
+          this.produto = false
+          this.aguarde = false
+        }
+      })
+    }
+  }
 
-    
-          if(this.enter && Object.keys(resposta).length != 0){
-              this.searchRepeated = resposta
-              this.suggestedProductList = []
-              for (const product of resposta){
-                this.suggestedProductList.push(product)
-              }
-              this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
-              this.produto = true
-              this.aguarde = false
-              this.enter = false
-              this.desculpe = false
-            
-          }else{
-            if(Object.keys(resposta).length != 0){
-              for(let index in resposta){
-                this.search.productForProductDB(resposta[index].PRIMARY_KEY).subscribe((product:any)=>{
-                  if(Object.keys(product).length != 0 ){
-                    this.searchRepeated.push(resposta[index])
-                    this.suggestedProductList = []
-                    this.suggestedProductList.push(resposta[index])
-                  }
-                })
-              }
-              this.produto = true
-              this.aguarde = false
-              this.enter = false
-              this.desculpe = false
-              $("#input-buscar-produto").blur();
-            }else{
-              this.desculpe = true
-              this.aguarde = false
-              this.enter = false
-            }
+  public searchProductOfProductDB(wordSuggestion, productDB){
+    let cout = 1
+    for(let index in productDB){
+      this.search.productForProductDB(productDB[index].PRIMARY_KEY).subscribe((product:any)=>{
+        if(Object.keys(product).length != 0 ){
+          var filtered = this.suggestedProductList.filter(value=> value.PRIMARY_KEY == productDB[index].PRIMARY_KEY);
+          if(Object.keys(filtered).length == 0){
+            this.suggestedProductList.push(productDB[index])
           }
-
-          if(wordSuggestion.length == cont){
-            this.loadingSuggested = false
-          }
-          
-          cont++
-       })
+          this.produto = true
+          this.aguarde = false
+          this.desculpe = false
+          $("#input-buscar-produto").blur();
+        }
+        if(cout == wordSuggestion.length && Object.keys(this.suggestedProductList).length == 0){
+          this.desculpe = true
+          this.produto = false
+          this.aguarde = false
+        }
+        cout++
+      })
     }
   }
 
   public selectSuggestion(suggestion){
-    this.router.navigate(['/'])
+    this.router.navigate(['/product'])
     this.searchProductDB_Output.emit({search:'suggestion', product:suggestion})
   }
 
-  public searchByTyping(suggestion, event){
-    if(this.Digite_tres_ou_mais_caracteres_total <= 0 && suggestion.length >= 2){
-      this.desculpe = false
-      this.aguarde = false
-      $("#input-buscar-produto").blur(); 
-      
-      if(this.suggestedProductList.length >= 1){
-        this.router.navigate(['/'])
-        this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
-      }else{
-        this.enter = true
-        var wordSuggestion = suggestion.split(" ")
+  public selectAllSuggestion(){
+    this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
+    this.router.navigate(['/product'])
+  }
 
-        var wordSuggestionFilter = wordSuggestion.filter(function (el) {
-          return el != null && el != "";
-        });
-        this.router.navigate(['/'])
-        this.sendSearchSuggestion(wordSuggestionFilter)
-      }
-    }
+  public autoFocus(){
+    this.interval = setInterval(() => {
+      $("#input-buscar-produto").focus()
+    },1000)
+  }
+
+  public clearTextSearch(){
+
+    (<HTMLInputElement>document.getElementById('input-buscar-produto')).value;
+
+    $("#input-buscar-produto").focus()
+
+    $('#input-buscar-produto').val('')
+
+    this.Digite_tres_ou_mais_caracteres_total = 3
+
+    this.digite = true
+      
+    this.aguarde = false
+
+    this.desculpe = false
+
+    this.produto = false
+
+    this.suggestedProductList = []
+
+    this.suggestion = ""
+
+    this.enter = false
   }
 
   ngOnDestroy(){

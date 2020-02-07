@@ -22,6 +22,7 @@ export class SearchProductService {
   }
 
   public productForProductDB(PRIMARY_KEY) {
-    return this.db.collection('product', ref => ref.where("PRIMARY_KEY_PRODUCT_DB", "==", PRIMARY_KEY).limit(1)).valueChanges();
+    return this.db.collection('product', ref => ref.where("PRIMARY_KEY_PRODUCT_DB", "==", PRIMARY_KEY)
+                                                   .where("productQuantities", ">", 0).limit(1)).valueChanges();
   }
 }
