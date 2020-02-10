@@ -125,7 +125,6 @@ export class OrderDetailComponent implements OnInit {
           await this.salesIncrement().then(()=>{
             this.orderDetailService.createInvoice(this.order).then(()=>{
               this.orderDetailService.deleterCollectionStorage('order', this.order.PRIMARY_KEY).then(()=>{
-                this.buttonRemoverPedido = true
                 this.historyNavigateBack()
               })
             })

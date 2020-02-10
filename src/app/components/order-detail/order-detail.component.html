@@ -100,7 +100,7 @@
         <!-- CLIENYE -->
         <div *ngIf="userType == 1" class="row no-print">
             <div class="col-xs-12">
-                <a class="btn btn-default pull-left" [routerLink]="['/store-order']">
+                <a class="btn btn-default pull-left" [routerLink]="['/client-order']">
                     <i class="fa fa fa-reply"></i> Voltar
                 </a>
                 <div *ngIf="order?.orderState == 'Entregando'">
@@ -132,13 +132,13 @@
                     </button>
                 </div>
                 <div *ngIf="order?.orderState == 'Finalizado' ||  order?.orderState == 'Desistência'">
-                    <button type="button" class="btn btn-danger pull-right" [ngClass]="{'btn-finish': buttonRemoverPedido == false}" (click)="RemoverPedido(order)">  
-                       <div *ngIf="!buttonRemoverPedido">
-                            <i class="fa fa-refresh fa-spin fa-1x"></i>
-                       </div>
-                       <div *ngIf="buttonRemoverPedido">
-                            Finalizar
-                       </div>   
+                    <button *ngIf="buttonRemoverPedido" type="button" class="btn btn-danger pull-right" (click)="RemoverPedido(order)">  
+                        Finalizar 
+                    </button>
+                    <button *ngIf="!buttonRemoverPedido" type="button" class="btn btn-danger pull-right btn-finish">  
+                        <div >
+                             <i class="fa fa-refresh fa-spin fa-1x"></i>
+                        </div> 
                     </button>
                 </div>
             </div>

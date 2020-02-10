@@ -91,8 +91,8 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     "orderDate": new FormControl(`${new Date()}`),
     "orderState": new FormControl("Enviado"),
     "message": new FormControl(null),
-  })
-
+    "indexDay":new FormControl(null),
+  })      
   constructor(private Appservice: AppService,
               private pedidoService:CompleteOrdersService,
               private router_navigator: Router,
@@ -136,7 +136,8 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public setIdComercioPedido(){
     this.formularioPedido.patchValue({
-      FOREIGN_KEY_STORE : this.route.snapshot.params['id']
+      FOREIGN_KEY_STORE : this.route.snapshot.params['id'],
+      indexDay: new Date()
     })
   }
 

@@ -52,7 +52,7 @@ export class PaymentListService {
   }
 
   public getStorePayment(FOREIGN_KEY_STORE){
-    return this.db.collection('storePayment', ref => ref.where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).orderBy("indexDay", "desc").limit(10)).valueChanges()
+    return this.db.collection('storePayment', ref => ref.where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).orderBy("indexDay", "desc")).valueChanges()
   }
 
   public async updateStatusPayment(pk:string, data:any){

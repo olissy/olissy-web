@@ -25,7 +25,7 @@ export class ClientOrderService {
   }
 
   public getByPedidoFOREIGN_KEY(collection, FOREIGN_KEY, order){
-    return this.db.collection(collection, ref => ref.where("FOREIGN_KEY_CLIENT", "==", FOREIGN_KEY).orderBy(order)).valueChanges()
+    return this.db.collection(collection, ref => ref.where("FOREIGN_KEY_CLIENT", "==", FOREIGN_KEY).orderBy("indexDay", "desc")).valueChanges()
   }
 
   public async marcarMensagemComoVisualizadaComercio(collection, pk, data){

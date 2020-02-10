@@ -15,7 +15,7 @@ export class UserHeaderComponent {
   constructor(private data: DataService) {}
 
   public searchProductDB_Output(productDB){
-    $('#displaySearch').modal('hide'); 
+    $('#displaySearch').modal('hide')
     this.data.setProductDB(productDB)
   }
 }

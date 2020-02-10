@@ -65,7 +65,6 @@ export class StorePageComponent implements OnInit {
     this.appService.produtos = []//remover produtos do carrinho
     this.comercioPaginaService.store('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
       this.comercios = store
-      console.log(store)
       this.searchEngineOptimization(store[0].storeCategory, store[0].storeCity, store[0].storeNeighborhood, store[0].storeName, store[0].storeAbout)
     })
     this.quantityOfProductsEndSales()

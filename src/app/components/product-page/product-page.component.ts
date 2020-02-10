@@ -74,6 +74,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     FOREIGN_KEY_CLIENT : new FormControl(null),
     commentText: new FormControl(null),
     commentDate : new FormControl(null),
+    indexDay : new FormControl(null),
     commentImageUrl : new FormControl(null),
     commentName : new FormControl(null),
     commentView : new FormControl(false),
@@ -117,7 +118,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
 
   public loadingPlusProduct(){
     this.loading = false
-    this.produtoService.comentarios(this.product.FOREIGN_KEY, (this.LIMIT++)*2).pipe(takeUntil(this.unsubscribe$)).subscribe((comment)=>{
+    this.produtoService.comentarios(this.PRIMARY_KEY_PRODUCT_STORE, (this.LIMIT++)*2).pipe(takeUntil(this.unsubscribe$)).subscribe((comment)=>{
       setTimeout(() => {
         this.comments = comment
         this.loading = true
@@ -279,6 +280,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       FOREIGN_KEY_CLIENT : this.client.FOREIGN_KEY,
       PRIMARY_KEY_PRODUCT : this.product.PRIMARY_KEY,
       commentDate : `${new Date()}` ,
+      indexDay: new Date(),
       commentImageUrl : this.client.clientImageUrl,
       commentName :this.client.clientName +' '+ this.client.clientLastName,
     });
@@ -317,6 +319,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
       FOREIGN_KEY_CLIENT : this.client.FOREIGN_KEY,
       PRIMARY_KEY_PRODUCT : this.product.PRIMARY_KEY,
       commentDate : `${new Date()}` ,
+      indexDay: new Date(),
       commentImageUrl : this.client.clientImageUrl,
       commentName :this.client.clientName +' '+ this.client.clientLastName,
     });

@@ -9,11 +9,11 @@ export class InvoiceListService {
   constructor(private db: AngularFirestore){}
 
   public getInvoiceClient(FOREIGN_KEY_CLIENT, LIMIT){
-    return this.db.collection('invoice', ref => ref.where("FOREIGN_KEY_CLIENT" , "==", FOREIGN_KEY_CLIENT).limit(LIMIT)).valueChanges()
+    return this.db.collection('invoice', ref => ref.where("FOREIGN_KEY_CLIENT" , "==", FOREIGN_KEY_CLIENT).orderBy("indexDay", "desc").limit(LIMIT)).valueChanges()
   }
 
   public getInvoiceStore(FOREIGN_KEY, LIMIT){
-    return this.db.collection('invoice', ref => ref.where("FOREIGN_KEY_STORE" , "==", FOREIGN_KEY).limit(LIMIT)).valueChanges()
+    return this.db.collection('invoice', ref => ref.where("FOREIGN_KEY_STORE" , "==", FOREIGN_KEY).orderBy("indexDay", "desc").limit(LIMIT)).valueChanges()
   }
 
   public getUser(FOREIGN_KEY){

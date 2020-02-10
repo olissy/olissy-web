@@ -6,16 +6,16 @@ import { BehaviorSubject, Subject } from 'rxjs';
 })
 export class DataService {
 
-  public subject = new Subject();
+  //public subject = new Subject();
 
-  //private productDBSource = new BehaviorSubject('false');
-  //getProductDB = this.productDBSource.asObservable();
+  private productDBSource = new BehaviorSubject(false);
+  subject = this.productDBSource.asObservable();
 
   constructor() { }
 
   setProductDB(message: any) {
-    //this.productDBSource.next(message)
-    this.subject.next(message);
+    this.productDBSource.next(message)
+    //this.subject.next(message);
   }
 
 }

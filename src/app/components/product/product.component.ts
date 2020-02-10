@@ -22,6 +22,8 @@ export class ProductComponent implements OnInit {
 
   public FOREIGN_KEY_STORE_ORDER_CART
 
+  public url:boolean = true
+
   public result = { store : [], product : null, productDataBase : [], limit : 10, offset : 0, size : 0  }
 
   constructor(private productService:ProductService, 
@@ -34,8 +36,18 @@ export class ProductComponent implements OnInit {
   ngOnInit(){ 
     this.searchEngineOptimization()
     this.haveOrderOpen()
-    this.product()
-    this.data.subject.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>this.searchProductDB(productDB)) 
+    this.data.subject.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>{
+      console.log(productDB)
+      if(Object.keys(productDB).length == 0){
+        this.product()
+      }else{
+        this.searchProductDB(productDB)  
+      }
+    }) 
+    let router = window.location.href.split('/' ) 
+    if(router[3]  == 'product'){
+      this.url = false
+    }
   }
 
   public searchEngineOptimization(){
@@ -51,7 +63,6 @@ export class ProductComponent implements OnInit {
   }
 
   public searchProductDB(ProductDB){
-    console.log(ProductDB)
     if(ProductDB.search == "suggestion"){
       this.searchProductDBSuggested(ProductDB.product)
     }
@@ -182,6 +193,10 @@ export class ProductComponent implements OnInit {
   ngOnDestroy(){
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    if(this.url){
+      console.log("destruir")
+      this.data.setProductDB(false)
+    }
   }
 
 }

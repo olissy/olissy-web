@@ -212,6 +212,7 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.data.setProductDB(false)
   }
 
 }

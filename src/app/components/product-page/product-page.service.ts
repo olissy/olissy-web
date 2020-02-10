@@ -12,7 +12,7 @@ export class ProductPageService {
   constructor(private db: AngularFirestore){}
 
   public comentarios(PRIMARY_KEY_PRODUCT, LIMIT){
-    return this.db.collection('commentProduct', ref => ref.where("PRIMARY_KEY_PRODUCT", "==", PRIMARY_KEY_PRODUCT).limit(LIMIT)).valueChanges()
+    return this.db.collection('commentProduct', ref => ref.where("PRIMARY_KEY_PRODUCT", "==", PRIMARY_KEY_PRODUCT).orderBy("indexDay", "desc").limit(LIMIT)).valueChanges()
   }
 
   public async comentar(data){
@@ -32,7 +32,7 @@ export class ProductPageService {
   public getCommentProductCount(PRIMARY_KEY_PRODUCT){
     return this.db.collection('commentProductCount', ref => ref.where("PRIMARY_KEY_PRODUCT", "==", PRIMARY_KEY_PRODUCT)).valueChanges()
   }
-
+ 
   public createCommentProductCount(data){
     return this.db.collection('commentProductCount').add(data).then(res => {
       this.update("commentProductCount", res.id, { PRIMARY_KEY: res.id })

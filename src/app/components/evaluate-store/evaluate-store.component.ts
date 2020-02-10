@@ -24,6 +24,7 @@ export class EvaluateStoreComponent implements OnInit, OnDestroy {
     FOREIGN_KEY_CLIENT : new FormControl(null),
     FOREIGN_KEY_STORE : new FormControl(null),
     commentText: new FormControl(null),
+    indexDay : new FormControl(null),
     commentDate : new FormControl(null),
     commentImageUrl : new FormControl(null),
     commentName : new FormControl(null),
@@ -112,6 +113,7 @@ export class EvaluateStoreComponent implements OnInit, OnDestroy {
         FOREIGN_KEY_CLIENT : res[0].PRIMARY_KEY,
         FOREIGN_KEY_STORE : this.route.snapshot.params['id'],
         commentDate : `${new Date()}`,
+        indexDay: new Date(),
         commentImageUrl : res[0].clientImageUrl,
         commentName : res[0].clientName+""+res[0].clientLastName,
       });

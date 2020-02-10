@@ -86,7 +86,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.paymentListService.getTimeZone().subscribe((times:any)=>{
-         this.DateTimeZone =  new Date()//times.datetime
+         this.DateTimeZone =  new Date(times.datetime)//
     })
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((token:any)=>{
       this.getPayment(token.uid)
@@ -123,7 +123,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
         inPaymentDay : payment[0].inPaymentDay,
         receivedPaymentDay : payment[0].receivedPaymentDay,
         latePaymentDay : payment[0].latePaymentDay,
-        indexDay : new Date()
+        indexDay : new Date(this.DateTimeZone)
       })
     })
   }
@@ -153,7 +153,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
 
     if(Object.keys(this.storePayment).length != 0){
-      if(new Date() > new Date(this.storePayment[0].inPaymentDay) && this.storePayment[0].statusPayment == "openPayment"){
+      if(new Date(this.DateTimeZone) > new Date(this.storePayment[0].inPaymentDay) && this.storePayment[0].statusPayment == "openPayment"){
         this.setFormPayment(this.adminPayment)
         this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'inPayment'})
         this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
@@ -166,7 +166,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   public paymentInLate(){
     if(this.storePayment[0]){
-      if(new Date() > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"){
+      if(new Date(this.DateTimeZone) > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"){
         this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'latePayment'})
         this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
           this.subscription.unsubscribe()
@@ -175,7 +175,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
       }
     } 
     if(this.storePayment[1]){
-      if(new Date() > new Date(this.storePayment[1].latePaymentDay) && this.storePayment[1].statusPayment == "inPayment"){
+      if(new Date(this.DateTimeZone) > new Date(this.storePayment[1].latePaymentDay) && this.storePayment[1].statusPayment == "inPayment"){
         this.paymentListService.updateStatusPayment(this.storePayment[1].PRIMARY_KEY, {statusPayment:'latePayment'})
         this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[1].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
           this.subscription.unsubscribe()
@@ -204,7 +204,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
       inPaymentDay : payment[0].inPaymentDay,
       receivedPaymentDay : payment[0].receivedPaymentDay,
       latePaymentDay : payment[0].latePaymentDay,
-      indexDay : new Date()
+      indexDay : new Date(this.DateTimeZone)
     })
   }
 

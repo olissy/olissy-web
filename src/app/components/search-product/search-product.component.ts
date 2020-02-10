@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { SearchProductService } from './search-product.service'
 declare var $ :any
-
+ 
 @Component({
   selector: 'search-product',
   templateUrl: './search-product.component.html',
@@ -151,13 +151,13 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
   public selectSuggestion(suggestion){
-    this.router.navigate(['/product'])
+    this.router.navigate(['/'])
     this.searchProductDB_Output.emit({search:'suggestion', product:suggestion})
   }
 
   public selectAllSuggestion(){
+    this.router.navigate(['/'])
     this.searchProductDB_Output.emit({search:'typing', product:this.suggestedProductList})
-    this.router.navigate(['/product'])
   }
 
   public autoFocus(){
@@ -197,3 +197,4 @@ export class SearchProductComponent implements OnInit, OnDestroy {
   }
 
 }
+

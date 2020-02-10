@@ -53,7 +53,7 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.adminPaymentService.getTimeZone().subscribe((times:any)=>{
-      this.clock.timeZone =  new Date()//times.datetime
+      this.clock.timeZone =  new Date(times.datetime)//
     })
     this.startPayment()
   }
@@ -71,7 +71,7 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
 
   public createNewPayment(){
     if(Object.keys(this.paymentList).length != 0){
-      if(new Date() > new Date(this.paymentList[0].inPaymentDay) && this.createOnePaymentByDate && this.paymentList[0].statusPayment == "openPayment"){
+      if(new Date(this.clock.timeZone) > new Date(this.paymentList[0].inPaymentDay) && this.createOnePaymentByDate && this.paymentList[0].statusPayment == "openPayment"){
         this.createOnePaymentByDate = false
         this.setNewDateFormPayment()
         this.adminPaymentService.updateStatusPayment(this.paymentList[0].PRIMARY_KEY, {statusPayment:'inPayment'}).then((payment:any)=>{
@@ -83,7 +83,7 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
 
   public paymentInLate(){ 
     if(this.paymentList[1]){
-      if(new Date() > new Date(this.paymentList[1].latePaymentDay) && this.lateOnePaymentByDate && this.paymentList[1].statusPayment == "inPayment"){
+      if(new Date(this.clock.timeZone) > new Date(this.paymentList[1].latePaymentDay) && this.lateOnePaymentByDate && this.paymentList[1].statusPayment == "inPayment"){
         this.lateOnePaymentByDate = false
         this.adminPaymentService.updateStatusPayment(this.paymentList[1].PRIMARY_KEY, {statusPayment:'latePayment'})
       }
@@ -91,8 +91,8 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
   }
 
   public setNewDateFormPayment(){
-    var date = new Date();
-    var nextMonth = new Date();
+    var date = new Date(this.clock.timeZone);
+    var nextMonth = new Date(this.clock.timeZone);
 
     var openPaymentDay:any = new Date(date.getFullYear(), date.getMonth(), 1);
     var closedPaymentDay:any = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -110,7 +110,7 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
       closedPaymentDay:closedPaymentDay.toString(),
       inPaymentDay: inPaymentDay.toString(),
       latePaymentDay: latePaymentDay.toString(),
-      indexDay: new Date()
+      indexDay: new Date(this.clock.timeZone)
     })
   }
 

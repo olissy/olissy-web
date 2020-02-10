@@ -45,7 +45,7 @@ export class StoreOrderService {
   }
 
   public getOrderByFOREIGN_KEY(collection, FOREIGN_KEY_STORE){
-    return this.db.collection(collection, ref => ref.where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE)).valueChanges()
+    return this.db.collection(collection, ref => ref.where("FOREIGN_KEY_STORE", "==", FOREIGN_KEY_STORE).orderBy("indexDay", "desc")).valueChanges()
   }
 
   public getReactionsProduct(FOREIGN_KEY_CLIENT, FOREIGN_KEY_PRODUCT){

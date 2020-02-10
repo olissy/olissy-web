@@ -260,6 +260,7 @@ export class StoreProductRecordComponent implements OnInit, OnDestroy {
   public ngOnDestroy(){
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    this.data.setProductDB(false)
   }
 
 }

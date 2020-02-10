@@ -7,6 +7,7 @@ import { AppService } from '../../app.service'
 import { AuthService  } from '../../AuthService'
 import { client, user } from '../../interfaces';
 import { ClientHeaderService } from './client-header.service'
+declare var $ :any;
 
 @Component({
   selector: 'app-client-header',
@@ -111,6 +112,7 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
   }
 
   searchProductDB_Output(productDB){
+    $('#displaySearch').modal('hide'); 
     this.data.setProductDB(productDB)
   }
 

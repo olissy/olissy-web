@@ -120,9 +120,24 @@ export class StoreProductComponent implements OnInit, OnDestroy {
   }
 
   public removerItemCarrinho(menu_PRIMARY_KEY, itemDecrement_PRIMARY_KEY, quantities ){
+
+/** 
+
+      for (const index in this.appService.produtos) {
+
+        if(this.appService.produtos[index].PRIMARY_KEY == itemDecrement_PRIMARY_KEY){
+          console.log(this.appService.produtos[index])
+          //this.appService.produtos[index].productPrice = this.appService.produtos[index].productPrice - this.appService.produtos[index].productPriceOrigin
+        }
+    
+      }
+    
+*/
+
     if(menu_PRIMARY_KEY == itemDecrement_PRIMARY_KEY && quantities == 0){
       for (const index in this.appService.produtos) {
         if(this.appService.produtos[index].PRIMARY_KEY == itemDecrement_PRIMARY_KEY){
+          console.log(Number(index))
           this.appService.produtos.splice(Number(index), 1)
         }
       }
