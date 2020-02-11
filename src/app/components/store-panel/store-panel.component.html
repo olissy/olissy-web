@@ -164,34 +164,84 @@
               />
             </div>
             <div class="form-group">
-              <label for="exampleInputEmail1">cidade</label>
+              <label for="cep">
+                CEP
+              </label>
               <input
                 type="text"
                 class="form-control"
+                (keyup)="setCep($event.target.value)"
                 autocomplete="off"
-                formControlName="storeCity"
-                required
-                placeholder="Enter cidade"
+                [imask]="cepMask"
+                [unmask]="true"
+                minlength="8"
+                formControlName="storeCEP"
+                placeholder="Enter cep"
               />
               <span
                 class="help-block"
                 style="color:green"
                 *ngIf="
-                  formStores.controls.storeCity.valid &&
-                  (formStores.controls.storeCity.dirty ||
-                  formStores.controls.storeCity.touched)
-                "
-              ><i class="fa fa-check"></i>Ok
+                  this.formStores.controls['storeCEP'].valid &&
+                  (this.formStores.controls['storeCEP'].dirty ||
+                  this.formStores.controls['storeCEP'].touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+            </div>
+            <div class="form-group">
+              <label for="state">
+                Estados
+              </label>
+              <select formControlName="storeState" (change)="setState($event.target.value)" class="form-control" required>
+                <option *ngFor="let state of states" [value]="state.sigla">
+                  {{ state.nome }}
+                </option>
+              </select>
+              <span
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  this.formStores.controls['storeState'].valid &&
+                  (this.formStores.controls['storeState'].dirty ||
+                  this.formStores.controls['storeState'].touched)
+                "><i class="fa fa-check"></i>Ok
               </span>
               <span
                 class="help-block"
                 style="color:red"
                 *ngIf="
-                  formStores.controls.storeCity.invalid &&
-                  (formStores.controls.storeCity.dirty ||
-                  formStores.controls.storeCity.touched)
-                "
-              ><i class="fa fa-remove"></i>Campo Obrigatorio
+                  this.formStores.controls['storeState'].invalid &&
+                  (this.formStores.controls['storeState'].dirty ||
+                  this.formStores.controls['storeState'].touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div> 
+            <div class="form-group">
+              <label for="exampleInputEmail1">
+                cidade
+              </label>
+              <select formControlName="storeCity" class="form-control" required>
+                <option *ngFor="let city of citys"[value]="city">
+                  {{ city }}
+                </option>
+              </select>
+              <span 
+                class="help-block"
+                style="color:green"
+                *ngIf="
+                  this.formStores.controls['storeCity'].valid &&
+                  (this.formStores.controls['storeCity'].dirty ||
+                  this.formStores.controls['storeCity'].touched)
+                "><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="
+                  this.formStores.controls['storeCity'].invalid &&
+                  (this.formStores.controls['storeCity'].dirty ||
+                  this.formStores.controls['storeCity'].touched)
+                "><i class="fa fa-remove"></i>Campo Obrigatorio
               </span>
             </div>
             <div class="form-group">

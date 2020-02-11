@@ -6,7 +6,7 @@ import IMask from 'imask';
 import { AuthService } from '../../AuthService'
 import { client } from '../../interfaces';
 import { ClientUserChangeRegistrationService } from './client-user-change-registration.service'
-//import estadosCidades from '../../../assets/estados-cidades'
+import estadosCidades from '../../../assets/estados-cidades'
 
 @Component({
   selector: 'app-client-user-change-registration',
@@ -24,7 +24,8 @@ export class ClientUserChangeRegistrationComponent implements OnInit, OnDestroy 
 
   public getNameImagem = ""
 
-  //public stateCity = estadosCidades.endereco[0].estados
+  public states = estadosCidades.endereco[0].estados
+  public citys = estadosCidades.endereco[0].estados[0].cidades
 
   public phoneMask: any = {
     mask: '(00) 0000-0000',
@@ -33,6 +34,11 @@ export class ClientUserChangeRegistrationComponent implements OnInit, OnDestroy 
 
   public cellPhoneMask: any = {
     mask: '(00) 0 0000-0000',
+    lazy: false
+  };
+
+  public cepMask: any = {
+    mask: '00000-000',
     lazy: false
   };
 
@@ -53,8 +59,9 @@ export class ClientUserChangeRegistrationComponent implements OnInit, OnDestroy 
     'PRIMARY_KEY':new FormControl(null,Validators.required),
     'clientNeighborhood': new FormControl(null),
     'clientCellPhone': new FormControl(null),
-    'clientCity': new FormControl(null),
-    'clientState': new FormControl(null),
+    'clientCountry': new FormControl('Brazil'),
+    'clientCity': new FormControl('Acrelândia'),
+    'clientState': new FormControl('AC'),
     'clientCEP': new FormControl(null),
     'clientEmail': new FormControl(null,Validators.required),
     'imageNew': new FormControl(null),
@@ -74,19 +81,46 @@ export class ClientUserChangeRegistrationComponent implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.cliente()
-    /*this.viacep('https://viacep.com.br/ws/29211350/json/', function(response) {
-      console.log(response, estadosCidades.endereco[0].estados)
-    });*/
+    for (const uf in this.states) {
+      if (this.states[uf].sigla == "AC") {
+        this.citys = this.states[uf].cidades
+      }
+    }
   }
 
-  viacep(theUrl, callback){
-    let xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() { 
-          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);     
+  setState(state){
+    for (const uf in this.states) {
+      if (this.states[uf].sigla == state) {
+        this.citys = this.states[uf].cidades
+      }
+    }
+    this.formularioCliente.patchValue({
+      clientCity : null
+    })
+    this.formularioCliente.get('clientCity').markAsTouched()
+  }
+  
+  setCep(caracter){
+    let caracterUnderline = caracter.replace(/_/g, ''); 
+    let caracterSubtrair = caracterUnderline.replace(/-/g, ''); 
+    let cep = caracterSubtrair
+    if(cep.length == 8){
+      this.clienteUsuarioService.getCEP(cep).subscribe((cepResponse:any)=>{
+        if(cepResponse.cep == caracterUnderline){
+           this.formularioCliente.patchValue({
+            clientNeighborhood : cepResponse.bairro,
+            clientCity : cepResponse.localidade,
+            clientStreet : cepResponse.logradouro,
+            clientState : cepResponse.uf,
+          })
+          for (const uf in this.states) {
+            if (this.states[uf].sigla == cepResponse.uf) {
+              this.citys = this.states[uf].cidades
+            }
+          }
         }
-        xmlHttp.open("GET", theUrl, true);
-        xmlHttp.send(null);
+      })
+    }
   }
 
   public cliente(){
@@ -108,7 +142,16 @@ export class ClientUserChangeRegistrationComponent implements OnInit, OnDestroy 
           clientSex : user[0].clientSex,
           clientLastName : user[0].clientLastName,
           clientTelephone :user[0].clientTelephone,
+          clientCEP : user[0].clientCEP,
+          clientState : user[0].clientState,
         })
+
+        for (const uf in this.states) {
+          if (this.states[uf].sigla == user[0].clientState) {
+            this.citys = this.states[uf].cidades
+          }
+        }
+
         //se nao existir chave
         if(!user[0].PRIMARY_KEY){
           //executa funcao para obeter chave e inserir no formlulario

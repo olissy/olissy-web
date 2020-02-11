@@ -4,7 +4,7 @@ import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { AuthService } from '../../AuthService'
 import { StorePanelService } from './store-panel.service'
-
+import estadosCidades from '../../../assets/estados-cidades'
 
 @Component({
   selector: 'app-store-panel',
@@ -19,6 +19,10 @@ export class StorePanelComponent implements OnInit, OnDestroy {
   public loading:boolean = false
 
   public PRIMARY_KEY_USUARIO:string = ""
+
+  public states = estadosCidades.endereco[0].estados
+  public citys = estadosCidades.endereco[0].estados[0].cidades
+
 
   public avatar = "https://firebasestorage.googleapis.com/v0/b/olissy-app.appspot.com/o/icone%2Favatar.png?alt=media&token=6b83f0ac-4a70-45c1-ba79-70f52e8f9b64"
 
@@ -37,7 +41,11 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     lazy: false
   }
 
-  
+  public cepMask: any = {
+    mask: '00000-000',
+    lazy: false
+  };
+
 
   public formStores: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
@@ -52,13 +60,16 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     'storeDeliveryEstimate':new FormControl(null,Validators.required),
     'storeCategory':new FormControl(null,Validators.required),
     'storeAbout':new FormControl(null,Validators.required),
-    'storeCity':new FormControl(null,Validators.required),
     'storeNeighborhood':new FormControl(null,Validators.required),
     'storeStreet':new FormControl(null,Validators.required),
     'storeCellPhone':new FormControl(null,Validators.required),
     'storeEmail':new FormControl(null),
     'storeTelephone':new FormControl(null,Validators.required),
     'storeCNPJ':new FormControl(null,Validators.required),
+    'storeCountry': new FormControl('Brazil'),
+    'storeCity': new FormControl('Acrelândia'),
+    'storeState': new FormControl('AC'),
+    'storeCEP': new FormControl(null),
   })
 
   constructor(private comercioService: StorePanelService,
@@ -85,8 +96,15 @@ export class StorePanelComponent implements OnInit, OnDestroy {
           storeRating: user[0].storeRating,
           storeStreet: user[0].storeStreet,
           storeTelephone: user[0].storeTelephone,
-          storeCNPJ : user[0].storeCNPJ
+          storeCNPJ : user[0].storeCNPJ,
+          storeCEP : user[0].storeCEP,
+          storeState : user[0].storeState,
         })
+        for (const uf in this.states) {
+          if (this.states[uf].sigla == user[0].storeState) {
+            this.citys = this.states[uf].cidades
+          }
+        }
       })
     })
   }
@@ -231,6 +249,43 @@ export class StorePanelComponent implements OnInit, OnDestroy {
       imageNew: blob
     })
   }
+
+  
+  setState(state){
+    for (const uf in this.states) {
+      if (this.states[uf].sigla == state) {
+        this.citys = this.states[uf].cidades
+      }
+    }
+    this.formStores.patchValue({
+      storeCity : null
+    })
+    this.formStores.get('storeCity').markAsTouched()
+  }
+
+  setCep(caracter){
+    let caracterUnderline = caracter.replace(/_/g, ''); 
+    let caracterSubtrair = caracterUnderline.replace(/-/g, ''); 
+    let cep = caracterSubtrair
+    if(cep.length == 8){
+      this.comercioService.getCEP(cep).subscribe((cepResponse:any)=>{
+        if(cepResponse.cep == caracterUnderline){
+           this.formStores.patchValue({
+            storeNeighborhood : cepResponse.bairro,
+            storeCity : cepResponse.localidade,
+            storeStreet : cepResponse.logradouro,
+            storeState : cepResponse.uf,
+          })
+          for (const uf in this.states) {
+            if (this.states[uf].sigla == cepResponse.uf) {
+              this.citys = this.states[uf].cidades
+            }
+          }
+        }
+      })
+    }
+  }
+
 
   ngOnDestroy(){
     this.unsubscribe$.next();

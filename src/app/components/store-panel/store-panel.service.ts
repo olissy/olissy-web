@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { firebase } from '@firebase/app';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { firebase } from '@firebase/app';
 
 export class StorePanelService {
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore, private http:HttpClient){}
 
   public getcategory(){
     return  this.db.collection('category').valueChanges()
@@ -56,6 +57,13 @@ export class StorePanelService {
   public getByFOREIGN_KEY(collection, FOREIGN_KEY){
     return this.db.collection(collection, ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
   }
+
+
+  public getCEP(cep) {
+    return this.http.get<any[]>(`https://viacep.com.br/ws/${cep}/json/`);
+  }
 }
+
+
 
 

@@ -5,10 +5,11 @@
 export const environment = {
   production: false,
   ambiente: "desenvolvimento",
-  apiOlissyMongoDB:"http://localhost:8080/product"
+  apiOlissyMongoDB:"https://olissy.herokuapp.com/product"
+  
 };
 
-/*
+/*apiOlissyMongoDB:"http://localhost:8080/product"
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
  *

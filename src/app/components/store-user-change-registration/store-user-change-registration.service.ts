@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import '@firebase/storage';
 import { firebase } from '@firebase/app';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { firebase } from '@firebase/app';
 
 export class StoreUserChangeRegistrationService {
 
-  constructor(private db: AngularFirestore) {}
+  constructor(private db: AngularFirestore, private http: HttpClient){}
 
   public async alterarDadosCliente(pk: string, data: any){
     delete data.imageDisplay;
@@ -49,6 +50,10 @@ export class StoreUserChangeRegistrationService {
       res = r;
     });
     return res;
+  }
+
+  public getCEP(cep) {
+    return this.http.get<any[]>(`https://viacep.com.br/ws/${cep}/json/`);
   }
 
 }

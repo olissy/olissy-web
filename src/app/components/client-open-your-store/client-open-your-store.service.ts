@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { firebase } from '@firebase/app';
 import '@firebase/storage';
+
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,7 @@ import '@firebase/storage';
 
 export class ClientOpenYourStoreService {
 
-  constructor(private db: AngularFirestore){}
+  constructor(private db: AngularFirestore, private http:HttpClient){}
 
   async setImagemStorage(imageName, imagem){
     var res:any = false
@@ -69,6 +71,10 @@ export class ClientOpenYourStoreService {
   public async storeOfQuantity() {
     const increment = firebase.firestore.FieldValue.increment(1);
     await this.db.collection('countOf').doc("0FPh9yLyy34ldMYC8l8t").update({ store : increment })
+  }
+
+  public getCEP(cep) {
+    return this.http.get<any[]>(`https://viacep.com.br/ws/${cep}/json/`);
   }
 }
 

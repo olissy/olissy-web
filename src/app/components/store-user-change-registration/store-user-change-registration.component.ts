@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import IMask from 'imask';
+import estadosCidades from '../../../assets/estados-cidades'
 
 @Component({
   selector: 'app-store-user-change-registration',
@@ -20,9 +21,17 @@ export class StoreUserChangeRegistrationComponent implements OnInit, OnDestroy {
 
   public loading:boolean = false
 
+  public states = estadosCidades.endereco[0].estados
+  public citys = estadosCidades.endereco[0].estados[0].cidades
+
   public avatar:any = "/assets/plataform/avatar.png"
 
   public getNameImagem = ""
+
+  public cepMask: any = {
+    mask: '00000-000',
+    lazy: false
+  };
 
   public timestampMask: any = {
     mask: Date,
@@ -69,7 +78,6 @@ export class StoreUserChangeRegistrationComponent implements OnInit, OnDestroy {
     'PRIMARY_KEY':new FormControl(null,Validators.required),
     'clientNeighborhood': new FormControl(null),
     'clientCellPhone': new FormControl(null),
-    'clientCity': new FormControl(null),
     'clientEmail': new FormControl(null,Validators.required),
     'imageNew': new FormControl(null),
     'imageDisplay': new FormControl(this.avatar,Validators.required),
@@ -81,6 +89,10 @@ export class StoreUserChangeRegistrationComponent implements OnInit, OnDestroy {
     'clientSex':new FormControl(null),
     'clientLastName':new FormControl(null,Validators.required),
     'clientTelephone':new FormControl(null),
+    'clientCountry': new FormControl('Brazil'),
+    'clientCity': new FormControl('Acrelândia'),
+    'clientState': new FormControl('AC'),
+    'clientCEP': new FormControl(null),
   })
 
   constructor(private authService:AuthService,
@@ -88,6 +100,41 @@ export class StoreUserChangeRegistrationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cliente()
+  }
+
+  setState(state){
+    for (const uf in this.states) {
+      if (this.states[uf].sigla == state) {
+        this.citys = this.states[uf].cidades
+      }
+    }
+    this.formularioCliente.patchValue({
+      clientCity : null
+    })
+    this.formularioCliente.get('clientCity').markAsTouched()
+  }
+  
+  setCep(caracter){
+    let caracterUnderline = caracter.replace(/_/g, ''); 
+    let caracterSubtrair = caracterUnderline.replace(/-/g, ''); 
+    let cep = caracterSubtrair
+    if(cep.length == 8){
+      this.comercioUsuarioService.getCEP(cep).subscribe((cepResponse:any)=>{
+        if(cepResponse.cep == caracterUnderline){
+           this.formularioCliente.patchValue({
+            clientNeighborhood : cepResponse.bairro,
+            clientCity : cepResponse.localidade,
+            clientStreet : cepResponse.logradouro,
+            clientState : cepResponse.uf,
+          })
+          for (const uf in this.states) {
+            if (this.states[uf].sigla == cepResponse.uf) {
+              this.citys = this.states[uf].cidades
+            }
+          }
+        }
+      })
+    }
   }
 
   public cliente(){
@@ -109,7 +156,16 @@ export class StoreUserChangeRegistrationComponent implements OnInit, OnDestroy {
           clientSex : user[0].clientSex,
           clientLastName : user[0].clientLastName,
           clientTelephone :user[0].clientTelephone,
+          clientCEP : user[0].clientCEP,
+          clientState : user[0].clientState
         })
+
+        for (const uf in this.states) {
+          if (this.states[uf].sigla == user[0].clientState) {
+            this.citys = this.states[uf].cidades
+          }
+        }
+
         //se nao existir chave
         if(!user[0].PRIMARY_KEY){
           //executa funcao para obeter chave e inserir no formlulario

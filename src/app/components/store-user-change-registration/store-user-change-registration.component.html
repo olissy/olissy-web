@@ -166,25 +166,77 @@
             ><i class="fa fa-remove"></i>Campo Obrigatorio
             </span>
           </div>
+
           <div class="form-group">
-            <label for="exampleInputEmail1">cidade</label>
+            <label for="cep">
+              CEP
+            </label>
             <input
               type="text"
               class="form-control"
+              (keyup)="setCep($event.target.value)"
               autocomplete="off"
-              required
-              formControlName="clientCity"
-              placeholder="Enter cidade"
+              [imask]="cepMask"
+              [unmask]="true"
+              minlength="8"
+              formControlName="clientCEP"
+              placeholder="Enter cep"
             />
             <span
+              class="help-block"
+              style="color:green"
+              *ngIf="
+                this.formularioCliente.controls['clientCEP'].valid &&
+                (this.formularioCliente.controls['clientCEP'].dirty ||
+                this.formularioCliente.controls['clientCEP'].touched)
+              "><i class="fa fa-check"></i>Ok
+            </span>
+          </div>
+          <div class="form-group">
+            <label for="state">
+              Estados
+            </label>
+            <select formControlName="clientState" (change)="setState($event.target.value)" class="form-control" required>
+              <option *ngFor="let state of states" [value]="state.sigla">
+                {{ state.nome }}
+              </option>
+            </select>
+            <span
+              class="help-block"
+              style="color:green"
+              *ngIf="
+                this.formularioCliente.controls['clientState'].valid &&
+                (this.formularioCliente.controls['clientState'].dirty ||
+                this.formularioCliente.controls['clientState'].touched)
+              "><i class="fa fa-check"></i>Ok
+            </span>
+            <span
+              class="help-block"
+              style="color:red"
+              *ngIf="
+                this.formularioCliente.controls['clientState'].invalid &&
+                (this.formularioCliente.controls['clientState'].dirty ||
+                this.formularioCliente.controls['clientState'].touched)
+              "><i class="fa fa-remove"></i>Campo Obrigatorio
+            </span>
+          </div> 
+          <div class="form-group">
+            <label for="exampleInputEmail1">
+              cidade
+            </label>
+            <select formControlName="clientCity" class="form-control" required>
+              <option *ngFor="let city of citys"[value]="city">
+                {{ city }}
+              </option>
+            </select>
+            <span 
               class="help-block"
               style="color:green"
               *ngIf="
                 this.formularioCliente.controls['clientCity'].valid &&
                 (this.formularioCliente.controls['clientCity'].dirty ||
                 this.formularioCliente.controls['clientCity'].touched)
-              "
-            ><i class="fa fa-check"></i>Ok
+              "><i class="fa fa-check"></i>Ok
             </span>
             <span
               class="help-block"
@@ -193,10 +245,10 @@
                 this.formularioCliente.controls['clientCity'].invalid &&
                 (this.formularioCliente.controls['clientCity'].dirty ||
                 this.formularioCliente.controls['clientCity'].touched)
-              "
-            ><i class="fa fa-remove"></i>Campo Obrigatorio
+              "><i class="fa fa-remove"></i>Campo Obrigatorio
             </span>
           </div>
+
           <div class="form-group">
             <label for="exampleInputEmail1">bairro</label>
             <input

@@ -22,6 +22,8 @@ export interface client {
   clientSex?: string;
   clientLastName?: string;
   clientTelephone?: string;
+  clientCEP?: string;
+  clientState?: string;
 }
 
 export interface comment {

@@ -5,6 +5,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../AuthService'
 import { ClientOpenYourStoreService } from './client-open-your-store.service'
+import estadosCidades from '../../../assets/estados-cidades'
+
 
 @Component({
   selector: 'app-client-open-your-store',
@@ -21,6 +23,9 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
   public categorias = [];
 
   public PRIMARY_KEY_USUARIO:string = ""
+
+  public states = estadosCidades.endereco[0].estados
+  public citys = estadosCidades.endereco[0].estados[0].cidades
 
   public avatar = "/assets/plataform/avatar.png"
 
@@ -39,6 +44,11 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     lazy: false
   };
 
+  public cepMask: any = {
+    mask: '00000-000',
+    lazy: false
+  };
+
   public formularioAbrirMinhaLoja: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
     'PRIMARY_KEY':new FormControl(null),
@@ -53,7 +63,6 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     'storeDeliveryEstimate':new FormControl(null,Validators.required),
     'storeCategory':new FormControl('farmacia',Validators.required),
     'storeAbout':new FormControl(null,Validators.required),
-    'storeCity':new FormControl(null,Validators.required),
     'storeNeighborhood':new FormControl(null,Validators.required),
     'storeStreet':new FormControl(null,Validators.required),
     'storeCellPhone':new FormControl(null,Validators.required),
@@ -62,6 +71,10 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     'storeCNPJ':new FormControl(null,Validators.required),
     'authorizationOpenStore':new FormControl(false,Validators.required),
     'storeOpenOrClosed':new FormControl(true,Validators.required),
+    'storeCountry': new FormControl('Brazil'),
+    'storeCity': new FormControl('Acrelândia'),
+    'storeState': new FormControl('AC'),
+    'storeCEP': new FormControl(null),
   })
 
   constructor(private authService:AuthService,
@@ -229,6 +242,42 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
       imageDisplay:Base64,
       imageNew: blob
     })
+  }
+
+
+  setState(state){
+    for (const uf in this.states) {
+      if (this.states[uf].sigla == state) {
+        this.citys = this.states[uf].cidades
+      }
+    }
+    this.formularioAbrirMinhaLoja.patchValue({
+      storeCity : null
+    })
+    this.formularioAbrirMinhaLoja.get('storeCity').markAsTouched()
+  }
+
+  setCep(caracter){
+    let caracterUnderline = caracter.replace(/_/g, ''); 
+    let caracterSubtrair = caracterUnderline.replace(/-/g, ''); 
+    let cep = caracterSubtrair
+    if(cep.length == 8){
+      this.abrirSuaLojaService.getCEP(cep).subscribe((cepResponse:any)=>{
+        if(cepResponse.cep == caracterUnderline){
+           this.formularioAbrirMinhaLoja.patchValue({
+            storeNeighborhood : cepResponse.bairro,
+            storeCity : cepResponse.localidade,
+            storeStreet : cepResponse.logradouro,
+            storeState : cepResponse.uf,
+          })
+          for (const uf in this.states) {
+            if (this.states[uf].sigla == cepResponse.uf) {
+              this.citys = this.states[uf].cidades
+            }
+          }
+        }
+      })
+    }
   }
 
   ngOnDestroy(){
