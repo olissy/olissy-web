@@ -49,6 +49,14 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     lazy: false
   };
 
+  public checkPayment = [
+    {description: 'Dinheiro', value: 'money', checked:false},
+    {description: "Débito", value: 'debit', checked:false},
+    {description: "Crédito", value: 'credit', checked:false}
+  ];
+
+  public checkPaymentStatus:any = "clean"
+
   public formularioAbrirMinhaLoja: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
     'PRIMARY_KEY':new FormControl(null),
@@ -75,6 +83,9 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     'storeCity': new FormControl('Acrelândia'),
     'storeState': new FormControl('AC'),
     'storeCEP': new FormControl(null),
+    'money': new FormControl(false),
+    'debit': new FormControl(false),
+    'credit': new FormControl(false),
   })
 
   constructor(private authService:AuthService,
@@ -110,6 +121,34 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
 
   }
 
+  onCheckChange(event) {
+
+    if(event.target.value == "money"){
+      this.formularioAbrirMinhaLoja.patchValue({
+        money: event.target.checked
+      })
+    }
+
+    if(event.target.value == "debit"){
+      this.formularioAbrirMinhaLoja.patchValue({
+        debit: event.target.checked
+      })
+    }
+
+    if(event.target.value == "credit"){
+      this.formularioAbrirMinhaLoja.patchValue({
+        credit: event.target.checked
+      })
+    }
+
+    if(this.formularioAbrirMinhaLoja.get('money').value || this.formularioAbrirMinhaLoja.get('debit').value || this.formularioAbrirMinhaLoja.get('credit').value){
+      this.checkPaymentStatus = true
+    }else{
+      this.checkPaymentStatus = false
+    }
+
+  }
+
   public setIdDocInformularioCliente(FOREIGN_KEY, EMAIL){
     this.abrirSuaLojaService.getIdDocByFOREIGN_KEY("store", FOREIGN_KEY).get().pipe(takeUntil(this.unsubscribe$)).subscribe( (res)=> {
      let PRIMARY_KEY = ""
@@ -142,19 +181,27 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     this.formularioAbrirMinhaLoja.get('storeAbout').markAsTouched()
     this.formularioAbrirMinhaLoja.get('storeTelephone').markAsTouched()
     this.formularioAbrirMinhaLoja.get('storeCNPJ').markAsTouched()
-    console.log( this.formularioAbrirMinhaLoja.value )
-    if(this.formularioAbrirMinhaLoja.status === "VALID"){
-      this.abrirSuaLojaService.setImagemStorage(this.formularioAbrirMinhaLoja.get('storeImagePath').value, this.formularioAbrirMinhaLoja.get('imageNew').value).then(async (url:any)=>{
-        let storeImageUrl = await url
-        this.formularioAbrirMinhaLoja.patchValue({
-          storeImageUrl: storeImageUrl,
-        })
-        this.abrirSuaLojaService.cadastrarLoja(this.formularioAbrirMinhaLoja.value, this.formularioAbrirMinhaLoja.get('PRIMARY_KEY').value, this.PRIMARY_KEY_USUARIO).then((cadastro:any)=>{
-          this.router_navigator.navigate(['/store-product-registration']);
-        })
-      }) 
+
+    console.log(this.formularioAbrirMinhaLoja.value)
+
+    if(this.formularioAbrirMinhaLoja.get('money').value || this.formularioAbrirMinhaLoja.get('debit').value || this.formularioAbrirMinhaLoja.get('credit').value){
+      this.checkPaymentStatus = true
+      /*
+      if(this.formularioAbrirMinhaLoja.status === "VALID"){
+        this.abrirSuaLojaService.setImagemStorage(this.formularioAbrirMinhaLoja.get('storeImagePath').value, this.formularioAbrirMinhaLoja.get('imageNew').value).then(async (url:any)=>{
+          let storeImageUrl = await url
+          this.formularioAbrirMinhaLoja.patchValue({
+            storeImageUrl: storeImageUrl,
+          })
+          this.abrirSuaLojaService.cadastrarLoja(this.formularioAbrirMinhaLoja.value, this.formularioAbrirMinhaLoja.get('PRIMARY_KEY').value, this.PRIMARY_KEY_USUARIO).then((cadastro:any)=>{
+            this.router_navigator.navigate(['/store-product-registration']);
+          })
+        }) 
+      }else{
+        this.loading = false
+      }*/
     }else{
-      this.loading = false
+      this.checkPaymentStatus = false
     }
   }
 

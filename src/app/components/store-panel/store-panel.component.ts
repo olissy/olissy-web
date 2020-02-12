@@ -46,6 +46,13 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     lazy: false
   };
 
+  public checkPayment = [
+    {description: 'Dinheiro', value: 'money', checked:false},
+    {description: "Débito", value: 'debit', checked:false},
+    {description: "Crédito", value: 'credit', checked:false}
+  ];
+
+  public checkPaymentStatus:any = "clean"
 
   public formStores: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
@@ -70,6 +77,9 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     'storeCity': new FormControl('Acrelândia'),
     'storeState': new FormControl('AC'),
     'storeCEP': new FormControl(null),
+    'money': new FormControl(false),
+    'debit': new FormControl(false),
+    'credit': new FormControl(false),
   })
 
   constructor(private comercioService: StorePanelService,
@@ -99,7 +109,13 @@ export class StorePanelComponent implements OnInit, OnDestroy {
           storeCNPJ : user[0].storeCNPJ,
           storeCEP : user[0].storeCEP,
           storeState : user[0].storeState,
+          money: user[0].money,
+          debit:  user[0].debit,
+          credit:  user[0].credit,
         })
+        this.checkPayment[0].checked = user[0].money
+        this.checkPayment[1].checked = user[0].debit
+        this.checkPayment[2].checked = user[0].credit
         for (const uf in this.states) {
           if (this.states[uf].sigla == user[0].storeState) {
             this.citys = this.states[uf].cidades
@@ -109,27 +125,61 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     })
   }
 
+  onCheckChange(event) {
+
+    if(event.target.value == "money"){
+      this.formStores.patchValue({
+        money: event.target.checked
+      })
+    }
+
+    if(event.target.value == "debit"){
+      this.formStores.patchValue({
+        debit: event.target.checked
+      })
+    }
+
+    if(event.target.value == "credit"){
+      this.formStores.patchValue({
+        credit: event.target.checked
+      })
+    }
+
+    if(this.formStores.get('money').value || this.formStores.get('debit').value || this.formStores.get('credit').value){
+      this.checkPaymentStatus = true
+    }else{
+      this.checkPaymentStatus = false
+    }
+
+  }
+
   public alterarCadastroLoja(){
-    this.markAsTouched()
-    if(this.formStores.status === "VALID"){
-      this.loading = true
-      if(this.formStores.get('imageNew').value === null){
-        this.comercioService.alterarCadastroLoja(this.formStores.value).then(()=>{
-          this.loading = false
-          this.markAsUntouched()
-        })
-      }else{
-        this.comercioService.setImagemStorage(`user/${this.formStores.get('PRIMARY_KEY').value}.jpg`, this.formStores.get('imageNew').value).then((url:any)=>{
-          this.formStores.patchValue({
-            clientImageUrl : url,
-            clientImagePath : `user/${this.formStores.get('PRIMARY_KEY').value}.jpg`
-          })
+
+    if(this.formStores.get('money').value || this.formStores.get('debit').value || this.formStores.get('credit').value){
+      this.checkPaymentStatus = true
+      this.markAsTouched()
+      if(this.formStores.status === "VALID"){
+        this.loading = true
+        if(this.formStores.get('imageNew').value === null){
           this.comercioService.alterarCadastroLoja(this.formStores.value).then(()=>{
             this.loading = false
             this.markAsUntouched()
           })
-        })
+        }else{
+          this.comercioService.setImagemStorage(`user/${this.formStores.get('PRIMARY_KEY').value}.jpg`, this.formStores.get('imageNew').value).then((url:any)=>{
+            this.formStores.patchValue({
+              clientImageUrl : url,
+              clientImagePath : `user/${this.formStores.get('PRIMARY_KEY').value}.jpg`
+            })
+            this.comercioService.alterarCadastroLoja(this.formStores.value).then(()=>{
+              this.loading = false
+              this.markAsUntouched()
+            })
+          })
+        }
       }
+    }else{
+      this.checkPaymentStatus = false
     }
   }
 

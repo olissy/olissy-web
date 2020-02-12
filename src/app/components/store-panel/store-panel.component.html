@@ -140,6 +140,32 @@
               ><i class="fa fa-remove"></i>Campo Obrigatorio
               </span>
             </div>
+
+
+
+            <div class="form-group">
+              <label for="checkbox-cart-payment" style="margin-bottom: 0px;">Forma de Pagamentos</label>
+              <div *ngFor="let check of checkPayment; let i=index">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" [checked]="check.checked" [value]="check.value" (change)="onCheckChange($event)">
+                    {{check.description}}
+                  </label>
+                </div>
+              </div>
+              <span 
+                class="help-block"
+                style="color:green"
+                *ngIf="checkPaymentStatus == true"><i class="fa fa-check"></i>Ok
+              </span>
+              <span
+                class="help-block"
+                style="color:red"
+                *ngIf="checkPaymentStatus == false"><i class="fa fa-remove"></i>Campo Obrigatorio
+              </span>
+            </div>
+
+
             <div class="form-group">
               <label for="exampleInputEmail1">Email da sua loja</label>
               <input

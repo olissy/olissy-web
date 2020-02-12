@@ -128,8 +128,14 @@
                 <option value="null" disabled hidden>
                   << Forma de Pagamento? >>
                 </option>
-                <option *ngFor="let pagamento of FormaPagamento"[value]="pagamento">
-                  {{ pagamento }}
+                <option  *ngIf="FormaPagamento[0].checked" [value]="FormaPagamento[0].value">
+                  {{ FormaPagamento[0].description }}
+                </option>
+                <option  *ngIf="FormaPagamento[1].checked" [value]="FormaPagamento[1].value">
+                  {{ FormaPagamento[1].description }}
+                </option>
+                <option  *ngIf="FormaPagamento[2].checked" [value]="FormaPagamento[2].value">
+                  {{ FormaPagamento[2].description }}
                 </option>
               </select>
               <span class="help-block button-alert-danger" style="color:#FFF; padding: 5px;"
@@ -140,6 +146,26 @@
                 "><b>Clique acima e escolhe a opção de pagamento</b>
               </span>
             </div>
+            <div class="form-group" *ngIf="formularioPedido.value.clientMethodPayment == 'money'">
+              <label class="control-label" for="clientCellPhone2">
+                Informe o valor do troco
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="informChange"
+                autocomplete="off"
+                placeholder="Informe o valor do troco"
+              />
+              <span class="help-block button-alert-danger" style="color:#FFF; padding: 5px;"
+              *ngIf="
+                formularioPedido.controls.informChange.invalid &&
+                (formularioPedido.controls.informChange.dirty ||
+                formularioPedido.controls.informChange.touched)
+              "><b>Digite o valor do troco</b>
+            </span>
+            </div>
+
           </div>
           <div class="col-sm-6 col-xs-12">
             <span class="lead">Montantes:</span>

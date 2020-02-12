@@ -155,6 +155,19 @@ export class OrderDetailComponent implements OnInit {
     window.history.back();
   }
 
+  public methodPaymentInPortugues(pay):string{
+    if(pay == 'money'){
+      return "Dinheiro"
+    }
+    if(pay == 'debit'){
+      return "Débito"
+    }
+    if(pay == 'credit'){
+      return "Crédito"
+    }
+
+  }
+
   ngOnDestroy(){
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

@@ -26,9 +26,9 @@
             </address>
         </div>
         <div class="col-sm-4 invoice-col">
-            <b>COD:</b> {{ order?.PRIMARY_KEY}}<br />
-            <b>Pagamento:</b> {{ order?.clientMethodPayment}}<br />
-            <b>Estado:</b> {{ order?.orderState}} 
+            <b>COD:</b> {{ order?.PRIMARY_KEY }}<br />
+            <b>Pagamento:</b> {{ methodPaymentInPortugues(order?.clientMethodPayment) }}<br />
+            <b>Estado:</b> {{ order?.orderState }} 
         </div>
         </div>
         <br />
@@ -60,12 +60,24 @@
         <div class="row">
             <div class="col-md-6 col-xs-12">
                 <span class="lead">Observações:</span>
-                <p class="text-muted well well-sm no-shadow" style="margin-top: 0px;">
-                # ver mensagem <b>Click aqui para ver</b><br />
-                # data do pedido <small><b>{{ formatDataOrder(order?.orderDate) }}</b></small><br />
-                # {{ order?.storeHours }} <br />
-                # Estimativa de entrega {{ order?.storeDeliveryEstimate }} 
-                </p>
+                <div class="text-muted well well-sm no-shadow" style="margin-top: 0px;">
+                    <div *ngIf="order?.clientMethodPayment == 'money'">
+                        # Informação do troco:
+                        <small>
+                            <b>
+                                {{  order?.informChange }}
+                            </b>
+                        </small>
+                    </div>
+                    <div>
+                        # data do pedido 
+                        <small>
+                            <b>
+                                {{ formatDataOrder(order?.orderDate) }}
+                            </b>
+                        </small>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6 col-xs-12">
                 <span class="lead">Montantes</span>

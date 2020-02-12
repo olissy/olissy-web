@@ -48,16 +48,16 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     ]
   }
 
-  public FormaPagamento = [
-    "Dinheiro",
-    "Cartão de Crédito",
-    "Cartão de Débito"
-  ]
-
   public cellPhoneMask: any = {
     mask: '(00) 0 0000-0000',
     lazy: false
   };
+
+  public FormaPagamento = [
+    {description: 'Dinheiro', value: 'money', checked:false},
+    {description: "Cartão de Débito", value: 'debit', checked:false},
+    {description: "Cartão de Crédito", value: 'credit', checked:false}
+  ];
 
   public data = new Date();
 
@@ -86,6 +86,7 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     "clientNeighborhood": new FormControl(null),
     "clientStreet": new FormControl(null),
     "clientEmail": new FormControl(null),
+    "informChange": new FormControl(null, Validators.required),
     "taxing": new FormControl('0.25'),
     "totalOrderValue": new FormControl(null),
     "orderDate": new FormControl(`${new Date()}`),
@@ -172,7 +173,8 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
             this.formularioPedido.patchValue({
               clientAddressFull: resposta.clientAddressFull,
               clientCellPhone: resposta.clientCellPhone,
-              clientMethodPayment: resposta.clientMethodPayment
+              clientMethodPayment: resposta.clientMethodPayment,
+              informChange: resposta.informChange
             })
           }
         })
@@ -198,6 +200,9 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public setImagePathEndNameFormulario(){
     this.pedidoService.getByFOREIGN_KEY('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+      this.FormaPagamento[0].checked = resposta[0].money
+      this.FormaPagamento[1].checked = resposta[0].debit
+      this.FormaPagamento[2].checked = resposta[0].credit
       this.formularioPedido.patchValue({
         storeImageUrl: resposta[0].storeImageUrl,
         storeName : resposta[0].storeName,
@@ -247,10 +252,17 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
   }
 
   public concluirPedido(){
+
+    if(this.formularioPedido.get('clientMethodPayment').valid && this.formularioPedido.get('informChange').valid == false){
+      this.formularioPedido.patchValue({
+        informChange:"0.00"
+      })
+    }
+
     this.formularioPedido.get('clientAddressFull').markAsTouched()
     this.formularioPedido.get('clientCellPhone').markAsTouched()
     this.formularioPedido.get('clientMethodPayment').markAsTouched()
-
+ 
     if( this.formularioPedido.get('clientAddressFull').valid == false ){
       document.getElementById("clientAddressFull").focus();
     }

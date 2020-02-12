@@ -10,3 +10,7 @@
   background-color: #c71582;
   border-color: #b31374;
 }
+
+.checkbox, .radio {
+  margin-top: 0px; 
+}
