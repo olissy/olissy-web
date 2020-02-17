@@ -18,9 +18,9 @@
                         <b>Aberto</b>
                     </span>
                     <span class="info-box-number">
-                        {{ formatterDateForPayment(payment.openPaymentDay) }}
+                        {{ payment.openPaymentDay | formatterDateForPayment }}
                         <br>
-                        {{ formatterDateForPayment(payment.closedPaymentDay) }} 
+                        {{ payment.closedPaymentDay | formatterDateForPayment }} 
                     </span>
                 </div>
                 <div class="box-end">
@@ -49,9 +49,9 @@
                             <b>Em pagamento</b>
                         </span>
                         <span class="info-box-number">
-                            {{ formatterDateForPayment(payment.inPaymentDay) }}
+                            {{ payment.inPaymentDay | formatterDateForPayment }}
                             <br>
-                            {{ formatterDateForPayment(payment.latePaymentDay) }} 
+                            {{ payment.latePaymentDay | formatterDateForPayment }}
                         </span>
                     </div>
                     <div class="box-end">
@@ -80,9 +80,9 @@
                             <b>Fechado</b>
                         </span>
                         <span class="info-box-number">
-                            {{ formatterDateForPayment(payment.openPaymentDay) }}
+                            {{ payment.openPaymentDay | formatterDateForPayment }}
                             <br>
-                            {{ formatterDateForPayment(payment.closedPaymentDay) }} 
+                            {{ payment.closedPaymentDay | formatterDateForPayment }}
                         </span>
                     </div>
                     <div class="box-end">

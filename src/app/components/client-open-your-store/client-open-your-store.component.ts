@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../AuthService'
 import { ClientOpenYourStoreService } from './client-open-your-store.service'
 import estadosCidades from '../../../assets/estados-cidades'
-
+declare var $ :any
 
 @Component({
   selector: 'app-client-open-your-store',
@@ -55,7 +55,16 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     {description: "Crédito", value: 'credit', checked:false}
   ];
 
+  public TaxaDelivery = [
+    {description: 'Negociar taxa de entrega', rule:false, value: 'negotiateRateLivery', checked:false},
+    {description: "Entrega somente no bairro (Grátis)",  rule:false, value: 'onlyInNeighborhood', checked:false},
+    {description: "Entrega grátis acima de R$0.00 por 0/km", taxa:0.00, km:0, rule:true, value: 'deliveryFreeAbove',  checked:false},
+    {description: "Entrega por R$0.00/KM", taxa:0.00, rule:true, value: 'deliveryBy', checked:false}
+  ];
+
   public checkPaymentStatus:any = "clean"
+
+  public taxaDeliveryStatus:any = "clean"
 
   public formularioAbrirMinhaLoja: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
@@ -86,6 +95,10 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     'money': new FormControl(false),
     'debit': new FormControl(false),
     'credit': new FormControl(false),
+    'negotiateRateLivery': new FormControl({status:false}),
+    'onlyInNeighborhood': new FormControl({status:false}),
+    'deliveryFreeAbove': new FormControl({status:false, taxa:0, km:0}),
+    'deliveryBy': new FormControl({status:false}),
   })
 
   constructor(private authService:AuthService,
@@ -118,7 +131,6 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
         }
       })
     })
-
   }
 
   onCheckChange(event) {
@@ -149,6 +161,135 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
 
   }
 
+  public setTaxaDeliveryAboveKmValue(value){
+    if(parseFloat(value) > 0 ){
+      let text = `Entrega grátis acima de R$${this.TaxaDelivery[2].taxa} por ${value}/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].km = parseFloat(value)
+      this.formularioAbrirMinhaLoja.patchValue({
+        deliveryFreeAbove: { status:false, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+      })
+      if(this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.taxa > 0 && this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.km > 0){
+        this.taxaDeliveryStatus = true
+        $("#deliveryFreeAbove").prop("checked", true)
+        this.formularioAbrirMinhaLoja.patchValue({
+          deliveryFreeAbove: { status:true, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+        })
+      }
+    }else{
+      $("#deliveryFreeAbove").prop("checked", false)
+      let text = `Entrega grátis acima de R$${this.TaxaDelivery[2].taxa} por 0/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].km = 0
+      this.formularioAbrirMinhaLoja.patchValue({
+        deliveryFreeAbove: { status:false, taxa:this.TaxaDelivery[2].taxa, km:0 }
+      })
+      if(!this.formularioAbrirMinhaLoja.get('negotiateRateLivery').value.status &&
+         !this.formularioAbrirMinhaLoja.get('onlyInNeighborhood').value.status && 
+         !this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.status && 
+         !this.formularioAbrirMinhaLoja.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
+    }
+  }
+
+  public setTaxaDeliveryAbobeTaxa(value){
+    if(parseFloat(value) > 0 ){
+      let text = `Entrega grátis acima de R$${value} por ${this.TaxaDelivery[2].km}/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].taxa = parseFloat(value)
+      this.formularioAbrirMinhaLoja.patchValue({
+        deliveryFreeAbove: { status:false, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+      })
+      if(this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.taxa > 0 && this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.km > 0){
+        this.taxaDeliveryStatus = true
+        $("#deliveryFreeAbove").prop("checked", true)
+        this.formularioAbrirMinhaLoja.patchValue({
+          deliveryFreeAbove: { status:true, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+        })
+      }
+    }else{
+      $("#deliveryFreeAbove").prop("checked", false)
+      let text = `Entrega grátis acima de R$0 por ${this.TaxaDelivery[2].km}/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].taxa = 0
+      this.formularioAbrirMinhaLoja.patchValue({
+        deliveryFreeAbove: { status:false, taxa:0, km:this.TaxaDelivery[2].km }
+      })
+      if(!this.formularioAbrirMinhaLoja.get('negotiateRateLivery').value.status &&
+         !this.formularioAbrirMinhaLoja.get('onlyInNeighborhood').value.status && 
+         !this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.status && 
+         !this.formularioAbrirMinhaLoja.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
+    }
+  }
+
+  public setTaxaDeliveryByKmValue(value){
+    if(parseFloat(value) > 0 ){
+      $("#deliveryBy").prop("checked", true)
+      this.taxaDeliveryStatus = true
+      let text = `Entrega por R$${value}/KM`
+      this.TaxaDelivery[3].description = text
+      this.TaxaDelivery[3].taxa = parseFloat(value)
+      this.formularioAbrirMinhaLoja.patchValue({
+        deliveryBy: { status:true, taxa:this.TaxaDelivery[3].taxa}
+      })
+    }else{
+      $("#deliveryBy").prop("checked", false)
+      let text = `Entrega por R$0/KM`
+      this.TaxaDelivery[3].description = text
+      this.TaxaDelivery[3].taxa = 0
+      this.formularioAbrirMinhaLoja.patchValue({
+        deliveryBy: { status:false, taxa:0}
+      })
+      if(!this.formularioAbrirMinhaLoja.get('negotiateRateLivery').value.status &&
+         !this.formularioAbrirMinhaLoja.get('onlyInNeighborhood').value.status && 
+         !this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.status && 
+         !this.formularioAbrirMinhaLoja.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
+    }
+  }
+
+
+  public setTaxaDelivery(event){
+
+    if(event.target.value == "negotiateRateLivery"){
+      this.formularioAbrirMinhaLoja.patchValue({
+        negotiateRateLivery: { status:event.target.checked }
+      })
+    }
+
+    if(event.target.value == "onlyInNeighborhood"){
+      this.formularioAbrirMinhaLoja.patchValue({
+        onlyInNeighborhood: { status:event.target.checked }
+      })
+    }
+
+    if(event.target.value == "deliveryFreeAbove" && this.TaxaDelivery[2].taxa <= 0 && this.TaxaDelivery[2].km <= 0){
+      $("#deliveryFreeAbove").prop("checked", false)
+    }else{
+      if(event.target.value == "deliveryFreeAbove" ){
+        $("#deliveryFreeAbove").prop("checked", true)
+      }
+    }
+
+    if(event.target.value == "deliveryBy" && this.TaxaDelivery[3].taxa <= 0){
+      $("#deliveryBy").prop("checked", false)
+    }else{
+      if(event.target.value == "deliveryBy" ){
+        $("#deliveryBy").prop("checked", true)
+      }
+    }
+
+    if(this.formularioAbrirMinhaLoja.get('negotiateRateLivery').value.status || this.formularioAbrirMinhaLoja.get('onlyInNeighborhood').value.status || this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.status || this.formularioAbrirMinhaLoja.get('deliveryBy').value.status){
+      this.taxaDeliveryStatus = true
+    }else{
+      this.taxaDeliveryStatus = false
+    }
+  }
+
   public setIdDocInformularioCliente(FOREIGN_KEY, EMAIL){
     this.abrirSuaLojaService.getIdDocByFOREIGN_KEY("store", FOREIGN_KEY).get().pipe(takeUntil(this.unsubscribe$)).subscribe( (res)=> {
      let PRIMARY_KEY = ""
@@ -166,7 +307,7 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
   }
 
   public abrirMinhaLoja(){
-    this.loading = true
+
     this.formularioAbrirMinhaLoja.get('imageNew').markAsTouched()
     this.formularioAbrirMinhaLoja.get('storeHours').markAsTouched()
     this.formularioAbrirMinhaLoja.get('storeName').markAsTouched()
@@ -182,12 +323,13 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     this.formularioAbrirMinhaLoja.get('storeTelephone').markAsTouched()
     this.formularioAbrirMinhaLoja.get('storeCNPJ').markAsTouched()
 
-    console.log(this.formularioAbrirMinhaLoja.value)
-
-    if(this.formularioAbrirMinhaLoja.get('money').value || this.formularioAbrirMinhaLoja.get('debit').value || this.formularioAbrirMinhaLoja.get('credit').value){
+    if((this.formularioAbrirMinhaLoja.get('money').value || this.formularioAbrirMinhaLoja.get('debit').value || this.formularioAbrirMinhaLoja.get('credit').value) &&
+      (this.formularioAbrirMinhaLoja.get('negotiateRateLivery').value.status || this.formularioAbrirMinhaLoja.get('onlyInNeighborhood').value.status || this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.status || this.formularioAbrirMinhaLoja.get('deliveryBy').value.status)){
       this.checkPaymentStatus = true
-      /*
+      this.taxaDeliveryStatus = true
       if(this.formularioAbrirMinhaLoja.status === "VALID"){
+        this.loading = true
+        console.log("cadastrado com sucesso!")
         this.abrirSuaLojaService.setImagemStorage(this.formularioAbrirMinhaLoja.get('storeImagePath').value, this.formularioAbrirMinhaLoja.get('imageNew').value).then(async (url:any)=>{
           let storeImageUrl = await url
           this.formularioAbrirMinhaLoja.patchValue({
@@ -196,12 +338,17 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
           this.abrirSuaLojaService.cadastrarLoja(this.formularioAbrirMinhaLoja.value, this.formularioAbrirMinhaLoja.get('PRIMARY_KEY').value, this.PRIMARY_KEY_USUARIO).then((cadastro:any)=>{
             this.router_navigator.navigate(['/store-product-registration']);
           })
-        }) 
+        })
       }else{
         this.loading = false
-      }*/
+      }
     }else{
-      this.checkPaymentStatus = false
+      if(!this.formularioAbrirMinhaLoja.get('money').value && !this.formularioAbrirMinhaLoja.get('debit').value && !this.formularioAbrirMinhaLoja.get('credit').value) {
+        this.checkPaymentStatus = false
+      }
+      if(!this.formularioAbrirMinhaLoja.get('negotiateRateLivery').value.status && !this.formularioAbrirMinhaLoja.get('onlyInNeighborhood').value.status && !this.formularioAbrirMinhaLoja.get('deliveryFreeAbove').value.status && !this.formularioAbrirMinhaLoja.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
     }
   }
 
@@ -218,7 +365,7 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
         this.formularioAbrirMinhaLoja.patchValue({
           imageDisplay:reader.result,
           imageNew: file
-        })
+        }) 
       }
       reader.readAsDataURL((<HTMLInputElement>event.target).files[0]);
     }

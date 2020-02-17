@@ -5,6 +5,7 @@ import { Subject } from 'rxjs'
 import { AuthService } from '../../AuthService'
 import { StorePanelService } from './store-panel.service'
 import estadosCidades from '../../../assets/estados-cidades'
+declare var $ :any
 
 @Component({
   selector: 'app-store-panel',
@@ -52,7 +53,16 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     {description: "Crédito", value: 'credit', checked:false}
   ];
 
+  public TaxaDelivery = [
+    {description: 'Negociar taxa de entrega', rule:false, value: 'negotiateRateLivery', checked:false},
+    {description: "Entrega somente no bairro (Grátis)",  rule:false, value: 'onlyInNeighborhood', checked:false},
+    {description: "Entrega grátis acima de R$0.00 por 0/km", taxa:0.00, km:0, rule:true, value: 'deliveryFreeAbove',  checked:false},
+    {description: "Entrega por R$0.00/KM", taxa:0.00, rule:true, value: 'deliveryBy', checked:false}
+  ];
+
   public checkPaymentStatus:any = "clean"
+
+  public taxaDeliveryStatus:any = "clean"
 
   public formStores: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
@@ -80,6 +90,10 @@ export class StorePanelComponent implements OnInit, OnDestroy {
     'money': new FormControl(false),
     'debit': new FormControl(false),
     'credit': new FormControl(false),
+    'negotiateRateLivery': new FormControl({status:false}),
+    'onlyInNeighborhood': new FormControl({status:false}),
+    'deliveryFreeAbove': new FormControl({status:false, taxa:0, km:0}),
+    'deliveryBy': new FormControl({status:false}),
   })
 
   constructor(private comercioService: StorePanelService,
@@ -88,6 +102,7 @@ export class StorePanelComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
       this.comercioService.getByFOREIGN_KEY('store', res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((user:any)=>{
+        
         this.formStores.patchValue({
           FOREIGN_KEY: user[0].FOREIGN_KEY,
           PRIMARY_KEY: user[0].PRIMARY_KEY,
@@ -112,15 +127,27 @@ export class StorePanelComponent implements OnInit, OnDestroy {
           money: user[0].money,
           debit:  user[0].debit,
           credit:  user[0].credit,
+          negotiateRateLivery: user[0].negotiateRateLivery,
+          onlyInNeighborhood: user[0].onlyInNeighborhood,
+          deliveryFreeAbove: user[0].deliveryFreeAbove,
+          deliveryBy: user[0].deliveryBy,
         })
+
         this.checkPayment[0].checked = user[0].money
         this.checkPayment[1].checked = user[0].debit
         this.checkPayment[2].checked = user[0].credit
+
+        this.TaxaDelivery[0].checked = user[0].negotiateRateLivery.status
+        this.TaxaDelivery[1].checked = user[0].onlyInNeighborhood.status
+        this.TaxaDelivery[2].checked = user[0].deliveryFreeAbove.status
+        this.TaxaDelivery[3].checked = user[0].deliveryBy.status
+
         for (const uf in this.states) {
           if (this.states[uf].sigla == user[0].storeState) {
             this.citys = this.states[uf].cidades
           }
         }
+
       })
     })
   }
@@ -153,10 +180,141 @@ export class StorePanelComponent implements OnInit, OnDestroy {
 
   }
 
-  public alterarCadastroLoja(){
+  
+  public setTaxaDeliveryAboveKmValue(value){
+    if(parseFloat(value) > 0 ){
+      let text = `Entrega grátis acima de R$${this.TaxaDelivery[2].taxa} por ${value}/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].km = parseFloat(value)
+      this.formStores.patchValue({
+        deliveryFreeAbove: { status:false, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+      })
+      if(this.formStores.get('deliveryFreeAbove').value.taxa > 0 && this.formStores.get('deliveryFreeAbove').value.km > 0){
+        this.taxaDeliveryStatus = true
+        $("#deliveryFreeAbove").prop("checked", true)
+        this.formStores.patchValue({
+          deliveryFreeAbove: { status:true, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+        })
+      }
+    }else{
+      $("#deliveryFreeAbove").prop("checked", false)
+      let text = `Entrega grátis acima de R$${this.TaxaDelivery[2].taxa} por 0/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].km = 0
+      this.formStores.patchValue({
+        deliveryFreeAbove: { status:false, taxa:this.TaxaDelivery[2].taxa, km:0 }
+      })
+      if(!this.formStores.get('negotiateRateLivery').value.status &&
+         !this.formStores.get('onlyInNeighborhood').value.status && 
+         !this.formStores.get('deliveryFreeAbove').value.status && 
+         !this.formStores.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
+    }
+  }
 
-    if(this.formStores.get('money').value || this.formStores.get('debit').value || this.formStores.get('credit').value){
+  public setTaxaDeliveryAbobeTaxa(value){
+    if(parseFloat(value) > 0 ){
+      let text = `Entrega grátis acima de R$${value} por ${this.TaxaDelivery[2].km}/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].taxa = parseFloat(value)
+      this.formStores.patchValue({
+        deliveryFreeAbove: { status:false, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+      })
+      if(this.formStores.get('deliveryFreeAbove').value.taxa > 0 && this.formStores.get('deliveryFreeAbove').value.km > 0){
+        this.taxaDeliveryStatus = true
+        $("#deliveryFreeAbove").prop("checked", true)
+        this.formStores.patchValue({
+          deliveryFreeAbove: { status:true, taxa:this.TaxaDelivery[2].taxa, km:this.TaxaDelivery[2].km }
+        })
+      }
+    }else{
+      $("#deliveryFreeAbove").prop("checked", false)
+      let text = `Entrega grátis acima de R$0 por ${this.TaxaDelivery[2].km}/km`
+      this.TaxaDelivery[2].description = text
+      this.TaxaDelivery[2].taxa = 0
+      this.formStores.patchValue({
+        deliveryFreeAbove: { status:false, taxa:0, km:this.TaxaDelivery[2].km }
+      })
+      if(!this.formStores.get('negotiateRateLivery').value.status &&
+         !this.formStores.get('onlyInNeighborhood').value.status && 
+         !this.formStores.get('deliveryFreeAbove').value.status && 
+         !this.formStores.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
+    }
+  }
+
+  public setTaxaDeliveryByKmValue(value){
+    if(parseFloat(value) > 0 ){
+      $("#deliveryBy").prop("checked", true)
+      this.taxaDeliveryStatus = true
+      let text = `Entrega por R$${value}/KM`
+      this.TaxaDelivery[3].description = text
+      this.TaxaDelivery[3].taxa = parseFloat(value)
+      this.formStores.patchValue({
+        deliveryBy: { status:true, taxa:this.TaxaDelivery[3].taxa}
+      })
+    }else{
+      $("#deliveryBy").prop("checked", false)
+      let text = `Entrega por R$0/KM`
+      this.TaxaDelivery[3].description = text
+      this.TaxaDelivery[3].taxa = 0
+      this.formStores.patchValue({
+        deliveryBy: { status:false, taxa:0}
+      })
+      if(!this.formStores.get('negotiateRateLivery').value.status &&
+         !this.formStores.get('onlyInNeighborhood').value.status && 
+         !this.formStores.get('deliveryFreeAbove').value.status && 
+         !this.formStores.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
+    }
+  }
+
+
+  public setTaxaDelivery(event){
+
+    if(event.target.value == "negotiateRateLivery"){
+      this.formStores.patchValue({
+        negotiateRateLivery: { status:event.target.checked }
+      })
+    }
+
+    if(event.target.value == "onlyInNeighborhood"){
+      this.formStores.patchValue({
+        onlyInNeighborhood: { status:event.target.checked }
+      })
+    }
+
+    if(event.target.value == "deliveryFreeAbove" && this.TaxaDelivery[2].taxa <= 0 && this.TaxaDelivery[2].km <= 0){
+      $("#deliveryFreeAbove").prop("checked", false)
+    }else{
+      if(event.target.value == "deliveryFreeAbove" ){
+        $("#deliveryFreeAbove").prop("checked", true)
+      }
+    }
+
+    if(event.target.value == "deliveryBy" && this.TaxaDelivery[3].taxa <= 0){
+      $("#deliveryBy").prop("checked", false)
+    }else{
+      if(event.target.value == "deliveryBy" ){
+        $("#deliveryBy").prop("checked", true)
+      }
+    }
+
+    if(this.formStores.get('negotiateRateLivery').value.status || this.formStores.get('onlyInNeighborhood').value.status || this.formStores.get('deliveryFreeAbove').value.status || this.formStores.get('deliveryBy').value.status){
+      this.taxaDeliveryStatus = true
+    }else{
+      this.taxaDeliveryStatus = false
+    }
+  }
+
+  public alterarCadastroLoja(){
+    if((this.formStores.get('money').value || this.formStores.get('debit').value || this.formStores.get('credit').value) &&
+      (this.formStores.get('negotiateRateLivery').value.status || this.formStores.get('onlyInNeighborhood').value.status || this.formStores.get('deliveryFreeAbove').value.status || this.formStores.get('deliveryBy').value.status)){
       this.checkPaymentStatus = true
+      this.taxaDeliveryStatus = true
       this.markAsTouched()
       if(this.formStores.status === "VALID"){
         this.loading = true
@@ -179,7 +337,12 @@ export class StorePanelComponent implements OnInit, OnDestroy {
         }
       }
     }else{
-      this.checkPaymentStatus = false
+      if(!this.formStores.get('money').value && !this.formStores.get('debit').value && !this.formStores.get('credit').value) {
+        this.checkPaymentStatus = false
+      }
+      if(!this.formStores.get('negotiateRateLivery').value.status && !this.formStores.get('onlyInNeighborhood').value.status && !this.formStores.get('deliveryFreeAbove').value.status && !this.formStores.get('deliveryBy').value.status){
+        this.taxaDeliveryStatus = false
+      }
     }
   }
 
