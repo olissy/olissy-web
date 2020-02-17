@@ -20,33 +20,7 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public produtos:any[] = []
 
-  public ID:any = ""
-
-  public comercio_FOREIGN_KEY = 0
-
-  private newContact = {
-    PRIMARY_KEY : "",
-
-    FOREIGN_KEY_CLIENT : "",
-    photoClient : "",
-    nameClient : "",
-    viewClient : true,
-
-    FOREIGN_KEY_STORE : "",
-    nameStore : "",
-    photoStore : "",
-    viewStore : false,
-
-    message:[{
-      FOREIGN_KEY:"",
-      data:"",
-      text:"",
-      name:"",
-      photo:"",
-      view:false
-      }
-    ]
-  }
+  public ID = false
 
   public cellPhoneMask: any = {
     mask: '(00) 0 0000-0000',
@@ -101,16 +75,21 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
               private authService: AuthService) {}
 
   ngOnInit() {
-    this.scrollToTop()
-    this.returnOrderNull()
-    this.authToken()
-    this.setIdComercioPedido()
-    this.popularProdutos()
-    this.setImagePathEndNameFormulario()
-    this.popularformularioPedidoCliente()
-    this.popularformularioPedidoMensagemMensagem()
-    this.popularformularioPedidoAdcional()
     this.autoFocus()
+    this.scrollToTop()
+    this.authToken()
+    this.setIdStoreInPedido()
+    this.setStoreForms()
+    this.setClientForms()
+    this.setProducts()
+  }
+
+  public historyNavigateBack(){
+    window.history.back();
+  }
+
+  public autoFocus(){
+    document.getElementById("clientAddressFull").focus();
   }
 
   public scrollToTop(){
@@ -125,81 +104,85 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     })
   }
 
-  public returnOrderNull(){
-    if(this.Appservice.produtos.length == 0){
-      this.router_navigator.navigate([`/store-page/${this.route.snapshot.params['id']}`])
-    }
+  public setProducts(){
+    this.produtos = this.Appservice.produtos
   }
 
-  public historyNavigateBack(){
-    window.history.back();
-  }
-
-  public setIdComercioPedido(){
+  public setIdStoreInPedido(){
     this.formularioPedido.patchValue({
       FOREIGN_KEY_STORE : this.route.snapshot.params['id'],
       indexDay: new Date()
     })
   }
 
-  public popularProdutos(){
-    this.produtos = this.Appservice.produtos
+  public TotalValorDoPedido(){
+    return this.produtos.reduce( (sum, item:any)=>{
+      return new Number(sum).valueOf() + new Number(item.productPrice).valueOf() 
+    },0) + new Number(this.formularioPedido.get('taxing').value)
   }
 
-  public popularformularioPedidoCliente(){
-    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
-      if(res != null){
-        this.pedidoService.getByFOREIGN_KEY('client', res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          this.formularioPedido.patchValue({
-            clientImageUrl:resposta[0].clientImageUrl,
-            FOREIGN_KEY_CLIENT: resposta[0].FOREIGN_KEY,
-            clientName: resposta[0].clientName,
-            clientLastName: resposta[0].clientLastName,
-            clientCity: resposta[0].clientCity,
-            clientNeighborhood: resposta[0].clientNeighborhood,
-            clientStreet: resposta[0].clientStreet,
-            clientEmail: resposta[0].clientEmail,
-          })
-        })
+  public removerItem(indice){
+     this.Appservice.produtos.splice(indice,1)
+  }
+
+  public aumentartem(item:any){
+    let foundItem = this.Appservice.produtos.find( (items)=> items.productName ===  item.productName)
+    if( item.quantities < item.productQuantities ){
+      foundItem.quantities++;
+      foundItem.productPrice = foundItem.productPriceOrigin * foundItem.quantities;
+    }
+  }
+
+  public diminuirItem(item:any){
+    let foundItem = this.Appservice.produtos.find( (items)=> items.productName ===  item.productName)
+    if(foundItem.quantities == 1){
+
+    }else{
+      foundItem.quantities = foundItem.quantities - 1
+      foundItem.productPrice = foundItem.productPrice - foundItem.productPriceOrigin
+    }
+  }
+
+
+
+  public concluirPedido(){
+
+    this.validationClientMethodPayment()
+
+    this.fieldValidation()
+
+    if(this.formularioPedido.valid && this.ID){
+      this.cadastraPedido()
+    }else{
+      console.log("formulario invalido")
+    }
+  }
+
+  public cadastraPedido(){
+    let pedido:any = []
+        pedido = this.formularioPedido.value
+        pedido.product = this.produtos
+        pedido.totalOrderValue = this.TotalValorDoPedido()
+
+        console.log(pedido)
+
+    /* 
+    this.pedidoService.criarPedido("order", pedido).then((res:any)=>{
+      for(const key of pedido.product) {
+        this.pedidoService.decrementProductQuantities(key.PRIMARY_KEY, key.quantities)
       }
-    })
+      this.Appservice.pedido = []
+      this.formularioPedido.reset
+      this.produtos = []
+      this.Appservice.produtos = []
+      this.router_navigator.navigate([`/evaluate-store/${this.formularioPedido.get('FOREIGN_KEY_STORE').value}`])
+    })*/  
+    
   }
 
-  public popularformularioPedidoAdcional(){
-    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
-      if(res != null){
-        this.pedidoService.getPedido().pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          if(Object.keys(resposta).length != 0){
-            this.formularioPedido.patchValue({
-              clientAddressFull: resposta.clientAddressFull,
-              clientCellPhone: resposta.clientCellPhone,
-              clientMethodPayment: resposta.clientMethodPayment,
-              informChange: resposta.informChange
-            })
-          }
-        })
-      }
-    })
-  }
-
-  public popularformularioPedidoMensagemMensagem(){
-    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
-      if(res != null){
-        this.pedidoService.getPedido().pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          if(resposta != ""){
-            if(Object.keys(resposta.message).length != 0){
-              this.formularioPedido.patchValue({
-                message: resposta.message
-              })
-            }
-          }
-        })
-      }
-    })
-  }
-
-  public setImagePathEndNameFormulario(){
+  public setStoreForms(){
     this.pedidoService.getByFOREIGN_KEY('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+      console.log(resposta)
       this.FormaPagamento[0].checked = resposta[0].money
       this.FormaPagamento[1].checked = resposta[0].debit
       this.FormaPagamento[2].checked = resposta[0].credit
@@ -218,47 +201,35 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     })
   }
 
-  public TotalValorDoPedido(){
-    return this.produtos.reduce( (sum, item:any)=>{
-      return new Number(sum).valueOf() + new Number(item.productPrice).valueOf() 
-    },0) + new Number(this.formularioPedido.get('taxing').value)
-  }
-
-  public removerItem(indice){
-     this.Appservice.produtos.splice(indice,1)
-     this.returnOrderNull()
-  }
-
-  public aumentartem(item:any){
-    let foundItem = this.Appservice.produtos.find( (items)=> items.productName ===  item.productName)
-      if( item.quantities < item.productQuantities ){
-        foundItem.quantities++;
-        foundItem.productPrice = foundItem.productPriceOrigin * foundItem.quantities;
+  public setClientForms(){
+    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
+      if(res != null){
+        this.pedidoService.getByFOREIGN_KEY('client', res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+          console.log(resposta)
+          this.formularioPedido.patchValue({
+            clientImageUrl:resposta[0].clientImageUrl,
+            FOREIGN_KEY_CLIENT: resposta[0].FOREIGN_KEY,
+            clientName: resposta[0].clientName,
+            clientLastName: resposta[0].clientLastName,
+            clientCity: resposta[0].clientCity,
+            clientNeighborhood: resposta[0].clientNeighborhood,
+            clientStreet: resposta[0].clientStreet,
+            clientEmail: resposta[0].clientEmail,
+          })
+        })
       }
+    })
   }
 
-  public diminuirItem(item:any){
-    let foundItem = this.Appservice.produtos.find( (items)=> items.productName ===  item.productName)
-    if(foundItem.quantities == 1){
-
-    }else{
-      foundItem.quantities = foundItem.quantities - 1
-      foundItem.productPrice = foundItem.productPrice - foundItem.productPriceOrigin
-    }
-  }
-
-  public autoFocus(){
-    document.getElementById("clientAddressFull").focus();
-  }
-
-  public concluirPedido(){
-
+  public validationClientMethodPayment(){
     if(this.formularioPedido.get('clientMethodPayment').valid && this.formularioPedido.get('informChange').valid == false){
       this.formularioPedido.patchValue({
         informChange:"0.00"
       })
     }
+  }
 
+  public fieldValidation(){
     this.formularioPedido.get('clientAddressFull').markAsTouched()
     this.formularioPedido.get('clientCellPhone').markAsTouched()
     this.formularioPedido.get('clientMethodPayment').markAsTouched()
@@ -272,120 +243,6 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     if( this.formularioPedido.get('clientMethodPayment').valid == false ){
       document.getElementById("clientMethodPayment").focus();
     }
-
-    if(this.formularioPedido.valid){
-      if(this.ID){
-        if(this.formularioPedido.get('message').value != null && this.formularioPedido.get('message').value != ""){
-          this.startOrderEndSendMensage(this.formularioPedido.get('FOREIGN_KEY_STORE').value, this.formularioPedido.get('message').value)
-        }else{
-          this.cadastraPedido()
-        }
-      }else{
-        this.GuaradarPedido_LogarUsuarioParaParaCadastrarPedido()
-      }
-    }else{
-      console.log("formulario invalido")
-    }
-  }
-
-  public cadastraPedido(){
-    let pedido:any = []
-    let FOREIGN_KEY_STORE = this.formularioPedido.get('FOREIGN_KEY_STORE').value
-    pedido = this.formularioPedido.value
-    pedido.product = this.produtos
-    pedido.totalOrderValue = this.TotalValorDoPedido()
-
-    for (const key of pedido.product) {
-      this.pedidoService.decrementProductQuantities(key.PRIMARY_KEY, key.quantities)
-    }
-
-    this.pedidoService.criarPedido("order", pedido).then((res:any)=>{
-      this.Appservice.pedido = []
-      this.formularioPedido.reset
-      this.produtos = []
-      this.Appservice.produtos = []
-    }) 
-    
-    this.router_navigator.navigate([`/evaluate-store/${FOREIGN_KEY_STORE}`])
-    
-  }
-
-  public GuaradarPedido_LogarUsuarioParaParaCadastrarPedido(){
-    let pedido:any = []
-        pedido = this.formularioPedido.value
-        pedido.product = this.produtos
-        pedido.totalOrderValue = this.TotalValorDoPedido()
-
-    this.pedidoService.setPedido(pedido).pipe(takeUntil(this.unsubscribe$)).subscribe(retorno=>{
-      if(retorno){
-        this.router_navigator.navigate(['/login'])
-      }
-    })
-  }
-
-  public startOrderEndSendMensage(FOREIGN_KEY_STORE, message){
-    this.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe( (isLogged:any)=>{
-      if(isLogged === null){}else{
-        let FOREIGN_KEY_CLIENT = isLogged.uid
-        this.newContact.message[0].text = message
-        let asyncExistContactStoreEndClient:boolean = true
-        this.pedidoService.existContactStoreEndClient(FOREIGN_KEY_CLIENT, FOREIGN_KEY_STORE).pipe(takeUntil(this.unsubscribe$)).subscribe( (existContact:any)=>{
-          if(Object.keys(existContact).length == 0){
-             asyncExistContactStoreEndClient = false
-            this.getStoreClientOrder(FOREIGN_KEY_CLIENT, FOREIGN_KEY_STORE)
-          }
-          if(Object.keys(existContact).length != 0 && asyncExistContactStoreEndClient == true){
-            asyncExistContactStoreEndClient = false
-            this.getClientOrder(FOREIGN_KEY_CLIENT, existContact[0].PRIMARY_KEY)
-          }
-        }) 
-      }
-    })
-  }
-
-  public getStoreClientOrder(FOREIGN_KEY_CLIENT, FOREIGN_KEY_STORE){
-    this.pedidoService.getByFOREIGN_KEY("client", FOREIGN_KEY_CLIENT).pipe(takeUntil(this.unsubscribe$)).subscribe( (client:any)=>{
-      this.newContact.FOREIGN_KEY_CLIENT = client[0].FOREIGN_KEY
-      this.newContact.nameClient = client[0].clientName +" "+ client[0].clientLastName
-      this.newContact.photoClient = client[0].clientImageUrl
-      this.pedidoService.getByFOREIGN_KEY("store", FOREIGN_KEY_STORE).pipe(takeUntil(this.unsubscribe$)).subscribe( (store:any)=>{
-        this.newContact.FOREIGN_KEY_STORE = store[0].FOREIGN_KEY
-        this.newContact.nameStore = store[0].storeName
-        this.newContact.photoStore = store[0].storeImageUrl
-        this.newContact.message[0].FOREIGN_KEY = client[0].FOREIGN_KEY
-        this.newContact.message[0].data = `${new Date()}`,
-        this.newContact.message[0].name = client[0].clientName +" "+ client[0].clientLastName
-        this.newContact.message[0].photo = client[0].clientImageUrl
-        this.newContact.message[0].view = false
-        this.pedidoService.criarContactInOrder(this.newContact).then((res:any)=>{
-          this.pedidoService.update("contact", res.id, {PRIMARY_KEY : res.id}).then(()=>{
-            this.cadastraPedido()
-          })
-        })
-      })
-    }) 
-  }
-
-  public getClientOrder(FOREIGN_KEY_CLIENT, PRIMARY_KEY){
-    this.pedidoService.getByFOREIGN_KEY("client",  FOREIGN_KEY_CLIENT).pipe(takeUntil(this.unsubscribe$)).subscribe( (client:any)=>{
-      this.newContact.message[0].FOREIGN_KEY = client[0].FOREIGN_KEY
-      this.newContact.message[0].data = `${new Date()}`,
-      this.newContact.message[0].name = client[0].clientName +" "+ client[0].clientLastName
-      this.newContact.message[0].photo = client[0].clientImageUrl
-      this.newContact.message[0].view = false
-      console.log(typeof PRIMARY_KEY.trim() === 'string' && PRIMARY_KEY.length > 1,PRIMARY_KEY)
-      if(typeof PRIMARY_KEY.trim() === 'string' && PRIMARY_KEY.length > 1){
-        this.pedidoService.sendMessage(PRIMARY_KEY, this.newContact.message[0]).then(()=>{
-          this.pedidoService.markMessageHowViewed(PRIMARY_KEY).then(()=>{
-            this.cadastraPedido()
-          })
-        })
-      }
-    })
-  }
-
-  public isLogged() {
-    return  this.authService.isLogged()
   }
 
   ngOnDestroy(){

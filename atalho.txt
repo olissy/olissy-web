@@ -221,6 +221,6 @@ cd dist/olissy
 
 firebase init
 
-firebase.json " alterar host "
+firebase.json " alterar host " 
 
 firebase deploy 

@@ -29,7 +29,7 @@ export class AdminPaymentService {
   }
 
   public getTimeZone() {
-    return this.http.get<any[]>("http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
+    return this.http.get<any[]>("https://worldtimeapi.org/api/timezone/America/Sao_Paulo");
   }
 
 }
