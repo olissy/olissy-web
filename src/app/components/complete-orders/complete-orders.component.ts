@@ -22,6 +22,8 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public ID = false
 
+  public buttonconcluded:boolean = true
+
   public cellPhoneMask: any = {
     mask: '(00) 0 0000-0000',
     lazy: false
@@ -32,6 +34,12 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     {description: "Cartão de Débito", value: 'debit', checked:false},
     {description: "Cartão de Crédito", value: 'credit', checked:false}
   ];
+
+  public TaxaDelivery = [];
+
+  public TaxaDeliveryStatus:boolean = false
+
+  public buttonTaxaDelivery:string = "Escolha a opção"
 
   public data = new Date();
 
@@ -65,9 +73,10 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     "totalOrderValue": new FormControl(null),
     "orderDate": new FormControl(`${new Date()}`),
     "orderState": new FormControl("Enviado"),
-    "message": new FormControl(null),
+    "rateOfDelivery": new FormControl(false),
     "indexDay":new FormControl(null),
-  })      
+  }) 
+
   constructor(private Appservice: AppService,
               private pedidoService:CompleteOrdersService,
               private router_navigator: Router,
@@ -98,8 +107,10 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public async authToken(){
     this.authService.isLogged().subscribe((res:any)=>{
-      if(res != null){
+      if(res != null &&  Object.keys(this.produtos).length != 0){
         this.ID = res.uid
+      }else{
+        this.router_navigator.navigate(['/login'])
       }
     })
   }
@@ -143,6 +154,17 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     }
   }
 
+  public setTaxaDelivery(taxa, index:number){
+    this.formularioPedido.patchValue({
+      rateOfDelivery:taxa.target.value
+    })
+    this.TaxaDeliveryStatus = false
+    this.buttonTaxaDelivery = this.TaxaDelivery[index].description
+  }
+
+  public setMessageRateOfDelivery(){
+    this.TaxaDeliveryStatusValidation()
+  }
 
 
   public concluirPedido(){
@@ -151,8 +173,11 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
     this.fieldValidation()
 
-    if(this.formularioPedido.valid && this.ID){
+    this.TaxaDeliveryStatusValidation()
+
+    if(this.formularioPedido.valid && this.ID && this.TaxaDeliveryStatusValidation() && Object.keys(this.produtos).length != 0){
       this.cadastraPedido()
+      this.buttonconcluded = false
     }else{
       console.log("formulario invalido")
     }
@@ -163,29 +188,42 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
         pedido = this.formularioPedido.value
         pedido.product = this.produtos
         pedido.totalOrderValue = this.TotalValorDoPedido()
-
-        console.log(pedido)
-
-    /* 
     this.pedidoService.criarPedido("order", pedido).then((res:any)=>{
-      for(const key of pedido.product) {
-        this.pedidoService.decrementProductQuantities(key.PRIMARY_KEY, key.quantities)
+      for(const index in pedido.product) {
+        this.pedidoService.decrementProductQuantities(pedido.product[index].PRIMARY_KEY, pedido.product[index].quantities)
+        if((parseInt(index) + 1) == pedido.product.length){
+          this.Appservice.pedido = []
+          this.formularioPedido.reset
+          this.produtos = []
+          this.Appservice.produtos = []
+          this.router_navigator.navigate([`/evaluate-store/${this.formularioPedido.get('FOREIGN_KEY_STORE').value}`])
+        }
       }
-      this.Appservice.pedido = []
-      this.formularioPedido.reset
-      this.produtos = []
-      this.Appservice.produtos = []
-      this.router_navigator.navigate([`/evaluate-store/${this.formularioPedido.get('FOREIGN_KEY_STORE').value}`])
-    })*/  
-    
+    })
   }
-
+ 
   public setStoreForms(){
     this.pedidoService.getByFOREIGN_KEY('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-      console.log(resposta)
       this.FormaPagamento[0].checked = resposta[0].money
       this.FormaPagamento[1].checked = resposta[0].debit
       this.FormaPagamento[2].checked = resposta[0].credit
+      
+      if(resposta[0].negotiateRateLivery.status){
+        this.TaxaDelivery.push({description:'Negociar taxa de entrega por Telefone', rule:false, value: 'negotiateRateLivery', checked:false})
+      }
+
+      if(resposta[0].onlyInNeighborhood.status){
+        this.TaxaDelivery.push({description: `Entrega GRÁTIS no bairro ${resposta[0].storeNeighborhood}`,  rule:false, value: 'onlyInNeighborhood', checked:false})
+      }
+
+      if(resposta[0].deliveryFreeAbove.status){
+        this.TaxaDelivery.push({description:`Entrega grátis acima de R$${resposta[0].deliveryFreeAbove.taxa} por ${resposta[0].deliveryFreeAbove.km}/km`, rule:true, value: 'deliveryFreeAbove',  checked:false})
+      }
+
+      if(resposta[0].deliveryBy.status){
+        this.TaxaDelivery.push({description: `Entrega por R$${resposta[0].deliveryBy.taxa}/KM`, rule:true, value: 'deliveryBy', checked:false})
+      }
+
       this.formularioPedido.patchValue({
         storeImageUrl: resposta[0].storeImageUrl,
         storeName : resposta[0].storeName,
@@ -205,7 +243,6 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
       if(res != null){
         this.pedidoService.getByFOREIGN_KEY('client', res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          console.log(resposta)
           this.formularioPedido.patchValue({
             clientImageUrl:resposta[0].clientImageUrl,
             FOREIGN_KEY_CLIENT: resposta[0].FOREIGN_KEY,
@@ -215,6 +252,10 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
             clientNeighborhood: resposta[0].clientNeighborhood,
             clientStreet: resposta[0].clientStreet,
             clientEmail: resposta[0].clientEmail,
+          })
+          this.formularioPedido.patchValue({
+            clientAddressFull : `${resposta[0].clientStreet}, Bairro:${resposta[0].clientNeighborhood}, ${resposta[0].clientCity}/${resposta[0].clientState}-${resposta[0].clientCountry}, cep:${resposta[0].clientCEP}`,
+            clientCellPhone: resposta[0].clientCellPhone
           })
         })
       }
@@ -227,6 +268,18 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
         informChange:"0.00"
       })
     }
+  }
+
+  public TaxaDeliveryStatusValidation():boolean{
+    let valid = null
+    if( this.formularioPedido.get('rateOfDelivery').value == false ){
+     this.TaxaDeliveryStatus = true
+     valid = false
+    }
+    if( this.formularioPedido.get('rateOfDelivery').value ){
+      valid = true
+     }
+    return valid
   }
 
   public fieldValidation(){

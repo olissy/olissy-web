@@ -67,16 +67,22 @@
           <div class="col-sm-4 col-xs-12">
             <div class="form-group">
               <label class="control-label" for="message">
-                Enviar mensagem?
+                Taxa de entrega
               </label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="message"
-                autocomplete="off"
-                placeholder="Você deseja enviar uma mensagem para a loja?"
-                id="message"
-              />
+              <button
+                class="btn btn-block btn-default"
+                data-keyboard="false" data-toggle="modal" data-target="#displayRateOfDelivery"
+                (click)="setMessageRateOfDelivery()"
+                [ngClass]="{ 'border-color-green': this.formularioPedido.get('rateOfDelivery').value }"
+              >
+              <b>{{ buttonTaxaDelivery }}</b>
+              </button>
+              <span
+              class="help-block button-alert-danger"
+              style="color:#FFF; padding: 5px;"
+              *ngIf="TaxaDeliveryStatus">
+              Clique acima e escolhe a opção de <b>TAXA</b>
+            </span>
             </div>
           </div>
         </div>
@@ -204,11 +210,58 @@
       </form>
       <div class="row">
         <div class="col-xs-12">
-          <button class="btn btn-success pull-right button-order-mobile button-alert" style="font-size:18px;" (click)="concluirPedido()">
+          <button *ngIf="buttonconcluded" class="btn btn-success pull-right button-order-mobile button-alert" style="font-size:18px;" (click)="concluirPedido()">
             <b>CONCLUIR PEDIDO</b>
           </button>
+          <button *ngIf="!buttonconcluded" type="button" class="btn btn-default pull-right btn-finish" style="font-size: 18px">  
+            <div >
+              <b>Enviando Pedido</b> &nbsp; <i class="fa fa-refresh fa-spin fa-1x"></i>
+            </div> 
+        </button>
         </div>
       </div>
     </section>
   </section>
 </div>
+<form>
+  <div class="modal fade" id="displayRateOfDelivery">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Escolhe a opção da taxa de entrega, que mais se aproxima da sua localidade</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"> 
+            <div *ngFor="let taxa of TaxaDelivery; let i=index"> 
+              <div  *ngIf="taxa.rule == false" class="checkbox" style="display: flex; align-items: baseline;" >               
+                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery" (change)="setTaxaDelivery($event, i)">
+                <label [for]="taxa.value" [ngClass]="taxa.value == 'negotiateRateLivery' ? 'alert alert-warning alert-dismissible' : 'alert alert-success alert-dismissible'" >{{taxa.description}}</label>
+              </div>
+              <div  *ngIf="taxa.rule == true && taxa.value == 'deliveryFreeAbove'" class="checkbox" style="display: flex; align-items: baseline;" >
+                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery"  (change)="setTaxaDelivery($event, i)" data-keyboard="false" data-toggle="modal" data-target="#displayTaxaDeliveryAbove">
+                <label [for]="taxa.value" class="alert alert-info alert-dismissible">{{taxa.description}}</label>
+              </div>
+              <div  *ngIf="taxa.rule == true && taxa.value == 'deliveryBy'" class="checkbox" style="display: flex; align-items: baseline;" >
+                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery"  (change)="setTaxaDelivery($event, i)" data-keyboard="false" data-toggle="modal" data-target="#displayTaxaDeliveryBy">
+                <label [for]="taxa.value" class="alert alert-danger ess alert-dismissible">{{taxa.description}}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div *ngIf="this.formularioPedido.get('rateOfDelivery').value == false">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+              Cancelar
+            </button>
+          </div>
+          <div *ngIf="this.formularioPedido.get('rateOfDelivery').value">
+            <button type="button" class="btn button-alert" style="color: #fff;" data-dismiss="modal">
+              Opção escolhida
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+  </div>
+</form> 
