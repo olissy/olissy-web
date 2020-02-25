@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router'
+import { FormGroup, FormControl  }  from '@angular/forms';
+import { AuthService  } from '../../AuthService';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { AppService } from '../../app.service'
@@ -22,12 +25,35 @@ export class ProductComponent implements OnInit {
 
   public FOREIGN_KEY_STORE_ORDER_CART
 
+  public comments = { status:false, post:[]}
+
+  public FOREIGN_KEY
+
+  public user:any = { clientImageUrl:null, clientName:null, clientLastName:null}
+
+  public TaxaDelivery = [{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false }];
+
   public url:boolean = true
 
-  public result = { store : [], product : null, productDataBase : [], limit : 10, offset : 0, size : 0  }
+  public reactLoading:boolean = true
+
+  public result = { store : [], product : null, productDataBase : [], react:null, limit : 10, offset : 0, size : 0  }
+
+  public formularioComentario: FormGroup = new FormGroup({
+    PRIMARY_KEY_PRODUCT : new FormControl(null),
+    FOREIGN_KEY_CLIENT : new FormControl(null),
+    commentText: new FormControl(null),
+    commentDate : new FormControl(null),
+    indexDay : new FormControl(null),
+    commentImageUrl : new FormControl(null),
+    commentName : new FormControl(null),
+    commentView : new FormControl(false),
+  })
 
   constructor(private productService:ProductService, 
+              private authService: AuthService,
               private appService:AppService,
+              private router_navigator: Router,
               private data: DataService,
               private metaTagService: Meta,
               private titleService: Title
@@ -35,9 +61,8 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(){ 
     this.searchEngineOptimization()
-    this.haveOrderOpen()
     this.data.subject.pipe(takeUntil(this.unsubscribe$)).subscribe(productDB =>{
-      console.log(productDB)
+
       if(Object.keys(productDB).length == 0){
         this.product()
       }else{
@@ -49,6 +74,133 @@ export class ProductComponent implements OnInit {
       this.url = false
     }
   }
+
+  public setDescription(value, index){
+    console.log(value, index)
+    this.result.product[index].description = value
+  }
+
+  public purchase(productDatabse, product){
+    product.productImageUrl = productDatabse.productImageUrl
+    product.productDescription = productDatabse.productDescription
+    product.provider = productDatabse.provider
+    product.andGeneric = productDatabse.andGeneric
+    product.productSession = productDatabse.productSession
+    product.productType = productDatabse.productType
+    product.productName = productDatabse.productName
+    product.productCategory = productDatabse.productCategory
+  
+    this.appService.produtos = []
+    product.quantities = 1
+    product.productPriceOrigin = product.productPrice
+    this.appService.produtos.push(product)
+    this.router_navigator.navigate(['/complete-orders' , product.FOREIGN_KEY])
+  }
+
+  public async getReact(){
+    this.authService.isLogged().subscribe((res:any)=>{
+      if(res != null){
+        this.FOREIGN_KEY = res.uid
+        this.getUser(this.FOREIGN_KEY)
+        this.productService.getReact(res.uid).subscribe((react)=>{
+          if(Object.keys(react).length != 0){
+            this.result.react = react[0]
+            this.reactFilter()
+          }else{
+            this.productService.react(res.uid)
+          }
+        })
+      }
+    })
+  }
+
+  public getUser(FOREIGN_KEY){
+    this.productService.getUser(FOREIGN_KEY).subscribe((user)=>{
+      this.user = user[0]
+    })
+  }
+
+  public setLove(product){
+    this.reactLoading = false
+    let PRIMARY_KEY = this.result.react.PRIMARY_KEY
+
+    //se nao existir react, adcionar
+    if( Object.keys(this.result.react.product).length == 0 ){
+      this.productService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
+        this.productService.incrementProductQuantities(product.PRIMARY_KEY).then(()=>{
+          this.reactLoading = true
+        })
+      })
+    }else{
+      if(product.react){
+        this.productService.delReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
+          this.productService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:false }).then(()=>{
+            this.productService.decrementProductQuantities(product.PRIMARY_KEY).then(()=>{
+              this.reactLoading = true
+            })
+          })
+        })
+      }else{
+        this.productService.delReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:false }).then(()=>{
+          this.productService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
+            this.productService.incrementProductQuantities(product.PRIMARY_KEY).then(()=>{
+              this.reactLoading = true
+            })
+          })
+        })
+      }
+    }
+  }
+
+  public reactFilter(){
+    for(let product in this.result.product){
+      this.result.product[product].react = false
+      for(let react in this.result.react.product){      
+        if(this.result.react.product[react].FOREIGN_KEY == this.result.product[product].PRIMARY_KEY && this.result.react.product[react].react == true){ 
+          this.result.product[product].react = true
+        } 
+      }
+    }
+  }
+
+  public setComment(PRIMARY_KEY){
+    this.comments.status = true
+    this.formularioComentario.patchValue({
+      PRIMARY_KEY_PRODUCT : PRIMARY_KEY,
+      commentText:""
+    });
+    this.productService.getComments(PRIMARY_KEY, 10).subscribe((comments)=>{
+      this.comments.status = false
+      this.comments.post = comments
+    })
+  }
+
+  public publicarComentario(){
+    this.formularioComentario.patchValue({
+      FOREIGN_KEY_CLIENT : this.FOREIGN_KEY,
+      commentDate : `${new Date()}` ,
+      indexDay: new Date(),
+      commentImageUrl : this.user.clientImageUrl,
+      commentName :this.user.clientName +' '+ this.user.clientLastName,
+    });
+    console.log(this.formularioComentario.value)
+    this.productService.setCommet(this.formularioComentario.value).then((res)=>{
+      console.log(res)
+      this.formularioComentario.reset()
+    })
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   public searchEngineOptimization(){
     this.metaTagService.addTags([
@@ -106,6 +258,7 @@ export class ProductComponent implements OnInit {
       this.store()
       this.productDataBase()
       this.enableScroll()
+      this.getReact()
     })
   } 
 
@@ -125,6 +278,8 @@ export class ProductComponent implements OnInit {
 
   public productDataBase(){
     for(let index in this.result.product){
+      this.result.product[index].description = true
+      this.result.product[index].index = index
       this.productService.productDataBase(this.result.product[index].PRIMARY_KEY_PRODUCT_DB).pipe(takeUntil(this.unsubscribe$)).subscribe((productDataBase:any)=>{
             
         let storeNotDuplicate = this.filterRemoveDuplicateProductDataBase(productDataBase[0].PRIMARY_KEY)
@@ -156,14 +311,23 @@ export class ProductComponent implements OnInit {
   }
 
   public selectDisplayStoreInfo(store){
-    this.displayStoreInfo = store
-  }
-
-  public haveOrderOpen(){
-    if(Object.keys(this.appService.pedido).length != 0){
-      this.FOREIGN_KEY_STORE_ORDER_CART = this.appService.pedido.FOREIGN_KEY_STORE
-     $('#displayShoppingCart').modal('show'); 
+    if(store.negotiateRateLivery.status){
+      this.TaxaDelivery[0] = { description:'Negociar taxa de entrega por Telefone', rule:true }
     }
+
+    if(store.onlyInNeighborhood.status){
+      this.TaxaDelivery[1] = { description: `Entrega GRÁTIS no bairro ${store.storeNeighborhood}`,  rule:true }
+    }
+
+    if(store.deliveryFreeAbove.status){
+      this.TaxaDelivery[2] = { description:`Entrega grátis acima de R$${store.deliveryFreeAbove.taxa} por ${store.deliveryFreeAbove.km}/km`, rule:true }
+    }
+
+    if(store.deliveryBy.status){
+      this.TaxaDelivery[3] = { description: `Entrega por R$${store.deliveryBy.taxa}/KM`, rule:true }
+    }
+
+    this.displayStoreInfo = store
   }
 
   public  loadingPlusProduct(){

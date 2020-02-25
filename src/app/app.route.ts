@@ -132,6 +132,14 @@ export const ROUTES: Routes = [
     loadChildren:'./components/order-detail/order-detail.module#OrderDetailModule'
   },
   {
+    path: 'client-order-detail/:id',
+    loadChildren:'./components/client-order-detail/client-order-detail.module#ClientOrderDetailModule'
+  },
+  {
+    path: 'store-order-detail/:id',
+    loadChildren:'./components/store-order-detail/store-order-detail.module#StoreOrderDetailModule'
+  },
+  {
     path: 'store-message-contact',
     loadChildren:'./components/store-message-contact/store-message-contact.module#StoreMessageContactModule'
   },

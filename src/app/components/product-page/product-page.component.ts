@@ -351,6 +351,7 @@ export class ProductPageComponent implements OnInit, OnDestroy {
     this.appService.produtos = []
     item.quantities = 1
     item.productPriceOrigin = item.productPrice
+    console.log(item)
     this.appService.produtos.push(item)
   }
 

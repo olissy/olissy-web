@@ -27,8 +27,6 @@ import { SearchStoreProductRegistrationComponent } from './components/search-sto
 import { SearchStoreProductRecordComponent } from './components/search-store-product-record/search-store-product-record.component';
 import { SearchProductComponent } from './components/search-product/search-product.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

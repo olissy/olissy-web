@@ -1,37 +1,35 @@
-
-<div *ngIf=" PopularOrder == '' " class="notHaveOrder-main">
-  <img src="{{ iconeOrder }}">
+<div *ngIf="PopularOrder == ''" class="notHaveOrder-main">
+  <img src="/assets/plataform/cart.png"/><br />
   <span>
     Você não possui pedidos
   </span>
 </div>
 
 <div class="col-md-12 col-xs-12" style="top: 25px;" *ngFor="let order of PopularOrder">
-  <div [routerLink]="['/order-detail', order.PRIMARY_KEY]"  class="info-box">
-    <span  class="info-box-icon no-padding" style="padding: 0px; background:  transparent; margin-top: -3px;">
-      <img [src]="order.clientImageUrl" width="70" height="70" class="img-circle"/>
+  <div [routerLink]="['/store-order-detail', order.PRIMARY_KEY]"  class="info-box" style=" cursor: pointer; ">
+    <span class="info-box-icon no-padding" style="padding: 0px; background:  transparent; margin-top: 10px;">
+      <img [src]="order.clientImageUrl" width="60px" height="60px" class="img-circle" />
     </span>
-    <div class="info-box-content">
-      <div class="product-info">
-        <span class="label pull-right"
+    <div class="info-box-content" style=" margin-left: 0px;">
+      <div class="product-info" style=" margin-bottom: 20px; ">
+        <span class="label label-success pull-right "
           [ngClass]="{
-            'label-success': order.orderState == 'Enviado',
-            'label-info':    order.orderState == 'Entregando',
-            'label-danger':  order.orderState == 'Desistência',
-            'label-primary':order.orderState == 'Finalizado',
-            'label-warning': order.orderState == 'Em processamento'
-          }">
-          {{ order.orderState }}
+            'label-success': order.orderState == 'reserved'  || order.orderState == 'accept',
+            'label-warning': order.orderState == 'pending',
+            'label-primary': order.orderState == 'packaging' || order.orderState == 'delivering',
+            'label-info'   : order.orderState == 'realized'  || order.orderState == 'finished',
+            'label-danger' : order.orderState == 'abandoned' || order.orderState == 'refused'
+          }">{{ order.orderState | StoreOrderPipe: 'formatOrderState' }}
         </span>
       </div>
       <span class="info-box-text text-nome-pedido font-weight-bold" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
         {{ order.clientName }} {{ order.clientLastName }}
       </span>
       <span class="info-box-number" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
-        {{ order.totalOrderValue | currency: 'BRL' }}
+        {{ order.totalOrderValue | currency: "BRL" }}
       </span>
       <span class="progress-description" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
-        {{ formatDataOrderList(order.orderDate) }}
+        {{ order.orderDate | StoreOrderPipe: 'formatDataOrderList' }}
       </span>
     </div>
   </div>

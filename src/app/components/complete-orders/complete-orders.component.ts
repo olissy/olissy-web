@@ -72,8 +72,9 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     "taxing": new FormControl('0.25'),
     "totalOrderValue": new FormControl(null),
     "orderDate": new FormControl(`${new Date()}`),
-    "orderState": new FormControl("Enviado"),
+    "orderState": new FormControl("reserved"),
     "rateOfDelivery": new FormControl(false),
+    "rateOfDeliveryDescription": new FormControl(false),
     "indexDay":new FormControl(null),
   }) 
 
@@ -84,7 +85,6 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
               private authService: AuthService) {}
 
   ngOnInit() {
-    this.autoFocus()
     this.scrollToTop()
     this.authToken()
     this.setIdStoreInPedido()
@@ -95,10 +95,6 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
 
   public historyNavigateBack(){
     window.history.back();
-  }
-
-  public autoFocus(){
-    document.getElementById("clientAddressFull").focus();
   }
 
   public scrollToTop(){
@@ -155,8 +151,10 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
   }
 
   public setTaxaDelivery(taxa, index:number){
+    $('#displayRateOfDelivery').modal('toggle');
     this.formularioPedido.patchValue({
-      rateOfDelivery:taxa.target.value
+      rateOfDelivery:taxa.target.value,
+      rateOfDeliveryDescription:this.TaxaDelivery[index].description
     })
     this.TaxaDeliveryStatus = false
     this.buttonTaxaDelivery = this.TaxaDelivery[index].description
@@ -286,16 +284,6 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     this.formularioPedido.get('clientAddressFull').markAsTouched()
     this.formularioPedido.get('clientCellPhone').markAsTouched()
     this.formularioPedido.get('clientMethodPayment').markAsTouched()
- 
-    if( this.formularioPedido.get('clientAddressFull').valid == false ){
-      document.getElementById("clientAddressFull").focus();
-    }
-    if( this.formularioPedido.get('clientCellPhone').valid == false ){
-      document.getElementById("clientCellPhone").focus();
-    }
-    if( this.formularioPedido.get('clientMethodPayment').valid == false ){
-      document.getElementById("clientMethodPayment").focus();
-    }
   }
 
   ngOnDestroy(){

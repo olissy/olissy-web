@@ -211,7 +211,7 @@
       <div class="row">
         <div class="col-xs-12">
           <button *ngIf="buttonconcluded" class="btn btn-success pull-right button-order-mobile button-alert" style="font-size:18px;" (click)="concluirPedido()">
-            <b>CONCLUIR PEDIDO</b>
+            <b>ENVIAR PEDIDO</b>
           </button>
           <button *ngIf="!buttonconcluded" type="button" class="btn btn-default pull-right btn-finish" style="font-size: 18px">  
             <div >
@@ -234,15 +234,15 @@
           <div class="form-group"> 
             <div *ngFor="let taxa of TaxaDelivery; let i=index"> 
               <div  *ngIf="taxa.rule == false" class="checkbox" style="display: flex; align-items: baseline;" >               
-                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery" (change)="setTaxaDelivery($event, i)">
-                <label [for]="taxa.value" [ngClass]="taxa.value == 'negotiateRateLivery' ? 'alert alert-warning alert-dismissible' : 'alert alert-success alert-dismissible'" >{{taxa.description}}</label>
+                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery" (change)="setTaxaDelivery($event, i)" >
+                <label [for]="taxa.value" [ngClass]="taxa.value == 'negotiateRateLivery' ? 'alert alert-warning alert-dismissible' : 'alert alert-success alert-dismissible'">{{taxa.description}}</label>
               </div>
               <div  *ngIf="taxa.rule == true && taxa.value == 'deliveryFreeAbove'" class="checkbox" style="display: flex; align-items: baseline;" >
-                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery"  (change)="setTaxaDelivery($event, i)" data-keyboard="false" data-toggle="modal" data-target="#displayTaxaDeliveryAbove">
+                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery"  (change)="setTaxaDelivery($event, i)">
                 <label [for]="taxa.value" class="alert alert-info alert-dismissible">{{taxa.description}}</label>
               </div>
               <div  *ngIf="taxa.rule == true && taxa.value == 'deliveryBy'" class="checkbox" style="display: flex; align-items: baseline;" >
-                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery"  (change)="setTaxaDelivery($event, i)" data-keyboard="false" data-toggle="modal" data-target="#displayTaxaDeliveryBy">
+                <input type="radio" [id]="taxa.value" [value]="taxa.value" [checked]="taxa.checked" name="rateOfDelivery"  (change)="setTaxaDelivery($event, i)">
                 <label [for]="taxa.value" class="alert alert-danger ess alert-dismissible">{{taxa.description}}</label>
               </div>
             </div>
@@ -256,7 +256,7 @@
           </div>
           <div *ngIf="this.formularioPedido.get('rateOfDelivery').value">
             <button type="button" class="btn button-alert" style="color: #fff;" data-dismiss="modal">
-              Opção escolhida
+              Ocultar
             </button>
           </div>
         </div>

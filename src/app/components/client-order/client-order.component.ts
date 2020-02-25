@@ -42,78 +42,10 @@ export class ClientOrderComponent implements OnInit, OnDestroy {
   public async buscarTodosPedidos(){
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((user:any)=>{
       this.token = user
-        this.clienteService.getByPedidoFOREIGN_KEY("order", this.token.uid, 'orderDate').pipe(takeUntil(this.unsubscribe$)).subscribe((order:any)=>{
+        this.clienteService.getOrder(this.token.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((order:any)=>{
           this.PopularOrder = order
         })
     })
-  }
-
-  public pedidoSelecionado(order){
-    console.log(order)
-    this.order = order
-    this.atualizarformularioMensagem(order)
-    this.marcarMensagemComoVisualizada()
-  }
-
-  public SomarQuantidadeProduto(){
-    return this.order.product.reduce((a, b) => a + (b['quantities'] || 0), 0);
-  }
-
-  public macarComoFinalizado(){
-    this.clienteService.update('order',this.order.PRIMARY_KEY, {orderState: 'Finalizado'})
-  }
-
-  public RemoverPedido(){
-    this.clienteService.update('order',this.order.PRIMARY_KEY, {orderState: 'Desistência'})
-  }
-
-  public enviarMensagem(){
-    let menssage = this.formularioMensagem.value
-    if(menssage.message === null || menssage.message === "" || menssage.message.trim() === ""){
-      this.formularioMensagem.reset()
-    }else{
-      this.clienteService.enviarMensagemNoPedido('order', this.order.PRIMARY_KEY,  menssage ).then(a=>{
-        this.formularioMensagem.reset()
-      })
-    }
-  }
-
-  public marcarMensagemComoVisualizada(){
-    let newMensagens = []
-    for (const m of this.order.message){
-     if(m.FOREIGN_KEY != this.token.uid && m.messageViewed == false){
-        m.messageViewed = true
-        newMensagens.push(m)
-     }else{
-      newMensagens.push(m)
-     }
-    }
-    this.clienteService.marcarMensagemComoVisualizadaComercio('order', this.order.PRIMARY_KEY, {'message':newMensagens} )
-  }
-
-  public atualizarformularioMensagem(message){
-    console.log(message)
-   this.formularioMensagem.patchValue({
-      FOREIGN_KEY: message.FOREIGN_KEY_CLIENT,
-      messageImageUrl:message.clientImageUrl,
-      messageName: message.clientName,
-      messageLastName: message.clientLastName,
-      messageViewed: false,
-      messageDate: `${new Date()}`
-    })
-  }
-
-  public formatDataOrderList(d){
-    let data = new Date(d);
-    let my = data.toLocaleString([], { hour12: true});
-    //let my = data.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true});
-    return my
-  }
-
-  public formatHours(d){
-    let data = new Date(d);
-    let my = data.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true});
-    return my
   }
 
   ngOnDestroy(){
