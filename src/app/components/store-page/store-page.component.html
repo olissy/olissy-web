@@ -1,87 +1,60 @@
-<!--
+<link href="https://fonts.googleapis.com/css?family=Roboto:900&display=swap" rel="stylesheet">
 
-
-
-<section class="content">
-  <div class="row">
-    <mt-pesquisa style="padding:10px" [boscar_por]="categoria" (produtos_Output)="produtos_Input($event)"></mt-pesquisa>
-    <div class="col-xs-12">
-      <div class="box box-solid" *ngFor="let store of comercios | async">
-        <div class="box-header with-border">
-          <i class="fa fa-home"></i>
-          <a [routerLink]="['/about-store', store.FOREIGN_KEY]" class="nameStore">
-            <h3 class="box-title">
-              {{ store.storeName }}
-            </h3>
-          </a>
-          <span class="pull-right">
-            <i class="fa fa-thumbs-o-up"></i>
-            {{ store?.follow }}
-          </span>
-        </div>
-        <div class="box-body">
-          <div class="col-sm-3 col-xs-12 img-mobile">
-            <img class="box-img-detail" [src]="store?.storeImageUrl" />
-          </div>
-          <dl class="col-sm-9 col-xs-12">
-            <dt>Categoria</dt>
-            <dd>{{ store?.storeCategory }}</dd>
-            <dt>Quem somos</dt>
-            <dd>{{ store?.storeAbout }}</dd>
-            <dt>Horários</dt>
-            <dd>{{ store?.storeHours }}</dd>
-          </dl>
-        </div>
-        <div class="box-footer detail-footer">
-          <a class="pull-left" routerLinkActive="detail-active" [routerLink]="['store-product']">
-            Produtos
-          </a>
-          <a class="pull-right" routerLinkActive="detail-active" [routerLink]="['store-comment']">
-            Comentários
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <router-outlet></router-outlet>
-  </div>
-</section>
--->
-<div class="container">
-  <section class="content">
+<div class="container not-select-text" style="padding: 0px 0px 0px 0px">
+  <section class="content" style="padding: 0px 15px 0px 15px">
     <div class="row">
       <div class="col-xs-12 collumn-mobile center">
-        <div class="box box-solid" *ngFor="let store of comercios">
+        <div class="box box-solid" *ngFor="let store of store">
           <div class="box-header with-border">
-            <span class="pull-left" style="font-size: 20px" [routerLink]="['/about-store', store.FOREIGN_KEY ]">
-              <i class="fa fa-home"></i>
-              <h3 class="box-title">
-                &nbsp;{{ store.storeName }}
-              </h3>
-            </span>
-            <span class="pull-right" style="font-size: 20px; cursor: pointer;" (click)="message()"> <!--[routerLink]="['/client-message-text/', 'inOR7yJHuEs8Ee5790yU']" -->
-              <i class="fa fa-envelope"></i>
-            </span>
+            <span class="pull-right" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
+              <a style="font-size: 25px; color: #020202; background-color: transparent; cursor: pointer;">
+                <i class="fa  fa-ellipsis-h"></i>
+              </a>
+            </span> 
           </div>
           <div class="box-body">
-            <div class="col-sm-12 col-xs-12 img-center">
-              <img class="box-img-detail" [src]="store?.storeImageUrl" />
+            <div class="col-sm-12 col-xs-12 painel">
+              <div> 
+                <a [href]="store?.storeImageUrl" target="_blank">
+                  <img class="img-circle box-img-detail"  [src]="store?.storeImageUrl" />
+                </a>
+              </div>         
+              <div style="font-family: 'Roboto';">
+                <a style="color: #000; font-size: 14px;">{{ store?.storeName }} <i class="fa fa-circle" style="font-size: 7px;"></i> {{ store?.storeNeighborhood }}</a>
+              </div> 
+              <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpenOrClosed">
+                Aberto 
+              </span>
+              <span> 
+                {{ store?.productQuantity }} produtos 
+              </span>
+              <span> 
+                {{ quantiyOfSales }} vendas 
+              </span> 
+              <div class="col-sm-12 col-xs-12 center">
+                <i *ngIf="store.negotiateRateLivery.status" class="fa fa-circle" style="font-size: 15px; margin-right: 15px; color: #ffc900cf;"></i>
+                <i *ngIf="store.onlyInNeighborhood.status" class="fa fa-circle" style="font-size: 15px; margin-right: 15px; color: #2cce2fd1;"></i>
+                <i *ngIf="store.deliveryFreeAbove.status" class="fa fa-circle" style="font-size: 15px; margin-right: 15px; color: #0994f7;"></i>
+                <i *ngIf="store.deliveryBy.status" class="fa fa-circle" style="font-size: 15px; margin-right: 15px; color: #ff6451;"></i>   
+              </div>
             </div>
-            <dl class="col-sm-12 col-xs-12">
-              <a *ngIf="store?.storeOpenOrClosed  == true" style="font-size:12px" class="text-success"><i class="fa fa-circle text-success" style="font-size:9px"></i> Aberto</a>
-              <a *ngIf="store?.storeOpenOrClosed  == false" style="font-size:12px" class="text-danger"><i class="fa fa-circle text-danger" style="font-size:9px"></i> Fechado</a>
-              <dt>Telefone</dt>
-              <dd>{{ store.storeCellPhone | mask: '(00) 0000-0000'}} - {{ store.storeTelephone | mask: '(00) 0 0000-0000'}}  </dd>
-              <dt>Endereço</dt>
-              <dd>{{ store.storeCity }} {{ store.storeNeighborhood }} {{ store.storeStreet }} </dd>
-              <dt>Horários</dt>
-              <dd>{{ store.storeHours }}</dd>
-            </dl>
-            <div class="col-sm-12 col-xs-12">
-              <button type="button" class="btn btn-default btn-xs"> <i class="fa fa-thumbs-o-up"></i> {{ store.follow }} Seguir </button>
-              <span class="pull-right text-muted"> <span> {{ quantityOfProducts }} produtos </span> &nbsp; <span> {{ quantiyOfSales }} vendas </span> </span>
-            </div>                    
+            <div class="col-sm-12 col-xs-12" style=" display:flex; 	flex-direction: row; justify-content: space-between;">
+              <span *ngIf="reactStatus == false" >
+                <i class="fa fa-thumbs-up" style="color:#999;font-size: 20px; cursor: pointer;"></i> 
+                <b style="color: #999;cursor: pointer; font-family: 'Roboto';"> {{ store.follow }} Seguidores</b>
+              </span>
+              <span (click)="setFollow(store)" *ngIf="!react.status && reactStatus" >
+                <i class="fa fa-thumbs-o-up" style="color: #000;font-size: 20px; cursor: pointer;"></i> 
+                <b style="color: #000;cursor: pointer; font-family: 'Roboto';"> {{ store.follow }} Seguidores</b>
+              </span>
+              <span (click)="setFollow(store)" *ngIf="react.status && reactStatus" >
+                <i class="fa fa-thumbs-up" style="color: #0994f7;font-size: 20px; cursor: pointer;"></i> 
+                <b style="color: #0994f7;cursor: pointer; font-family: 'Roboto';"> {{ store.follow }} Seguidores</b>
+              </span>
+              <span  style="font-size: 20px; cursor: pointer;" (click)="message()">
+                <i class="fa fa-envelope" style="color: #000;font-size: 20px; cursor: pointer;"></i>
+              </span>
+            </div>        
           </div>
           <div class="box-footer detail-footer">
             <a class="pull-left" routerLinkActive="detail-active" [routerLink]="['store-product']">
@@ -95,7 +68,79 @@
       </div>
     </div>
     <div class="row">
-      <router-outlet></router-outlet>
+       <router-outlet></router-outlet>  
     </div>
   </section>
 </div>
+<form>
+  <div class="modal fade" id="displayStoreInfo">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="box-footer" style="border-top: 0px solid #f4f4f4;">
+            <div class="row">
+              <div class="form-group"> 
+                <div  style="display: flex; flex-direction: column;"> 
+                  <div *ngIf="TaxaDelivery[0].rule" class="alert" style="background-color: #ffc900cf; color: #f6f6f6; text-shadow: 1px 1px #777;">{{ TaxaDelivery[0].description }}</div>
+                  <div *ngIf="TaxaDelivery[1].rule" class="alert" style="background-color: #2cce2fd1; color: #f6f6f6;text-shadow: 1px 1px #777;">{{ TaxaDelivery[1].description }}</div>              
+                  <div *ngIf="TaxaDelivery[2].rule" class="alert" style="background-color: #0994f7;color: #f6f6f6;text-shadow: 1px 1px #777;">{{ TaxaDelivery[2].description }}</div>
+                  <div *ngIf="TaxaDelivery[3].rule" class="alert" style="background-color: #ff6451;color: #f6f6f6;text-shadow: 1px 1px #777;">{{ TaxaDelivery[3].description }}</div>             
+                </div>
+              </div>
+              <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">Loja</h5>
+                  <span class="description-text">
+                    {{ displayStoreInfo?.storeName }}
+                    <br>
+                  </span>
+                </div>
+              </div>
+              <div class="col-sm-4 border-right">
+                <div class="description-block">
+                  <h5 class="description-header">Contatos</h5>
+                  <span class="description-text" style="text-transform: none;">
+                    {{ displayStoreInfo?.storeEmail }}
+                    <br>
+                  </span>
+                  <span class="description-text">
+                    {{ displayStoreInfo?.storeCellPhone | mask: '(00) 0 0000-0000' }}
+                    <br>
+                  </span>
+                  <span class="description-text">
+                    {{ displayStoreInfo?.storeTelephone | mask: '(00) 0000-0000'}}
+                  </span>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="description-block">
+                  <h5 class="description-header">
+                    Endereço
+                  </h5>
+                  <span class="description-text">
+                    {{ displayStoreInfo?.storeCity }}
+                    <br>
+                  </span>
+                  <span class="description-text">
+                    {{ displayStoreInfo?.storeNeighborhood }}
+                    <br>
+                  </span>
+                  <span class="description-text">
+                    {{ displayStoreInfo?.storeStreet }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Ocultar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>  
+
+
+

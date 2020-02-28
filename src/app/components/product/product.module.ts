@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ProductRoute } from './product.route';
 import { ProductComponent } from './product.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductPipe } from './product.pipe'
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule} from 'angular-imask';
 
@@ -16,9 +17,9 @@ import { IMaskModule} from 'angular-imask';
     NgxMaskModule,
     IMaskModule, 
   ],
-  declarations: [ProductComponent,]
+  declarations: [ProductComponent, ProductPipe]
 
 })
 
-export class ProductModule { }
+export class ProductModule { } 
 

@@ -18,15 +18,21 @@ import { Meta, Title } from '@angular/platform-browser';
 
 export class StorePageComponent implements OnInit {
 
-  public comercios
+  public store
+
+  public reactStatus:boolean = true
 
   private unsubscribe$ = new Subject();
 
   public categoria:string = 'store'
-
-  public quantityOfProducts:number = 0 
   
   public quantiyOfSales:number = 0 
+
+  public TaxaDelivery = [{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false }];
+
+  public displayStoreInfo:any
+
+  public react:any = { status:false, store:[] }
 
   private newContact = {
     PRIMARY_KEY : "",
@@ -64,10 +70,11 @@ export class StorePageComponent implements OnInit {
     this.scrollToTop()
     this.appService.produtos = []//remover produtos do carrinho
     this.comercioPaginaService.store('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
-      this.comercios = store
+      this.store = store
+      this.getReact()
       this.searchEngineOptimization(store[0].storeCategory, store[0].storeCity, store[0].storeNeighborhood, store[0].storeName, store[0].storeAbout)
     })
-    this.quantityOfProductsEndSales()
+    
   }
 
   public searchEngineOptimization(keywords1, keywords2, keywords3, title, description){
@@ -109,19 +116,6 @@ export class StorePageComponent implements OnInit {
     }
   }
 
-  public quantityOfProductsEndSales(){
-    this.comercioPaginaService.getByFOREIGN_KEY('product', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((user:any)=>{
-      this.quantityOfProducts = user.length;
-      this.quantiyOfSales = this.TotalQuantiyOfSales(user)
-    })
-  }
-
-  public TotalQuantiyOfSales(sales){
-    return sales.reduce( (sum, item:any)=>{
-      return new Number(sum).valueOf() + new Number(item.sale).valueOf()
-    },0)
-  }
-
   public message(){
     this.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe( (isLogged:any)=>{
       if(isLogged === null){
@@ -129,7 +123,6 @@ export class StorePageComponent implements OnInit {
       }else{
         let FOREIGN_KEY_CLIENT = isLogged.uid
         let FOREIGN_KEY_STORE = this.route.snapshot.params['id']
-        console.log(FOREIGN_KEY_CLIENT, FOREIGN_KEY_STORE)
         this.comercioPaginaService.existContactStoreEndClient(FOREIGN_KEY_CLIENT, FOREIGN_KEY_STORE).pipe(takeUntil(this.unsubscribe$)).subscribe( (existContact:any)=>{
           
           if(Object.keys(existContact).length == 0){//existe contato entre loja e cliente
@@ -160,6 +153,89 @@ export class StorePageComponent implements OnInit {
       })
     })
   }
+
+  public selectDisplayStoreInfo(store){
+    if(store.negotiateRateLivery.status){
+      this.TaxaDelivery[0] = { description:'Negociar taxa de entrega por Telefone', rule:true }
+    }
+
+    if(store.onlyInNeighborhood.status){
+      this.TaxaDelivery[1] = { description: `Entrega GRÁTIS no bairro ${store.storeNeighborhood}`,  rule:true }
+    }
+
+    if(store.deliveryFreeAbove.status){
+      this.TaxaDelivery[2] = { description:`Entrega grátis acima de R$${store.deliveryFreeAbove.taxa} por ${store.deliveryFreeAbove.km}/km`, rule:true }
+    }
+
+    if(store.deliveryBy.status){
+      this.TaxaDelivery[3] = { description: `Entrega por R$${store.deliveryBy.taxa}/KM`, rule:true }
+    }
+
+    this.displayStoreInfo = store
+  }
+
+  public async getReact(){
+    this.authService.isLogged().subscribe((res:any)=>{
+      if(res != null){
+        this.comercioPaginaService.getReact(res.uid).subscribe((react:any)=>{
+          if(Object.keys(react).length != 0){
+            this.react = react[0]
+            this.reactFilter()
+          }else{
+            this.comercioPaginaService.react(res.uid)
+          }
+        })
+      }
+    })
+  }
+
+  public reactFilter(){
+    for(let react in this.react.store){
+      this.react.status = false
+      if(this.react.store[react].FOREIGN_KEY == this.store[0].PRIMARY_KEY &&  this.react.store[react].react == true){ 
+        this.react.status = true
+      } 
+    }  
+  }
+
+  public setFollow(product){
+    let PRIMARY_KEY = this.react.PRIMARY_KEY
+    this.reactStatus = false
+
+
+    //se nao existir react, adcionar
+    if( Object.keys(this.react.store).length == 0 ){
+      console.log("a")
+      this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
+        this.comercioPaginaService.incrementFollowQuantities(product.PRIMARY_KEY).then(()=>{
+          this.reactStatus = true
+        })
+      })
+    }else{
+      if(this.react.status){
+        console.log("b")
+        this.comercioPaginaService.delReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
+          this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:false }).then(()=>{
+            this.comercioPaginaService.decrementFollowQuantities(product.PRIMARY_KEY).then(()=>{
+              this.reactStatus = true
+            })
+          })
+        })
+      }else{
+        console.log("c")
+        this.comercioPaginaService.delReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:false }).then(()=>{
+          this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
+            this.comercioPaginaService.incrementFollowQuantities(product.PRIMARY_KEY).then(()=>{
+              this.reactStatus = true
+            })
+          })
+        })
+      }
+    }
+  }
+
+
+
  
   ngOnDestroy(){
     console.log("store-page destroy")

@@ -64,6 +64,11 @@ export class ProductService {
     return await this.db.collection("react").doc(pk).update({'product':firebase.firestore.FieldValue.arrayRemove(data)})
   }
 
+  public async incrementCommet(pk){
+    const increment = firebase.firestore.FieldValue.increment(1);
+    return await this.db.collection('product').doc(pk).update({ comment: increment })
+  }
+
   public async incrementProductQuantities(pk){
     const increment = firebase.firestore.FieldValue.increment(1);
     return await this.db.collection('product').doc(pk).update({ love: increment })

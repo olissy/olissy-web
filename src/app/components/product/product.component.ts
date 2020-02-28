@@ -21,11 +21,15 @@ export class ProductComponent implements OnInit {
 
   public loading:boolean = true
 
+  public commentPlus:boolean = true
+
   public displayStoreInfo:any
 
   public FOREIGN_KEY_STORE_ORDER_CART
 
-  public comments = { status:false, post:[]}
+  public LOGIN:boolean = false
+
+  public comments = { status:false, limit:2, post:[] }
 
   public FOREIGN_KEY
 
@@ -76,7 +80,6 @@ export class ProductComponent implements OnInit {
   }
 
   public setDescription(value, index){
-    console.log(value, index)
     this.result.product[index].description = value
   }
 
@@ -101,6 +104,7 @@ export class ProductComponent implements OnInit {
     this.authService.isLogged().subscribe((res:any)=>{
       if(res != null){
         this.FOREIGN_KEY = res.uid
+        this.LOGIN = true
         this.getUser(this.FOREIGN_KEY)
         this.productService.getReact(res.uid).subscribe((react)=>{
           if(Object.keys(react).length != 0){
@@ -165,16 +169,17 @@ export class ProductComponent implements OnInit {
 
   public setComment(PRIMARY_KEY){
     this.comments.status = true
+    this.comments.limit = 2
     this.formularioComentario.patchValue({
       PRIMARY_KEY_PRODUCT : PRIMARY_KEY,
       commentText:""
     });
-    this.productService.getComments(PRIMARY_KEY, 10).subscribe((comments)=>{
+    this.productService.getComments(PRIMARY_KEY, this.comments.limit).subscribe((comments)=>{
       this.comments.status = false
       this.comments.post = comments
     })
   }
-
+ 
   public publicarComentario(){
     this.formularioComentario.patchValue({
       FOREIGN_KEY_CLIENT : this.FOREIGN_KEY,
@@ -183,18 +188,25 @@ export class ProductComponent implements OnInit {
       commentImageUrl : this.user.clientImageUrl,
       commentName :this.user.clientName +' '+ this.user.clientLastName,
     });
-    console.log(this.formularioComentario.value)
-    this.productService.setCommet(this.formularioComentario.value).then((res)=>{
-      console.log(res)
-      this.formularioComentario.reset()
-    })
+    if(this.formularioComentario.get('commentText').value.length > 2){
+      this.productService.setCommet(this.formularioComentario.value).then((res)=>{
+        this.productService.incrementCommet(this.formularioComentario.get('PRIMARY_KEY_PRODUCT').value).then(()=>{
+          this.formularioComentario.reset()
+        })
+      })
+    }
   }
 
-
-
-
-
-
+  public setCommentPlus(){
+    this.commentPlus = false
+    this.productService.getComments(this.formularioComentario.get('PRIMARY_KEY_PRODUCT').value, (this.comments.limit++)*2).pipe(takeUntil(this.unsubscribe$)).subscribe((comments)=>{
+      setTimeout(() => {
+        this.comments.status = false
+        this.comments.post = comments
+        this.commentPlus = true
+      }, 1000);
+    })
+  }
 
 
 
@@ -227,10 +239,13 @@ export class ProductComponent implements OnInit {
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
-    this.result.productDataBase.push( ProductDB )
     this.productService.productSuggested(ProductDB.PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
+      this.result.productDataBase.push( ProductDB )
       this.result.product = product
-       this.store()
+      this.result.product[0].description = true
+      this.result.product[0].index = 0
+      this.store()
+      this.getReact()
     })
   }
 
@@ -238,11 +253,14 @@ export class ProductComponent implements OnInit {
     this.result.productDataBase = []
     this.result.product = []
     this.result.store = []
+
     for (const index in ProductDB){
       this.productService.productSuggested(ProductDB[index].PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
         this.result.productDataBase.push( ProductDB[index] )
-        this.result.product.push( product[0] )
-         this.store()
+        this.result.product[index] = product[0]
+        this.result.product[index].description = true
+        this.result.product[index].index = index
+        this.store()
       })
     }
   }

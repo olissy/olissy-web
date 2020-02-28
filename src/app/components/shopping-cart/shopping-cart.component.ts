@@ -27,6 +27,8 @@ export class ShoppingCartComponent implements OnInit {
     if(menu_PRIMARY_KEY == itemDecrement_PRIMARY_KEY && quantities == 0){
       for (const index in this.appService.produtos) {
         if(this.appService.produtos[index].PRIMARY_KEY == itemDecrement_PRIMARY_KEY){
+          this.appService.produtos[index].productPrice = this.appService.produtos[index].productPriceOrigin
+          this.appService.produtos[index].quantities = 0
           this.appService.produtos.splice(Number(index), 1)
         }
       }
@@ -45,6 +47,10 @@ export class ShoppingCartComponent implements OnInit {
     for (const key in this.produtos) {
       if(this.produtos[key].PRIMARY_KEY == item.PRIMARY_KEY){
         this.produtos[key].quantities--
+        
+        if(this.produtos[key].quantities > 0){
+          this.produtos[key].productPrice = (this.produtos[key].productPrice - this.produtos[key].productPriceOrigin)
+        }
       }
       this.removerItemCarrinho(this.produtos[key].PRIMARY_KEY, item.PRIMARY_KEY, this.produtos[key].quantities)
     }

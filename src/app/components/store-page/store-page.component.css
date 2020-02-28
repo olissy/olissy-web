@@ -1,3 +1,8 @@
+img {
+  border: 0px solid #31cc48;
+}
+
+
 .linkCabecarioVoltraEstrela{
   cursor: pointer;
   text-decoration:none;
@@ -51,16 +56,23 @@
   }
 }
 
-.img-center{
+.painel{
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
 }
 
 .center{
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
+}
+
+.painel-left{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
 }
 
 .box {
@@ -72,4 +84,19 @@
   min-height: 1px;
   padding-right: 0px; 
   padding-left: 0px; 
+}
+
+.storeOpenOrClosed{
+  color: #31cc48;
+  background-color: #fff;
+  font-family: 'Roboto';
+}
+
+
+.box-header.with-border {
+  border-bottom: 0px solid #f4f4f4; 
+}
+
+.box-header {
+  padding: 0px 10px 0px 0px;
 }
