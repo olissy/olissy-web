@@ -38,14 +38,8 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
   async ngOnInit() {
     await this.obterDadosToken()
     this.obterDadosCliente()
-    this.obterDadosUsuario()
     this.obterDadosPedidos()
     this.getNewMessage()
-  }
-
-  soundOfNotification(){
-    var audio = new Audio('/assets/sound/notification.mp3');
-        audio.play();
   }
 
   public async obterDadosToken(){
@@ -66,12 +60,6 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
     })
   }
 
-  public obterDadosUsuario(){
-    this.clienteHeaderService.getByFOREIGN_KEY('user',this.token.uid,1).pipe(takeUntil(this.unsubscribe$)).subscribe( (dados:[client])=>{
-      this.usuario = dados[0]
-    })
-  }
-
   public SignOut(){
     this.appservice.router_app_componet = 'usuario'
     this.authService.logout()
@@ -81,36 +69,9 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
   public getNewMessage(){
     this.clienteHeaderService.getNewMessageByFOREIGN_KEY(this.token.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((newMessage:any)=>{
       this.newMessage = newMessage
-      console.log(newMessage)
     })
   }
-
-  public countNewMensage(msn:any):number{
-    let numberOfNewMessage:number = 0
-    for (const key of msn) {
-      if(key.FOREIGN_KEY != this.token.uid && key.view == false){
-        numberOfNewMessage++
-      }
-    }
-    return numberOfNewMessage
-  }
-
-  public showLestNewMensage(msn:any):string{
-    let LestMensage:string
-    for (const key of msn) {
-      if(key.FOREIGN_KEY != this.token.uid && key.view == false){
-        LestMensage = key.text
-      }
-    }
-    return LestMensage
-  } 
-
-  public formatHours(d){
-    let data = new Date(d);
-    let my = data.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true});
-    return my
-  }
-
+ 
   searchProductDB_Output(productDB){
     $('#displaySearch').modal('hide'); 
     this.data.setProductDB(productDB)

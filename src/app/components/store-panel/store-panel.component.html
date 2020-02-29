@@ -461,11 +461,11 @@
               <div class="col-md-12 col-sm-12 col-xs-12" style="display: flex;">
                 <div class="input-group" >
                   <span class="input-group-addon">R$</span>
-                  <input type="number" class="form-control" value="0.00"  placeholder="0.00" (click)="setTaxaDeliveryAbobeTaxa($event.target.value)" (keyup)="setTaxaDeliveryAbobeTaxa($event.target.value)">
+                  <input type="number" class="form-control" value="{{ this.TaxaDelivery[2].taxa }}"  placeholder="0.00" (click)="setTaxaDeliveryAbobeTaxa($event.target.value)" (keyup)="setTaxaDeliveryAbobeTaxa($event.target.value)">
                 </div>
                 &nbsp;&nbsp;
                 <div class="input-group">
-                  <input type="number" value="0.00" placeholder="0.00" class="form-control" (click)="setTaxaDeliveryAboveKmValue($event.target.value)" (keyup)="setTaxaDeliveryAboveKmValue($event.target.value)">
+                  <input type="number" value="{{ this.TaxaDelivery[2].km }}" placeholder="0.00" class="form-control" (click)="setTaxaDeliveryAboveKmValue($event.target.value)" (keyup)="setTaxaDeliveryAboveKmValue($event.target.value)">
                   <span class="input-group-addon">/KM</span>
                 </div>
               </div>
@@ -487,7 +487,7 @@
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="input-group">
                   <span class="input-group-addon">R$</span>
-                  <input type="text" class="form-control" value="0.00" placeholder="0.00" (click)="setTaxaDeliveryByKmValue($event.target.value)" (keyup)="setTaxaDeliveryByKmValue($event.target.value)">
+                  <input type="text" class="form-control" value="{{ this.TaxaDelivery[3].taxa }}" placeholder="0.00" (click)="setTaxaDeliveryByKmValue($event.target.value)" (keyup)="setTaxaDeliveryByKmValue($event.target.value)">
                 </div>
               </div>
             </div>  

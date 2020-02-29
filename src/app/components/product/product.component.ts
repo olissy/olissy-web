@@ -101,12 +101,12 @@ export class ProductComponent implements OnInit {
   }
 
   public async getReact(){
-    this.authService.isLogged().subscribe((res:any)=>{
+    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
       if(res != null){
         this.FOREIGN_KEY = res.uid
         this.LOGIN = true
         this.getUser(this.FOREIGN_KEY)
-        this.productService.getReact(res.uid).subscribe((react)=>{
+        this.productService.getReact(res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((react)=>{
           if(Object.keys(react).length != 0){
             this.result.react = react[0]
             this.reactFilter()
@@ -119,12 +119,13 @@ export class ProductComponent implements OnInit {
   }
 
   public getUser(FOREIGN_KEY){
-    this.productService.getUser(FOREIGN_KEY).subscribe((user)=>{
+    this.productService.getUser(FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((user)=>{
       this.user = user[0]
     })
   }
 
   public setLove(product){
+
     this.reactLoading = false
     let PRIMARY_KEY = this.result.react.PRIMARY_KEY
 
@@ -174,7 +175,7 @@ export class ProductComponent implements OnInit {
       PRIMARY_KEY_PRODUCT : PRIMARY_KEY,
       commentText:""
     });
-    this.productService.getComments(PRIMARY_KEY, this.comments.limit).subscribe((comments)=>{
+    this.productService.getComments(PRIMARY_KEY, this.comments.limit).pipe(takeUntil(this.unsubscribe$)).subscribe((comments)=>{
       this.comments.status = false
       this.comments.post = comments
     })
@@ -240,7 +241,7 @@ export class ProductComponent implements OnInit {
     this.result.product = []
     this.result.store = []
     this.productService.productSuggested(ProductDB.PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
-      this.result.productDataBase.push( ProductDB )
+      this.result.productDataBase[0] =  ProductDB 
       this.result.product = product
       this.result.product[0].description = true
       this.result.product[0].index = 0
@@ -256,11 +257,14 @@ export class ProductComponent implements OnInit {
 
     for (const index in ProductDB){
       this.productService.productSuggested(ProductDB[index].PRIMARY_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((product:any)=>{
-        this.result.productDataBase.push( ProductDB[index] )
+        this.result.productDataBase[index] =  ProductDB[index]
         this.result.product[index] = product[0]
         this.result.product[index].description = true
         this.result.product[index].index = index
         this.store()
+        if( (parseInt(index) + 1)  == ProductDB.length){
+          this.getReact()
+        }
       })
     }
   }

@@ -140,7 +140,12 @@ export class StorePanelComponent implements OnInit, OnDestroy {
         this.TaxaDelivery[0].checked = user[0].negotiateRateLivery.status
         this.TaxaDelivery[1].checked = user[0].onlyInNeighborhood.status
         this.TaxaDelivery[2].checked = user[0].deliveryFreeAbove.status
+        this.TaxaDelivery[2].km = user[0].deliveryFreeAbove.km
+        this.TaxaDelivery[2].taxa = user[0].deliveryFreeAbove.taxa
+        this.TaxaDelivery[2].description = `Entrega grátis acima de R$${user[0].deliveryFreeAbove.taxa} por ${user[0].deliveryFreeAbove.km}/km`
         this.TaxaDelivery[3].checked = user[0].deliveryBy.status
+        this.TaxaDelivery[3].taxa = user[0].deliveryBy.taxa
+        this.TaxaDelivery[3].description = `Entrega por R$${user[0].deliveryBy.taxa}/KM`
 
         for (const uf in this.states) {
           if (this.states[uf].sigla == user[0].storeState) {

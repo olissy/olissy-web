@@ -86,11 +86,19 @@ img {
   padding-left: 0px; 
 }
 
-.storeOpenOrClosed{
+.storeOpen{
   color: #31cc48;
   background-color: #fff;
   font-family: 'Roboto';
 }
+
+
+.storeClosed{
+  color: #ff6451;
+  background-color: #fff;
+  font-family: 'Roboto';
+}
+
 
 
 .box-header.with-border {

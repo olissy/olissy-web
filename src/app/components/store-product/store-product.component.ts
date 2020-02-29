@@ -68,12 +68,12 @@ export class StoreProductComponent implements OnInit, OnDestroy {
   }
 
   public async getReact(){
-    this.authService.isLogged().subscribe((res:any)=>{
+    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
       if(res != null){
         this.FOREIGN_KEY = res.uid
         this.LOGIN = true
         this.getUser(this.FOREIGN_KEY)
-        this.storeProductService.getReact(res.uid).subscribe((react)=>{
+        this.storeProductService.getReact(res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((react)=>{
           if(Object.keys(react).length != 0){
             this.result.react = react[0]
             this.reactFilter()
@@ -86,7 +86,7 @@ export class StoreProductComponent implements OnInit, OnDestroy {
   }
 
   public getUser(FOREIGN_KEY){
-    this.storeProductService.getUser(FOREIGN_KEY).subscribe((user)=>{
+    this.storeProductService.getUser(FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((user)=>{
       this.user = user[0]
     })
   }
@@ -141,7 +141,7 @@ export class StoreProductComponent implements OnInit, OnDestroy {
       PRIMARY_KEY_PRODUCT : PRIMARY_KEY,
       commentText:""
     });
-    this.storeProductService.getComments(PRIMARY_KEY, this.comments.limit).subscribe((comments)=>{
+    this.storeProductService.getComments(PRIMARY_KEY, this.comments.limit).pipe(takeUntil(this.unsubscribe$)).subscribe((comments)=>{
       this.comments.status = false
       this.comments.post = comments
     })

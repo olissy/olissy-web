@@ -22,9 +22,12 @@
               <div style="font-family: 'Roboto';">
                 <a style="color: #000; font-size: 14px;">{{ store?.storeName }} <i class="fa fa-circle" style="font-size: 7px;"></i> {{ store?.storeNeighborhood }}</a>
               </div> 
-              <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpenOrClosed">
-                Aberto 
-              </span>
+              <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpen">
+                Aberto
+              </span> 
+              <span *ngIf="store?.storeOpenOrClosed  == false" class="storeClosed">
+                Fechado
+              </span> 
               <span> 
                 {{ store?.productQuantity }} produtos 
               </span>

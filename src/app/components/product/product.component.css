@@ -81,7 +81,7 @@ a {
    border-bottom: 0px; 
 }
 
-.storeOpenOrClosed > i{
+.storeOpen > i{
   font-size:12px;
   color: #02c16ad1;
   border: #fff solid 2px;
@@ -89,7 +89,21 @@ a {
   background-color: #fff;
 }
 
-.storeOpenOrClosed{
+.storeOpen{
+  top: -10px;
+  left: -15px;
+  position: relative;
+}
+
+.storeClosed > i{
+  font-size:12px;
+  color: #ff6451;
+  border: #fff solid 2px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.storeClosed{
   top: -10px;
   left: -15px;
   position: relative;
@@ -110,6 +124,7 @@ a {
   margin: 5px 5px 10px 5px;
   align-items: baseline;
   padding-top: 10px;
+  padding-bottom: 10px;
 }
 .menu-item-info-box-text {
   margin: 0px 0px 10px 5px;

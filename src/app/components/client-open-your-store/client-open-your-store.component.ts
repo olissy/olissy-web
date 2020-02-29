@@ -86,7 +86,7 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
     'storeEmail':new FormControl(null),
     'storeTelephone':new FormControl(null,Validators.required),
     'storeCNPJ':new FormControl(null,Validators.required),
-    'authorizationOpenStore':new FormControl(false,Validators.required),
+    'authorizationOpenStore':new FormControl(true,Validators.required),
     'storeOpenOrClosed':new FormControl(true,Validators.required),
     'storeCountry': new FormControl('Brazil'),
     'storeCity': new FormControl('Acrelândia'),

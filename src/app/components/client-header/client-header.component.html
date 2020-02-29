@@ -18,65 +18,21 @@
             <i class="fa fa-home"></i>
           </a>
         </li>
-        <li class="dropdown messages-menu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 20px;padding-top: 20px;">
+        <li routerLinkActive="active" class="dropdown messages-menu">
+          <a routerLink="/client-message-contact"  class="dropdown-toggle" data-toggle="dropdown" style="font-size: 20px;padding-top: 20px;">
             <i class="fa fa-envelope"></i>
             <span class="label label-success" *ngIf="newMessage?.length">
               {{ newMessage?.length }}  
             </span>
           </a> 
-          <ul class="dropdown-menu" *ngIf="newMessage?.length">
-            <li *ngFor="let mensagem of newMessage" class="mensagem-mobile" style="width: 100%;" [routerLink]="['/client-message-text', mensagem.PRIMARY_KEY]">
-              <ul class="menu">
-                <li>
-                  <a style="padding-left: 0px;">
-                    <div class="pull-left">
-                      <span class="label label-success" style="position: relative; left: 40px; top:-15px">
-                        {{ countNewMensage(mensagem.message) }} 
-                      </span>
-                      <img src="{{ mensagem.photoStore }}" class="img-circle" alt="User Image"/>
-                    </div>
-                    <h4>
-                      {{ mensagem.nameStore }}
-                    </h4>
-                    <p>
-                      {{ showLestNewMensage(mensagem.message) }}
-                    </p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
         </li> 
-        <li class="dropdown notifications-menu">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="font-size: 20px;padding-top: 20px;">
+        <li routerLinkActive="active" class="dropdown notifications-menu">
+          <a routerLink="/client-order"  class="dropdown-toggle" data-toggle="dropdown" style="font-size: 20px;padding-top: 20px;">
             <i class="fa fa-bell"></i>
             <span class="label label-success" *ngIf="pedidos?.length">
               {{ pedidos?.length }}
             </span>
           </a>
-          <ul class="dropdown-menu" *ngIf="pedidos?.length">
-            <li>
-              <ul class="menu" *ngFor="let pedido of pedidos">
-                <li class="widget-user-header"  [routerLink]="['/order-detail', pedido?.PRIMARY_KEY]" style="padding: 7px; background-color: #c71582; color: #fff">
-                  <img
-                    [src]="pedido.storeImageUrl"
-                    class="img-circle"
-                    width="30"         
-                    alt="User Image"/>
-                  {{ pedido?.storeName }}
-                </li>
-                <li *ngFor="let produto of pedido.product"  [routerLink]="['/order-detail', pedido?.PRIMARY_KEY]" class="info-box-texts" style="padding: 10px; background-color: #ffe7f0;">
-                  <span style="padding: 6px; padding-top: 3px">
-                    {{ produto.quantities }} X
-                  </span>
-                  <span style="padding: 6px; padding-top: 3px">
-                    {{ produto.productName }}
-                  </span>
-                </li>
-              </ul>
-            </li>
-          </ul>
         </li>
         <li class="dropdown user user-menu">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 22px;">

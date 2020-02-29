@@ -44,7 +44,8 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.obterDadosToken()
-    this.getComercio()
+    this.getStore()
+    this.getOrder()
     this.getNewMessage()
     this.getRouterReloadPage()
   }
@@ -77,21 +78,18 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
     this.data.setProductDB(productDB)
   }
 
-  soundOfNotification(){
-    var audio = new Audio('/assets/sound/notification.mp3');
-      audio.play();
-  }
-
   public obterDadosToken(){
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((user:any)=>{
       this.token = user
     })
   }
 
-  public getComercio(){
+  public getStore(){
     this.storeHeaderService.getStoreByFOREIGN_KEY("store", this.token.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((store:[store])=>{
       this.store = store[0]
     })
+  }  
+  public getOrder(){
     this.storeHeaderService.getOrderByFOREIGN_KEY("order", this.token.uid).pipe(takeUntil(this.unsubscribe$)).subscribe( (dados)=>{
       this.pedidos = dados
     })
@@ -103,36 +101,10 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
     })
   }
 
-  public countNewMensage(msn:any):number{
-    let numberOfNewMessage:number = 0
-    for (const key of msn) {
-      if(key.FOREIGN_KEY != this.token.uid && key.view == false){
-        numberOfNewMessage++
-      }
-    }
-    return numberOfNewMessage
-  }
-
-  public showLestNewMensage(msn:any):string{
-    let LestMensage:string
-    for (const key of msn) {
-      if(key.FOREIGN_KEY != this.token.uid && key.view == false){
-        LestMensage = key.text
-      }
-    }
-    return LestMensage
-  }
-
   public SignOut(){
     this.appservice.router_app_componet = 'usuario'
     this.authService.logout()
     this.router.navigateByUrl('/login')
-  }
-
-  public formatHours(d){
-    let data = new Date(d);
-    let my = data.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true});
-    return my
   }
 
   storeOpenOrClosed(){

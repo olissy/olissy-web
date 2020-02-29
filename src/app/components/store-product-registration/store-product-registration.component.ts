@@ -60,7 +60,7 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
     'productQuantities':new FormControl(0),
     'love':new FormControl(0),
     'sale':new FormControl(0),
-    'view':new FormControl(0),
+    'comment':new FormControl(0),
   })
 
   public result = { store : null, product : null, productDataBase : [], limit : 10, offset : 0, size : 0  }
@@ -169,7 +169,7 @@ export class StoreProductRegistrationComponent implements OnInit, OnDestroy {
       productPrice:PRODUCT.productPrice,
       love: 0,
       sale: 0,
-      view: 0,
+      comment: 0,
       productDateRegister: `${new Date()}`,
     })
   }
