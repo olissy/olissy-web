@@ -1,8 +1,8 @@
 <link href="https://fonts.googleapis.com/css?family=Roboto:900&display=swap" rel="stylesheet">
 
-<div class="container">
-  <div *ngFor="let product of result.product" class="col-md-12 col-xs-12 center" style="top: 25px; margin-bottom: 10px">
-    <div *ngFor="let store of result.store">
+<div class="container"> 
+  <div *ngFor="let product of result.product" >
+    <div *ngFor="let store of result.store"class="col-md-12 col-xs-12 center" style="top: 25px; margin-bottom: 10px">
       <div *ngIf="store.FOREIGN_KEY == product.FOREIGN_KEY" class="menu-item-info-box card" style="cursor: pointer">
 
         <div   class="box-header with-border" style="padding: 5px 0px 0px 5px">
