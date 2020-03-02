@@ -52,7 +52,7 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.adminPaymentService.getTimeZone().subscribe((times:any)=>{
+    this.adminPaymentService.getTimeZone().pipe(takeUntil(this.unsubscribe$)).subscribe((times:any)=>{
       this.clock.timeZone =  new Date(times.datetime)//
     })
     this.startPayment()
@@ -96,8 +96,14 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
 
     var openPaymentDay:any = new Date(date.getFullYear(), date.getMonth(), 1);
     var closedPaymentDay:any = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        closedPaymentDay.setHours(23)
+        closedPaymentDay.setMinutes(59)
+        closedPaymentDay.setSeconds(59)
     var inPaymentDay:any = null
     const latePaymentDay = new Date(date.setDate(46));
+          latePaymentDay.setHours(23)
+          latePaymentDay.setMinutes(59)
+          latePaymentDay.setSeconds(59)
 
     if(nextMonth.getMonth() == 11){
       inPaymentDay = new Date(nextMonth.getFullYear() + 1, 0, 1);
@@ -113,6 +119,7 @@ export class AdminPaymentComponent implements OnInit, OnDestroy {
       indexDay: new Date(this.clock.timeZone)
     })
   }
+
 
   public formatterDateForPayment(date){
     var data = new Date(date);

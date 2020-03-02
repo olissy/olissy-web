@@ -85,8 +85,8 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.paymentListService.getTimeZone().subscribe((times:any)=>{
-         this.DateTimeZone =  new Date(times.datetime)//
+    this.paymentListService.getTimeZone().pipe(takeUntil(this.unsubscribe$)).subscribe((times:any)=>{
+         this.DateTimeZone =  new Date(times.datetime)
     })
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((token:any)=>{
       this.getPayment(token.uid)
@@ -150,13 +150,11 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   public paymentInOpen(){
 
-
-
     if(Object.keys(this.storePayment).length != 0){
-      if(new Date(this.DateTimeZone) > new Date(this.storePayment[0].inPaymentDay) && this.storePayment[0].statusPayment == "openPayment"){
+      if(new Date(this.DateTimeZone) >= new Date(this.storePayment[0].inPaymentDay) && this.storePayment[0].statusPayment == "openPayment"){
         this.setFormPayment(this.adminPayment)
         this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'inPayment'})
-        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT, this.storePayment[0].FOREIGN_KEY_STORE).subscribe((res:any)=>{
           this.subscription.unsubscribe()
           this.paymentListService.updateStoreListStatePayment(res[0].PRIMARY_KEY, {statusPayment:'inPayment'})
         })
@@ -168,7 +166,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     if(this.storePayment[0]){
       if(new Date(this.DateTimeZone) > new Date(this.storePayment[0].latePaymentDay) && this.storePayment[0].statusPayment == "inPayment"){
         this.paymentListService.updateStatusPayment(this.storePayment[0].PRIMARY_KEY, {statusPayment:'latePayment'})
-        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[0].PRIMARY_KEY_ADMIN_PAYMENT, this.storePayment[0].FOREIGN_KEY_STORE).subscribe((res:any)=>{
           this.subscription.unsubscribe()
           this.paymentListService.updateStoreListStatePayment(res[0].PRIMARY_KEY, {statusPayment:'latePayment'})
         })
@@ -177,7 +175,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     if(this.storePayment[1]){
       if(new Date(this.DateTimeZone) > new Date(this.storePayment[1].latePaymentDay) && this.storePayment[1].statusPayment == "inPayment"){
         this.paymentListService.updateStatusPayment(this.storePayment[1].PRIMARY_KEY, {statusPayment:'latePayment'})
-        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[1].PRIMARY_KEY_ADMIN_PAYMENT).subscribe((res:any)=>{
+        this.subscription = this.paymentListService.getByPRIMARY_KEY_ADMIN_PAYMENT(this.storePayment[1].PRIMARY_KEY_ADMIN_PAYMENT, this.storePayment[0].FOREIGN_KEY_STORE).subscribe((res:any)=>{
           this.subscription.unsubscribe()
           this.paymentListService.updateStoreListStatePayment(res[0].PRIMARY_KEY, {statusPayment:'latePayment'})
         })
@@ -197,13 +195,23 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   }
 
   public setFormPayment(payment){
+    var closedPaymentDay = new Date(payment[0].closedPaymentDay);
+        closedPaymentDay.setHours(23)
+        closedPaymentDay.setMinutes(59)
+        closedPaymentDay.setSeconds(59)
+
+    var latePaymentDay = new Date(payment[0].latePaymentDay);
+        latePaymentDay.setHours(23)
+        latePaymentDay.setMinutes(59)
+        latePaymentDay.setSeconds(59)
+
     this.formPayment.patchValue({
       PRIMARY_KEY_ADMIN_PAYMENT : payment[0].PRIMARY_KEY,
       openPaymentDay : payment[0].openPaymentDay,
-      closedPaymentDay : payment[0].closedPaymentDay,
+      closedPaymentDay : closedPaymentDay.toString(), 
       inPaymentDay : payment[0].inPaymentDay,
       receivedPaymentDay : payment[0].receivedPaymentDay,
-      latePaymentDay : payment[0].latePaymentDay,
+      latePaymentDay : latePaymentDay.toString(),
       indexDay : new Date(this.DateTimeZone)
     })
   }

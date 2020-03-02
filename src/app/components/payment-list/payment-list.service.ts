@@ -63,8 +63,9 @@ export class PaymentListService {
     return await this.db.collection('storeListStatePayment').doc(pk).update(data)
   }
 
-  public getByPRIMARY_KEY_ADMIN_PAYMENT(PRIMARY_KEY_ADMIN_PAYMENT) {
-    return this.db.collection('storeListStatePayment', ref =>ref.where('PRIMARY_KEY_ADMIN_PAYMENT', '==', PRIMARY_KEY_ADMIN_PAYMENT)).valueChanges();
+  public getByPRIMARY_KEY_ADMIN_PAYMENT(PRIMARY_KEY_ADMIN_PAYMENT, FOREIGN_KEY_STORE) {
+    return this.db.collection('storeListStatePayment', ref =>ref.where('PRIMARY_KEY_ADMIN_PAYMENT', '==', PRIMARY_KEY_ADMIN_PAYMENT)
+                                                                .where('FOREIGN_KEY_STORE', '==', FOREIGN_KEY_STORE)).valueChanges();
   }
 
   public async addTaxingAdmin(PRIMARY_KEY){
