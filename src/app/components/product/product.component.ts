@@ -33,6 +33,8 @@ export class ProductComponent implements OnInit {
 
   public FOREIGN_KEY
 
+  public createReactUser:boolean = false
+
   public user:any = { clientImageUrl:null, clientName:null, clientLastName:null}
 
   public TaxaDelivery = [{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false }];
@@ -110,12 +112,18 @@ export class ProductComponent implements OnInit {
           if(Object.keys(react).length != 0){
             this.result.react = react[0]
             this.reactFilter()
-          }else{
-            this.productService.react(res.uid)
           }
+          this.createReact(react, res.uid)
         })
       }
     })
+  }
+  
+  public createReact(react, id){
+    if(Object.keys(react).length == 0 && this.createReactUser == false){
+      this.productService.react(id)
+      this.createReactUser = true
+    }
   }
 
   public getUser(FOREIGN_KEY){

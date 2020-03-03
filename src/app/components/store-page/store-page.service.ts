@@ -39,7 +39,7 @@ export class StorePageService {
 
   
   public getReact(FOREIGN_KEY){
-    return this.db.collection('react', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
+    return  this.db.collection('react', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
   }
 
   public async react(FOREIGN_KEY){

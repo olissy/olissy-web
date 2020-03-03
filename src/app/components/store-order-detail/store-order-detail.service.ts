@@ -21,6 +21,10 @@ export class StoreOrderDetailService {
     return this.db.collection('user', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
   }
 
+  public getByStoreFOREIGN_KEY(FOREIGN_KEY){
+    return this.db.collection('store', ref => ref.where("FOREIGN_KEY", "==", FOREIGN_KEY)).valueChanges()
+  }
+
   public async update(collection:string, pk:string, data:any) {
     await this.db.collection(collection).doc(pk).update(data)
   }
@@ -55,5 +59,9 @@ export class StoreOrderDetailService {
     return await this.db.collection('product').doc(pk).update({ productQuantities: increment }).then( async(res)=>{
       return await res
     })
+  }
+
+  public async incrementSale(pk){
+    return await this.db.collection('store').doc(pk).update({ sale: firebase.firestore.FieldValue.increment(1) })
   }
 }

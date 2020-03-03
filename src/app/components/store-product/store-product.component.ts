@@ -77,8 +77,6 @@ export class StoreProductComponent implements OnInit, OnDestroy {
           if(Object.keys(react).length != 0){
             this.result.react = react[0]
             this.reactFilter()
-          }else{
-            this.storeProductService.react(res.uid)
           }
         })
       }

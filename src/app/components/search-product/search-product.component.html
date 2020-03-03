@@ -100,7 +100,7 @@
         <div *ngIf="produto" class="dropdown-buscar-produto">
           <div *ngFor="let suggested of suggestedProductList" class="list-product-search" (click)="selectSuggestion(suggested)">
             <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12">
-              <div class="info-box" style=" box-shadow: 0 0px 0px rgba(0,0,0,0.1); ">
+              <div class="info-box" style=" box-shadow: 0 0px 0px rgba(0,0,0,0.1);  display: initial;">
                 <span class="info-box-icon" style="background-color: #fff;">
                   <img [src]="suggested.productImageUrl" style=" margin-top: 0px;" width="100%"/>
                 </span>

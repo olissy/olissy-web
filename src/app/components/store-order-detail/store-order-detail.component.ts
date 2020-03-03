@@ -18,6 +18,8 @@ export class StoreOrderDetailComponent implements OnInit {
 
   public product:any;
 
+  public store = { PRIMARY_KEY:null }
+
   public loading:boolean = true
 
   public order:any;
@@ -50,7 +52,7 @@ export class StoreOrderDetailComponent implements OnInit {
   }
 
   setProduct(product){
-    this.orderDetailService.getProductDataBase(product.PRIMARY_KEY_PRODUCT_DB).subscribe((productDB:any)=>{
+    this.orderDetailService.getProductDataBase(product.PRIMARY_KEY_PRODUCT_DB).pipe(takeUntil(this.unsubscribe$)).subscribe((productDB:any)=>{
       this.product = productDB[0]
       setTimeout(() => {
         this.loading = false
@@ -97,14 +99,21 @@ export class StoreOrderDetailComponent implements OnInit {
 
   public clientFinishedOrder(){
     if(this.order.orderState == 'finished'){
+      this.loadingOrder = true
       this.PaymentListComponent.ngOnInit()
+      this.orderDetailService.getByStoreFOREIGN_KEY(this.order.FOREIGN_KEY_STORE).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
+        this.store.PRIMARY_KEY = store[0].PRIMARY_KEY
+        this.loadingOrder = false
+      })
     }
   } 
 
   public async finished(order){
     
     this.buttonRemoverPedido = false
-
+    
+    this.orderDetailService.incrementSale(this.store.PRIMARY_KEY)
+    
     this.PaymentListComponent.addPayment(order.PRIMARY_KEY, order.clientName+" "+order.clientLastName, order.totalOrderValue - 0.25).then(async(res:any) => {
       if(res != null){
         delete this.order.message

@@ -20,19 +20,21 @@ export class StorePageComponent implements OnInit {
 
   public store
 
+  public isLogin:boolean = false
+
   public reactStatus:boolean = true
 
   private unsubscribe$ = new Subject();
 
   public categoria:string = 'store'
-  
-  public quantiyOfSales:number = 0 
 
   public TaxaDelivery = [{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false },{ description:'', rule:false }];
 
   public displayStoreInfo:any
 
   public react:any = { status:false, store:[] }
+
+  public react_user = { status:"react-full-grey", id:null, createReact:false }
 
   private newContact = {
     PRIMARY_KEY : "",
@@ -93,27 +95,8 @@ export class StorePageComponent implements OnInit {
     $('html, body').animate({scrollTop:0}, 'slow');
   }
 
-  public historyNavigateBack(){
-    window.history.back();
-  }
-
   public isLogged() {
     return  this.authService.isLogged()
-  }
-
-  public adicionarItemCarrinho(item){
-    let foundItem:any = this.appService.produtos.find( (items)=> items.PRIMARY_KEY ===  item.PRIMARY_KEY)
-    if(foundItem){
-      if(foundItem.quantidade == null){
-        foundItem.quantidade = 1
-      }
-      foundItem.quantidade = foundItem.quantidade + 1
-      foundItem.price = foundItem.priceOrigin * foundItem.quantidade
-    }else{
-      item.quantidade = 1
-      item.priceOrigin = item.price
-      this.appService.produtos.push(item)
-    }
   }
 
   public message(){
@@ -175,68 +158,89 @@ export class StorePageComponent implements OnInit {
   }
 
   public async getReact(){
-    this.authService.isLogged().subscribe((res:any)=>{
+    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
       if(res != null){
-        this.comercioPaginaService.getReact(res.uid).subscribe((react:any)=>{
+        this.comercioPaginaService.getReact(res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe(async(react:any)=>{
+
+          await react
+          this.react_user.id = res.uid
+
           if(Object.keys(react).length != 0){
             this.react = react[0]
-            this.reactFilter()
-          }else{
-            this.comercioPaginaService.react(res.uid)
           }
+
+          this.createReact(react)
+
+          this.storeReact()
         })
       }
     })
   }
 
-  public reactFilter(){
-    for(let react in this.react.store){
-      this.react.status = false
-      if(this.react.store[react].FOREIGN_KEY == this.store[0].PRIMARY_KEY &&  this.react.store[react].react == true){ 
-        this.react.status = true
-      } 
-    }  
-  }
-
-  public setFollow(product){
-    let PRIMARY_KEY = this.react.PRIMARY_KEY
-    this.reactStatus = false
-
-
-    //se nao existir react, adcionar
-    if( Object.keys(this.react.store).length == 0 ){
-      console.log("a")
-      this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
-        this.comercioPaginaService.incrementFollowQuantities(product.PRIMARY_KEY).then(()=>{
-          this.reactStatus = true
-        })
-      })
-    }else{
-      if(this.react.status){
-        console.log("b")
-        this.comercioPaginaService.delReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
-          this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:false }).then(()=>{
-            this.comercioPaginaService.decrementFollowQuantities(product.PRIMARY_KEY).then(()=>{
-              this.reactStatus = true
-            })
-          })
-        })
-      }else{
-        console.log("c")
-        this.comercioPaginaService.delReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:false }).then(()=>{
-          this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:product.PRIMARY_KEY, react:true }).then(()=>{
-            this.comercioPaginaService.incrementFollowQuantities(product.PRIMARY_KEY).then(()=>{
-              this.reactStatus = true
-            })
-          })
-        })
-      }
+  public createReact(react){
+    if(Object.keys(react).length == 0 && this.react_user.createReact == false){
+      this.comercioPaginaService.react(this.react_user.id)
+      this.react_user.createReact = true
     }
   }
 
+  public storeReact(){
+    if(Object.keys(this.react.store).length != 0){
+      for (const key in this.react.store) {
+        if (this.react.store[key].FOREIGN_KEY == this.store[0].PRIMARY_KEY) {
+          
+          if(this.react.store[key].react == true){
+            this.react_user.status = "react-full-blue"
+            this.isLogin = true
+          }else{
+            this.react_user.status = "react-full-black"
+            this.isLogin = true
+          }
+          break
+        }else{
+          this.react_user.status = "react-full-black"
+          this.isLogin = true
+        }
+      }
+    }else{
+      this.react_user.status = "react-empty"
+      this.isLogin = true
+    } 
+  }
 
+  public createFollow(store){
+    let PRIMARY_KEY = this.react.PRIMARY_KEY
+    this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:store.PRIMARY_KEY, react:true }).then(()=>{
+      this.comercioPaginaService.incrementFollowQuantities(store.PRIMARY_KEY).then(()=>{
+        this.react_user.status = "react-full-blue"
+      })
+    })
+  }
 
- 
+  public setFollowBlue(store){
+    //this.react_user.status = "react-full-grey"
+    let PRIMARY_KEY = this.react.PRIMARY_KEY
+    this.comercioPaginaService.delReact(PRIMARY_KEY, { FOREIGN_KEY:store.PRIMARY_KEY, react:true }).then(async(res1)=>{ await res1
+      this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:store.PRIMARY_KEY, react:false }).then(async(res2)=>{ await res2
+        this.comercioPaginaService.decrementFollowQuantities(store.PRIMARY_KEY).then(async(res3)=>{ await res3
+          this.react_user.status = "react-full-black"
+        })
+      })
+    })
+  }
+
+  public setFollowBlack(store){
+    //this.react_user.status = "react-full-grey"
+    let PRIMARY_KEY = this.react.PRIMARY_KEY
+    this.comercioPaginaService.delReact(PRIMARY_KEY, { FOREIGN_KEY:store.PRIMARY_KEY, react:false }).then(async(res1)=>{ await res1
+      this.comercioPaginaService.setReact(PRIMARY_KEY, { FOREIGN_KEY:store.PRIMARY_KEY, react:true }).then(async(res2)=>{ await res2
+        this.comercioPaginaService.incrementFollowQuantities(store.PRIMARY_KEY).then(async(res3)=>{ await res3
+          this.react_user.status = "react-full-blue"
+        })
+      })
+    })
+  }
+
   ngOnDestroy(){
     console.log("store-page destroy")
     this.unsubscribe$.next();

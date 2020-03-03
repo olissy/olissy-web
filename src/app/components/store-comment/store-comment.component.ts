@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router'
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { FormGroup, FormControl  }  from '@angular/forms';
 import { StoreCommentService } from './store-comment.service'
+import { AuthService  } from '../../AuthService';
 
 @Component({
   selector: 'app-store-comment',
@@ -13,7 +15,15 @@ import { StoreCommentService } from './store-comment.service'
 
 export class StoreCommentComponent implements OnInit, OnDestroy {
 
-  public comentarios = []
+  public LOGIN:boolean = false
+
+  public commentPlus:boolean = true
+
+  public FOREIGN_KEY
+
+  public user:any = { clientImageUrl:null, clientName:null, clientLastName:null}
+
+  public comments = { status:false, limit:2, post:[] }
 
   private unsubscribe$ = new Subject();
 
@@ -21,23 +31,75 @@ export class StoreCommentComponent implements OnInit, OnDestroy {
 
   public LIMIT:number = 10
 
+  public store = { PRIMARY_KEY:null, commentStore : 0}
+
+  public formularioComentario: FormGroup = new FormGroup({
+    FOREIGN_KEY_STORE : new FormControl(null),
+    PRIMARY_KEY_STORE : new FormControl(null),
+    FOREIGN_KEY_CLIENT : new FormControl(null),
+    commentText: new FormControl(null),
+    commentDate : new FormControl(null),
+    indexDay : new FormControl(null),
+    commentImageUrl : new FormControl(null),
+    commentName : new FormControl(null),
+    commentView : new FormControl(null),
+  })
+
   constructor(private comentarioService: StoreCommentService,
-              private route:ActivatedRoute) {}
+              private route:ActivatedRoute,
+              private authService: AuthService) {}
 
   ngOnInit() {
     this.comentarioService.getReviewsByFOREIGN_KEY(this.route.parent.snapshot.params['id'], this.LIMIT).pipe(takeUntil(this.unsubscribe$)).subscribe(comment=>{
-      this.comentarios = comment
+      this.comments.post = comment
+      this.isLogged()
     })
   }
 
-  public loadingPlusProduct(){
-    this.loading = false
-    this.comentarioService.getReviewsByFOREIGN_KEY(this.route.parent.snapshot.params['id'], (this.LIMIT++)*5).subscribe(comment=>{
-      setTimeout(() => {
-        this.comentarios = comment
-        this.loading = true
-      }, 1000);
+  public async isLogged(){
+    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
+      if(res != null){
+        this.FOREIGN_KEY = res.uid
+        this.LOGIN = true
+        this.getStore()
+        this.getUser()
+      }
     })
+  }
+
+  getStore(){
+    this.comentarioService.getByStoreFOREIGN_KEY(this.route.parent.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
+      this.store.PRIMARY_KEY = store[0].PRIMARY_KEY
+      this.store.commentStore = store[0].commentStore
+    })
+  }
+
+  getUser(){
+    this.comentarioService.getByUserFOREIGN_KEY(this.FOREIGN_KEY).pipe(takeUntil(this.unsubscribe$)).subscribe((user:any)=>{
+      this.user.clientImageUrl = user[0].clientImageUrl
+      this.user.clientName =  user[0].clientName
+      this.user.clientLastName = user[0].clientLastName
+    })
+  }
+  
+  public publicarComentario(){
+    this.formularioComentario.patchValue({
+      FOREIGN_KEY_CLIENT : this.FOREIGN_KEY,
+      FOREIGN_KEY_STORE:this.route.parent.snapshot.params['id'],
+      PRIMARY_KEY_STORE : this.store.PRIMARY_KEY,
+      commentDate : `${new Date()}` ,
+      indexDay: new Date(),
+      commentImageUrl : this.user.clientImageUrl,
+      commentName :this.user.clientName +' '+ this.user.clientLastName,
+      commentView: false
+    });
+    if(this.formularioComentario.get('commentText').value.length > 2){
+      this.comentarioService.setCommet(this.formularioComentario.value).then((res)=>{
+        this.comentarioService.incrementCommet(this.formularioComentario.get('PRIMARY_KEY_STORE').value).then(()=>{
+          this.formularioComentario.reset()
+        })
+      })
+    }
   }
 
   ngOnDestroy(){
