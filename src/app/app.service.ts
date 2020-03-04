@@ -9,6 +9,7 @@ export class AppService {
   public ListaProdutosPesquisado: any = [];
   public pedido: any = [];
   public router_app_componet = 'usuario';
+  public routeParams = "/"
 }
 
 /*

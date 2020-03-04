@@ -31,7 +31,7 @@ export class StoreCommentComponent implements OnInit, OnDestroy {
 
   public LIMIT:number = 10
 
-  public store = { PRIMARY_KEY:null, commentStore : 0}
+  public store = { PRIMARY_KEY:null, commentStore : 0} 
 
   public formularioComentario: FormGroup = new FormGroup({
     FOREIGN_KEY_STORE : new FormControl(null),
@@ -53,6 +53,7 @@ export class StoreCommentComponent implements OnInit, OnDestroy {
     this.comentarioService.getReviewsByFOREIGN_KEY(this.route.parent.snapshot.params['id'], this.LIMIT).pipe(takeUntil(this.unsubscribe$)).subscribe(comment=>{
       this.comments.post = comment
       this.isLogged()
+      this.getStore()
     })
   }
 
@@ -61,7 +62,6 @@ export class StoreCommentComponent implements OnInit, OnDestroy {
       if(res != null){
         this.FOREIGN_KEY = res.uid
         this.LOGIN = true
-        this.getStore()
         this.getUser()
       }
     })
@@ -70,7 +70,7 @@ export class StoreCommentComponent implements OnInit, OnDestroy {
   getStore(){
     this.comentarioService.getByStoreFOREIGN_KEY(this.route.parent.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
       this.store.PRIMARY_KEY = store[0].PRIMARY_KEY
-      this.store.commentStore = store[0].commentStore
+      this.store.commentStore = store[0].commentStore || 0
     })
   }
 

@@ -1,5 +1,5 @@
 
-<div class="col-md-12 col-xs-12 center">
+<div *ngIf="store.commentStore > 0"  class="col-md-12 col-xs-12 center">
   <div class="box box-solid card">
     <div class="box-header with-border">
       <div class="user-block">
@@ -55,4 +55,16 @@
     </div>
   </div>
 </div>
- 
+
+
+<div *ngIf="store.commentStore == 0"  class="col-md-12 col-xs-12 center">
+  <div class="box box-solid card">
+      <div class="box-header with-border">
+          <div class="user-block" style=" padding: 10px; ">
+            <span class="username center">
+              Esta loja não possui comentario 
+            </span>
+          </div>
+      </div>
+  </div>
+</div>

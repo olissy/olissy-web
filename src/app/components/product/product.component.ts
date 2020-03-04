@@ -101,7 +101,7 @@ export class ProductComponent implements OnInit {
     this.appService.produtos.push(product)
     this.router_navigator.navigate(['/complete-orders' , product.FOREIGN_KEY])
   }
-
+ 
   public async getReact(){
     this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
       if(res != null){

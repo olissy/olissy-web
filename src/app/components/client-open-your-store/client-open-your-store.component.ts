@@ -69,8 +69,10 @@ export class ClientOpenYourStoreComponent implements OnInit, OnDestroy {
   public formularioAbrirMinhaLoja: FormGroup = new FormGroup({
     'FOREIGN_KEY':new FormControl(null),
     'PRIMARY_KEY':new FormControl(null),
-    'storeRating':new FormControl(0),
     'follow':new FormControl(0),
+    'commentStore':new FormControl(0),
+    'sale':new FormControl(0),
+    'productQuantity':new FormControl(0),
     'storeImagePath': new FormControl(null),
     'storeImageUrl': new FormControl(null),
     'imageDisplay': new FormControl(null),

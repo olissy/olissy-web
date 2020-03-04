@@ -71,6 +71,7 @@ export class StorePageComponent implements OnInit {
   ngOnInit() {
     this.scrollToTop()
     this.appService.produtos = []//remover produtos do carrinho
+    this.appService.routeParams = this.route.snapshot.params['id']
     this.comercioPaginaService.store('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
       this.store = store
       this.getReact()

@@ -69,7 +69,7 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
         }
       }
     });
-  }
+  } 
 
   public searchProductDB_Output(productDB){
     $('#displaySearch-store-product-registration').modal('hide'); 

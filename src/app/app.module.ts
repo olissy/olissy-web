@@ -26,6 +26,7 @@ import { UserHeaderComponent } from './components/user-header/user-header.compon
 import { SearchStoreProductRegistrationComponent } from './components/search-store-product-registration/search-store-product-registration.component';
 import { SearchStoreProductRecordComponent } from './components/search-store-product-record/search-store-product-record.component';
 import { SearchProductComponent } from './components/search-product/search-product.component';
+import { SearchStoreComponent } from './components/search-store/search-store.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { SearchProductComponent } from './components/search-product/search-produ
     UserHeaderComponent,
     SearchStoreProductRegistrationComponent,
     SearchStoreProductRecordComponent,
-    SearchProductComponent
+    SearchProductComponent,
+    SearchStoreComponent
   ],
   imports: [
     NgxMaskModule.forRoot(),
