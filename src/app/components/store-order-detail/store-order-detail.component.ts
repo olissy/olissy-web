@@ -16,6 +16,8 @@ export class StoreOrderDetailComponent implements OnInit {
 
   public loadingOrder:boolean = false
 
+  public taxaDeliveryStatus = "accept"
+
   public product:any;
 
   public store = { PRIMARY_KEY:null }
@@ -23,6 +25,8 @@ export class StoreOrderDetailComponent implements OnInit {
   public loading:boolean = true
 
   public order:any;
+
+  public totalOrder
 
   private unsubscribe$ = new Subject();
 
@@ -65,7 +69,7 @@ export class StoreOrderDetailComponent implements OnInit {
   }
 
   public pending(){
-    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'pending'})
+    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'pending', taxaDelivery: this.order.taxaDelivery})
   }
 
   public packaging(){
@@ -144,6 +148,17 @@ export class StoreOrderDetailComponent implements OnInit {
 
   public macarComoComprado(PRIMARY_KEY){
     this.orderDetailService.update('reactionsProduct', PRIMARY_KEY, {clientReactionsSale: true})
+  }
+
+  public setTaxaDelivery(value){
+    if(value == ""  || value == null ||  value == NaN  || value == undefined || value == false){
+      this.order.taxaDelivery = 0
+      this.taxaDeliveryStatus = "accept"
+    }else{
+      this.order.taxaDelivery = value
+      this.taxaDeliveryStatus = "pending"
+    }
+    
   }
 
   ngOnDestroy(){

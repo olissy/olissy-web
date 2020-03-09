@@ -136,6 +136,10 @@ export const ROUTES: Routes = [
     loadChildren:'./components/client-order-detail/client-order-detail.module#ClientOrderDetailModule'
   },
   {
+    path: 'client-order-detail-alter/:id',
+    loadChildren:'./components/client-order-detail-alter/client-order-detail-alter.module#ClientOrderDetailAlterModule'
+  },
+  {
     path: 'store-order-detail/:id',
     loadChildren:'./components/store-order-detail/store-order-detail.module#StoreOrderDetailModule'
   },

@@ -69,36 +69,83 @@
         </div>
         <div class="row">
             <div class="col-md-6 col-xs-12">
-                <span class="lead">Observações:</span>
+                <span class="lead">Estado do Pedido:</span>
                 <div class="text-muted well well-sm no-shadow" style="margin-top: 0px;">
-                    <div>
-                        # Informamos que  
+                    <div *ngIf="order?.orderState == 'reserved'">
+                        <b>
+                            Reservado:
+                        </b>
                         <small>
-                            <b>
-                                {{ order?.orderState | ClientOrderDetailPipe: 'formatInfoOrderState' }}
-                            </b>
+                            Você enviou um pedido, ao solicitar a reserva a loja {{ order?.storeName }} deverá aceitar, deixar em pendente ou recusar seu pedido em até 24 horas antes que ele expire. <b>Por favor aguarde a resposta da loja</b>
                         </small>
                     </div>
-                    <div *ngIf="order?.clientMethodPayment == 'money'">
-                        # Informação do seu troco:
+                    <div *ngIf="order?.orderState == 'accept'">
+                        <b>
+                            Aceito: 
+                        </b>
                         <small>
-                            <b>
-                                {{  order?.informChange }}
-                            </b>
+                            Seu pedido foi <b>ACEITO</b> com sucesso pela loja {{ order?.storeName }}
                         </small>
                     </div>
-                    <div>
-                        # data do pedido 
+                    <div *ngIf="order?.orderState == 'pending'">
+                        <b>
+                            Pendente: 
+                        </b>
                         <small>
-                            <b>
-                               {{ order?.orderDate | ClientOrderDetailPipe: 'formatDataOrder' }}
-                            </b>
+                            Seu pedido esta pedente, <b>Leia a NOTA, e atualize seu pedido para ser aceito</b>
                         </small>
                     </div>
-                    <div>
-                        # Você poderar receber uma ligação da loja, para confirmação das informação neste pedido
+                    <div *ngIf="order?.orderState == 'refused'">
+                        <b>
+                            Recusado:
+                        </b>
+                        <small>
+                            Que pena, seu pedido foi recusado. Nenhuma cobrança sera feita, para saber mais <b>Leia a NOTA</b>
+                        </small>
+                    </div>
+                    <div *ngIf="order?.orderState == 'packaging'">
+                        <b>
+                            Empacotando:
+                        </b>
+                        <small>
+                            Seu produto esta sendo separado e embalado, para a entrega
+                        </small>
+                    </div>
+                    <div *ngIf="order?.orderState == 'delivering'">
+                        <b>
+                            Entregando:
+                        </b>
+                        <small>
+                           Produto separado e embalado, estamos entregando o seu produto! <b>Há, {{ order?.clientName }} você poderar receber uma ligação da loja para confirmação do seu endereço</b>
+                        </small>
+                    </div>
+                    <div *ngIf="order?.orderState == 'realized'">
+                        <b>
+                            Recebido:
+                        </b>
+                        <small>
+                            Com produto recebido basta <b>marcar como <i style="color: green;">Recebido</i></b>
+                        </small>
+                    </div>
+                    <div *ngIf="order?.orderState == 'finished'">
+                        <b>
+                            Finalizado:
+                        </b>
+                        <small>
+                            Parabéns {{ order?.clientName }}! esperamos que você esteja satisfeito com nosso serviço. <b>O nosso muito obrigado e ate a proxima \o/</b>
+                        </small>
+                    </div>
+                    <div *ngIf="order?.orderState == 'abandoned'">
+                        <b>
+                            Desistencia:
+                        </b>
+                        <small>
+                           Que pena, Você desistiu :(
+                        </small>
                     </div>
                 </div>
+                <app-note [orderForNote]="order" [nameNote]="order?.clientName+' '+order?.clientLastName" user="client" userView="store"></app-note>
+                
             </div>
             <div class="col-md-6 col-xs-12">
                 <span class="lead">Montantes</span>
@@ -119,33 +166,33 @@
                             </tr>
                             <tr>
                                 <th>Entrega:</th>
-                                <td class="text-right">0.0</td>
+                                <td class="text-right">{{ order?.taxaDelivery }}</td>
                             </tr>
                             <tr>
                                 <th>Total:</th>
-                                <td class="text-right">{{ order?.totalOrderValue }}</td>
+                                <td class="text-right">{{ order?.totalOrderValue-0 + (order?.taxaDelivery-0)|number }}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
+        </div> 
         <div class="row no-print">
             <div class="col-xs-12">
-                <a class="btn btn-default pull-left" [routerLink]="['/client-order']">
-                    <i class="fa fa fa-reply"></i> Voltar
-                </a>
                 <div *ngIf=" order?.orderState == 'reserved'">
                     <button type="button" class="btn btn-danger pull-right" (click)="abandoned()">
                         Desistir
                     </button>
                 </div>
-                <div *ngIf=" order?.orderState == 'pending'">
-                    <button type="button" class="btn btn-success pull-right" (click)="accept()" >
-                        Aceitar
-                    </button>
-                    <button type="button" class="btn btn-danger pull-right" (click)="abandoned()">
+                <div *ngIf=" order?.orderState == 'pending'" style="display: flex; justify-content: space-between;">
+                    <button type="button" class="btn btn-danger" (click)="abandoned()">
                         Desistir
+                    </button>
+                    <!-- <a type="button" class="btn btn-warning" [routerLink]="['/client-order-detail-alter', order?.PRIMARY_KEY]">
+                        Alter Pedido
+                    </a> -->
+                    <button type="button" class="btn btn-success" (click)="accept()" >
+                        Aceitar
                     </button>
                 </div>
                 <div *ngIf=" order?.orderState == 'accept'">
@@ -165,7 +212,7 @@
                 </div>
                 <div *ngIf=" order?.orderState == 'realized'">
                     <button type="button" class="btn btn-info pull-right" (click)="finished()">
-                        Finalizar
+                        Recebido
                     </button>
                 </div>
                 <div *ngIf=" order?.orderState == 'refused'">
@@ -173,6 +220,9 @@
                         Cancelar
                     </button>
                 </div>
+                <a class="btn btn-default pull-left" [routerLink]="['/client-order']" style="margin-top: 15px;">
+                    <i class="fa fa fa-reply"></i> Voltar
+                </a>
             </div>
         </div>
     </section>

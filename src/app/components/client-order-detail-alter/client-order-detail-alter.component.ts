@@ -5,16 +5,15 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AppService } from '../../app.service'
 import { AuthService  } from '../../AuthService';
-import { CompleteOrdersService  } from './complete-orders.service';
+import { ClientOrderDetailAlterService } from './client-order-detail-alter.service'
 declare var $ :any;
 
-
 @Component({
-  selector: 'app-complete-orders',
-  templateUrl: './complete-orders.component.html',
-  styleUrls: ['./complete-orders.component.css']
+  selector: 'app-client-order-detail-alter',
+  templateUrl: './client-order-detail-alter.component.html',
+  styleUrls: ['./client-order-detail-alter.component.css']
 })
-export class CompleteOrdersComponent implements OnInit, OnDestroy {
+export class ClientOrderDetailAlterComponent implements OnInit {
 
   private unsubscribe$ = new Subject();
 
@@ -81,14 +80,13 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
   }) 
 
   constructor(private Appservice: AppService,
-              private pedidoService:CompleteOrdersService,
+              private pedidoService:ClientOrderDetailAlterService,
               private router_navigator: Router,
               private route:ActivatedRoute,
               private authService: AuthService) {}
 
   ngOnInit() {
     this.scrollToTop()
-    this.authToken()
     this.setIdStoreInPedido()
     this.setStoreForms()
     this.setClientForms()
@@ -103,18 +101,11 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     $('html, body').animate({scrollTop:0}, 'slow');
   }
 
-  public async authToken(){
-    this.authService.isLogged().subscribe((res:any)=>{
-      if(res != null &&  Object.keys(this.produtos).length != 0){
-        this.ID = res.uid
-      }else{
-        this.router_navigator.navigate(['/login'])
-      }
-    })
-  }
-
   public setProducts(){
-    this.produtos = this.Appservice.produtos
+    this.pedidoService.getOrder(this.route.snapshot.params['id']).subscribe((product:any)=>{
+      this.produtos = product[0].product
+      console.log(product[0].product)
+    })
   }
 
   public setIdStoreInPedido(){
@@ -188,18 +179,7 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
         pedido = this.formularioPedido.value
         pedido.product = this.produtos
         pedido.totalOrderValue = this.TotalValorDoPedido()
-    this.pedidoService.criarPedido("order", pedido).then((res:any)=>{
-      for(const index in pedido.product) {
-        this.pedidoService.decrementProductQuantities(pedido.product[index].PRIMARY_KEY, pedido.product[index].quantities)
-        if((parseInt(index) + 1) == pedido.product.length){
-          this.Appservice.pedido = []
-          this.formularioPedido.reset
-          this.produtos = []
-          this.Appservice.produtos = []
-          this.router_navigator.navigate([`/evaluate-store/${this.formularioPedido.get('FOREIGN_KEY_STORE').value}`])
-        }
-      }
-    })
+
   }
  
   public setStoreForms(){

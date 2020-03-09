@@ -30,7 +30,7 @@
           </div>
         </div>
         <div *ngIf="!comments.status" class="modal-footer" style="padding: 0px; text-align: start; border-top: 0px solid #e5e5e5;background-color: #d2d6de;">
-          <div *ngIf="false" class="box box-default collapsed-box box-solid" style="cursor: pointer; margin-bottom: 0px; box-shadow: none;">
+          <!-- <div *ngIf="false" class="box box-default collapsed-box box-solid" style="cursor: pointer; margin-bottom: 0px; box-shadow: none;">
             <div class="box-header with-border">
               <div *ngIf="commentPlus" class="box-title" (click)="setCommentPlus()" style="align-items: center; display: flex; justify-content: center;">
                 Mais Comentarios 
@@ -39,7 +39,7 @@
                 <i class="fa fa-refresh fa-spin fa-1x"></i>
               </div>
             </div>
-          </div>
+          </div> -->
           <form *ngIf="LOGIN" [formGroup]="formularioComentario" style="margin: 5px 2px 5px 4px; background-color: #d2d6de; display: flex;">
             <div class="img-push" style="width: 100%;">
               <input type="text" formControlName="commentText" class="form-control input-sm" (keyup.enter)="publicarComentario()" placeholder="Comente Você Também ...">

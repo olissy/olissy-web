@@ -7,6 +7,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule} from 'angular-imask';
 import { ClientOrderDetailPipe } from './client-order-detail.pipe'
+import { NoteModule } from './../note/note.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -14,7 +16,8 @@ import { ClientOrderDetailPipe } from './client-order-detail.pipe'
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule,
-    IMaskModule
+    IMaskModule,
+    NoteModule
   ],
   declarations: [ClientOrderDetailComponent, ClientOrderDetailPipe]
 

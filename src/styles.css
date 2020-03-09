@@ -416,3 +416,7 @@ button:focus {
   -ms-user-select: none;
   user-select: none;
 }
+
+blockquote {
+  border-left: 0px solid #eee !important;
+}

@@ -49,7 +49,7 @@ export class ClientOrderDetailComponent implements OnInit {
   }
 
   public accept(){
-    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'accept'})
+    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'reserved'})
   }
 
   public finished(){
