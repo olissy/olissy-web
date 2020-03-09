@@ -52,6 +52,7 @@ export class StoreCommentComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.comentarioService.getReviewsByFOREIGN_KEY(this.route.parent.snapshot.params['id'], this.LIMIT).pipe(takeUntil(this.unsubscribe$)).subscribe(comment=>{
       this.comments.post = comment
+      this.loading = false
       this.isLogged()
       this.getStore()
     })

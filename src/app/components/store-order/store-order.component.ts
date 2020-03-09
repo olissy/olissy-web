@@ -47,6 +47,10 @@ export class StoreOrderComponent implements OnInit, OnDestroy {
     })
   }
 
+  public calculateTotalOrder(product, taxaPlataform, TaxaDelivery){
+    return Number(product) + Number(taxaPlataform) + Number(TaxaDelivery);
+  }
+
   ngOnDestroy(){
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

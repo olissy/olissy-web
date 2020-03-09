@@ -181,7 +181,7 @@
                   <tr>
                     <th>Subtotal:</th>
                     <td class="text-right">
-                      {{ TotalValorDoPedido() - 0.25 | currency: "BRL" }}
+                      {{ TotalValorDoPedido() | currency: "BRL" }}
                     </td>
                   </tr>
                   <tr>
@@ -190,7 +190,7 @@
                   </tr>
                   <tr>
                     <th>Plataforma:</th>
-                    <td class="text-right">{{ 0.25 | currency: "BRL" }}</td>
+                    <td class="text-right">{{ formularioPedido.value.taxing | currency: "BRL"}}</td>
                   </tr>
                   <tr>
                     <th>Entrega:</th>
@@ -199,7 +199,7 @@
                   <tr>
                     <th>Total:</th>
                     <td class="text-right">
-                      {{ TotalValorDoPedido() | currency: "BRL" }}
+                      {{ calculateTotalOrder(TotalValorDoPedido(),formularioPedido.value.taxing, formularioPedido.value.taxaDelivery) }}
                     </td>
                   </tr>
                 </tbody>

@@ -127,7 +127,7 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
   public TotalValorDoPedido(){
     return this.produtos.reduce( (sum, item:any)=>{
       return new Number(sum).valueOf() + new Number(item.productPrice).valueOf() 
-    },0) + new Number(this.formularioPedido.get('taxing').value)
+    },0)
   }
 
   public removerItem(indice){
@@ -286,6 +286,10 @@ export class CompleteOrdersComponent implements OnInit, OnDestroy {
     this.formularioPedido.get('clientAddressFull').markAsTouched()
     this.formularioPedido.get('clientCellPhone').markAsTouched()
     this.formularioPedido.get('clientMethodPayment').markAsTouched()
+  }
+
+  public calculateTotalOrder(product, taxaPlataform, TaxaDelivery){
+    return Number(product) + Number(taxaPlataform) + Number(TaxaDelivery);
   }
 
   ngOnDestroy(){

@@ -64,15 +64,15 @@
             <li class="user-body">
               <div class="row">
                 <div class="col-xs-4 text-center">
-                  <i class="fa fa-thumbs-o-up"></i>
+                  <i class="fa fa-thumbs-up"></i>
                   {{ store.follow }}
                 </div>
                 <div class="col-xs-4 text-center">
-                  <i class="fa fa-bell-o"></i>
-                  {{ quantiyOfSales }}
+                  <i class="fa fa-star"></i>
+                  {{ store.sale }}
                 </div>
                 <div class="col-xs-4 text-center">
-                  <i class="fa fa-medkit"></i>
+                  <i class="fa fa-tags"></i>
                   {{ store.productQuantity }}
                 </div>
               </div>
@@ -80,8 +80,8 @@
             <li class="user-footer">
               <div class="pull-left">
                 <a (click)="storeOpenOrClosed()" class="btn btn-default btn-flat">
-                  <a *ngIf="store?.storeOpenOrClosed  == true" style="font-size:12px; color: #666;" class="text-success"><i class="fa fa-circle text-success" style="font-size:9px"></i> Aberto</a>
-                  <a *ngIf="store?.storeOpenOrClosed  == false" style="font-size:12px; color: #666;" class="text-danger"><i class="fa fa-circle text-danger" style="font-size:9px"></i> Fechado</a>
+                  <a *ngIf="store?.storeOpenOrClosed  == true" style="font-size:12px; color: #666; background: transparent;"><i class="fa fa-circle" style="font-size:9px; color: #2cce2fd1;"></i> Aberto</a>
+                  <a *ngIf="store?.storeOpenOrClosed  == false" style="font-size:12px; color: #666; background: transparent;"><i class="fa fa-circle" style="font-size:9px; color: #ff6451;"></i> Fechado</a>
                 </a> 
               </div>
               <div class="pull-right">

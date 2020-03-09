@@ -59,12 +59,12 @@
             </tr>
           </thead>
           <tbody *ngFor="let  client of listOrderClient.orders">
-            <tr [routerLink]="['/invoice-detail', client.PRIMARY_KEY_INVOICE]">
-              <td>{{  formatterDateForPayment(client.data) }}</td>
-              <td>{{  client.name }}</td>
-              <td>{{  client.price | currency: "BRL" }}</td>
+            <tr>
+              <td><a target="_blank" [routerLink]="['/invoice-detail', client.PRIMARY_KEY_INVOICE]">{{  formatterDateForPayment(client.data) }}</a></td>
+              <td><a target="_blank" [routerLink]="['/invoice-detail', client.PRIMARY_KEY_INVOICE]">{{  client.name }}</a></td>
+              <td><a target="_blank" [routerLink]="['/invoice-detail', client.PRIMARY_KEY_INVOICE]">{{  client.price | currency: "BRL" }}</a></td>
             </tr>
-          </tbody>
+          </tbody> 
         </table>
       </div>
     </div>

@@ -20,7 +20,7 @@ export class StoreHeaderComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject();
 
-  public store:any = {storeImageUrl :""}
+  public store:any = {storeImageUrl :"/assets/plataform/avatar.png"}
 
   public newMessage
 

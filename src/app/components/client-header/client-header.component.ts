@@ -21,7 +21,7 @@ export class ClientHeaderComponent implements OnInit , OnDestroy{
 
   public usuario:user
 
-  public cliente:client
+  public cliente:client = {clientImageUrl : "/assets/plataform/avatar.png"}
 
   public pedidos:any;
 

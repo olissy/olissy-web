@@ -154,7 +154,7 @@
                         <tbody>
                             <tr>
                                 <th style="width:50%">Subtotal:</th>
-                                <td class="text-right">{{ order?.totalOrderValue - order?.taxing }}</td>
+                                <td class="text-right">{{ order?.totalOrderValue }}</td>
                             </tr>
                             <tr>
                                 <th>Tax (0.0%)</th>
@@ -170,7 +170,8 @@
                             </tr>
                             <tr>
                                 <th>Total:</th>
-                                <td class="text-right">{{ order?.totalOrderValue-0 + (order?.taxaDelivery-0)|number }}</td>
+                                <!-- <td class="text-right">{{ order?.totalOrderValue-0 + (order?.taxaDelivery-0)|number }}</td> -->
+                                <td class="text-right">{{ calculateTotalOrder(order.totalOrderValue, order.taxing, order.taxaDelivery) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -188,9 +189,9 @@
                     <button type="button" class="btn btn-danger" (click)="abandoned()">
                         Desistir
                     </button>
-                    <!-- <a type="button" class="btn btn-warning" [routerLink]="['/client-order-detail-alter', order?.PRIMARY_KEY]">
+                    <a type="button" class="btn btn-warning" [routerLink]="['/client-order-detail-alter', order?.PRIMARY_KEY]">
                         Alter Pedido
-                    </a> -->
+                    </a> 
                     <button type="button" class="btn btn-success" (click)="accept()" >
                         Aceitar
                     </button>

@@ -85,15 +85,15 @@
               </tr>
               <tr>
                 <th>Plataforma:</th>
-                <td class="text-right">{{ 0.0 | currency: "BRL" }}</td>
+                <td class="text-right">{{ invoice.taxing | currency: "BRL" }}</td>
               </tr>
               <tr>
                 <th>Entrega:</th>
-                <td class="text-right">{{ 0.0 | currency: "BRL" }}</td>
+                <td class="text-right">{{ invoice.taxaDelivery | currency: "BRL" }}</td>
               </tr>
               <tr>
                 <th>Total:</th>
-                <td class="text-right">{{ invoice.totalOrderValue | currency: "BRL" }}</td>
+                <td class="text-right"> {{ calculateTotalOrder(invoice.totalOrderValue, invoice.taxing, invoice.taxaDelivery) | currency: "BRL" }}</td> 
               </tr>
             </tbody>
           </table> 

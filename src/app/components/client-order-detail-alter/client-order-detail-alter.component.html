@@ -103,11 +103,11 @@
                 <tbody>
                   <tr *ngFor="let item of produtos; let i = index">
                     <td class="text-center">
-                      <a (click)="diminuirItem(item)" class="btn btn-sm" style="color:red">
+                      <a  class="btn btn-sm" style="color:rgb(102, 98, 98)">
                         <i class="fa fa-minus"></i>
                       </a>
                       {{ item.quantities }}
-                      <a (click)="aumentartem(item)" class="btn btn-sm" style="color:green">
+                      <a class="btn btn-sm" style="color:rgb(102, 98, 98)">
                         <i class="fa fa-plus"></i>
                       </a>
                     </td>
@@ -116,7 +116,7 @@
                       {{ item.productPriceOrigin | currency: "BRL" }}
                     </td>
                     <td class="text-right">
-                      <a class="btn btn-sm danger" (click)="removerItem(i)">
+                      <a class="btn btn-sm danger">
                         <i class="fa fa-remove"></i>
                       </a>
                     </td>
@@ -181,7 +181,7 @@
                     <tr>
                       <th>Subtotal:</th>
                       <td class="text-right">
-                        {{ TotalValorDoPedido() - 0.25 | currency: "BRL" }}
+                        {{ TotalValorDoPedido() | currency: "BRL" }}
                       </td>
                     </tr>
                     <tr>
@@ -190,16 +190,16 @@
                     </tr>
                     <tr>
                       <th>Plataforma:</th>
-                      <td class="text-right">{{ 0.25 | currency: "BRL" }}</td>
+                      <td class="text-right">{{ formularioPedido.value.taxing | currency: "BRL" }}</td>
                     </tr>
                     <tr>
                       <th>Entrega:</th>
-                      <td class="text-right">{{ 0 | currency: "BRL" }}</td>
+                      <td class="text-right">{{ formularioPedido.value.taxaDelivery }}</td>
                     </tr>
                     <tr>
                       <th>Total:</th>
                       <td class="text-right">
-                        {{ TotalValorDoPedido() | currency: "BRL" }}
+                        {{ calculateTotalOrder(formularioPedido.value.totalOrderValue,formularioPedido.value.taxing, formularioPedido.value.taxaDelivery) }}
                       </td>
                     </tr>
                   </tbody>

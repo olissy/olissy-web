@@ -1,5 +1,13 @@
 
-<div *ngIf="store.commentStore > 0"  class="col-md-12 col-xs-12 center">
+<div class="row" *ngIf="loading">
+  <div class="login-logo">
+    <i class="fa fa-refresh fa-spin fa-2x"></i>
+  </div>
+</div>
+
+
+
+<div *ngIf="store.commentStore > 0  && loading == false"  class="col-md-12 col-xs-12 center">
   <div class="box box-solid card">
     <div class="box-header with-border">
       <div class="user-block">
@@ -57,7 +65,7 @@
 </div>
 
 
-<div *ngIf="store.commentStore == 0"  class="col-md-12 col-xs-12 center">
+<div *ngIf="store.commentStore == 0 && loading == false"  class="col-md-12 col-xs-12 center">
   <div class="box box-solid card">
       <div class="box-header with-border">
           <div class="user-block" style=" padding: 10px; ">
@@ -68,3 +76,4 @@
       </div>
   </div>
 </div>
+

@@ -222,7 +222,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     
     let store = {
       PRIMARY_KEY_INVOICE : PRIMARY_KEY_INVOICE,
-      data : new Date(this.DateTimeZone).toString(),
+      data : new Date().toString(),
       name : name,
       price : price
     }

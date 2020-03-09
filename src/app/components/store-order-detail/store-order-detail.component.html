@@ -174,7 +174,7 @@
 
                             <tr>
                                 <th>Total:</th>
-                                <td class="text-right">{{ order?.totalOrderValue-0 + (order?.taxaDelivery-0)|number }}</td>
+                                <td class="text-right">{{ calculateTotalOrder(order.totalOrderValue, order.taxing, order.taxaDelivery) }}</td>
                             </tr>
                         </tbody>
                     </table>

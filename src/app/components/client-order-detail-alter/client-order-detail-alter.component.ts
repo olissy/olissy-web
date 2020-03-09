@@ -19,6 +19,8 @@ export class ClientOrderDetailAlterComponent implements OnInit {
 
   public produtos:any[] = []
 
+  public note;
+
   public ID = false
 
   public buttonconcluded:boolean = true
@@ -87,9 +89,6 @@ export class ClientOrderDetailAlterComponent implements OnInit {
 
   ngOnInit() {
     this.scrollToTop()
-    this.setIdStoreInPedido()
-    this.setStoreForms()
-    this.setClientForms()
     this.setProducts()
   }
 
@@ -104,43 +103,57 @@ export class ClientOrderDetailAlterComponent implements OnInit {
   public setProducts(){
     this.pedidoService.getOrder(this.route.snapshot.params['id']).subscribe((product:any)=>{
       this.produtos = product[0].product
-      console.log(product[0].product)
+      this.note =  product[0].note
+      this.setOrder(product)
+      this.setTaxaDeliveryForms(product[0].FOREIGN_KEY_STORE)
     })
   }
 
-  public setIdStoreInPedido(){
+  public setOrder(resposta){
+    console.log(resposta)
     this.formularioPedido.patchValue({
-      FOREIGN_KEY_STORE : this.route.snapshot.params['id'],
-      indexDay: new Date()
+      PRIMARY_KEY:resposta[0].PRIMARY_KEY,
+      FOREIGN_KEY_STORE:resposta[0].FOREIGN_KEY_STORE,
+      FOREIGN_KEY_CLIENT:resposta[0].FOREIGN_KEY_CLIENT,
+      storeViewedTheOrder:resposta[0].storeViewedTheOrder,
+      storeImageUrl:resposta[0].storeImageUrl,
+      storeName:resposta[0].storeName,
+      storeNeighborhood:resposta[0].storeNeighborhood,
+      storeStreet:resposta[0].storeStreet,
+      storeCellPhone:resposta[0].storeCellPhone,
+      storeCity:resposta[0].storeCity,
+      storeCNPJ:resposta[0].storeCNPJ,
+      storeEmail:resposta[0].storeEmail,
+      storeHours:resposta[0].storeHours,
+      storeDeliveryEstimate:resposta[0].storeDeliveryEstimate,
+      clientAddressFull:resposta[0].clientAddressFull,
+      clientCellPhone:resposta[0].clientCellPhone,
+      clientMethodPayment:resposta[0].clientMethodPayment,
+      clientImageUrl:resposta[0].clientImageUrl,
+      clientName:resposta[0].clientName,
+      clientLastName:resposta[0].clientLastName,
+      clientCity:resposta[0].clientCity,
+      clientNeighborhood:resposta[0].clientNeighborhood,
+      clientStreet:resposta[0].clientStreet,
+      clientEmail:resposta[0].clientEmail,
+      informChange:resposta[0].informChange,
+      taxing:resposta[0].taxing,
+      totalOrderValue:resposta[0].totalOrderValue,
+      taxaDelivery:resposta[0].taxaDelivery,
+      orderDate:resposta[0].orderDate,
+      orderState:resposta[0].orderState,
+      rateOfDelivery:resposta[0].rateOfDelivery,
+      rateOfDeliveryDescription:resposta[0].rateOfDeliveryDescription,
+      indexDay:resposta[0].indexDay,
     })
+    this.TaxaDeliveryStatus = false
+    this.buttonTaxaDelivery = resposta[0].rateOfDeliveryDescription
   }
 
   public TotalValorDoPedido(){
     return this.produtos.reduce( (sum, item:any)=>{
       return new Number(sum).valueOf() + new Number(item.productPrice).valueOf() 
-    },0) + new Number(this.formularioPedido.get('taxing').value)
-  }
-
-  public removerItem(indice){
-     this.Appservice.produtos.splice(indice,1)
-  }
-
-  public aumentartem(item:any){
-    let foundItem = this.Appservice.produtos.find( (items)=> items.productName ===  item.productName)
-    if( item.quantities < item.productQuantities ){
-      foundItem.quantities++;
-      foundItem.productPrice = foundItem.productPriceOrigin * foundItem.quantities;
-    }
-  }
-
-  public diminuirItem(item:any){
-    let foundItem = this.Appservice.produtos.find( (items)=> items.productName ===  item.productName)
-    if(foundItem.quantities == 1){
-
-    }else{
-      foundItem.quantities = foundItem.quantities - 1
-      foundItem.productPrice = foundItem.productPrice - foundItem.productPriceOrigin
-    }
+    },0)
   }
 
   public setTaxaDelivery(taxa, index:number){
@@ -155,35 +168,31 @@ export class ClientOrderDetailAlterComponent implements OnInit {
 
   public setMessageRateOfDelivery(){
     this.TaxaDeliveryStatusValidation()
+    this.setCheckedRateOfDelivery()
   }
 
+  public setCheckedRateOfDelivery(){
+    if(this.TaxaDelivery[0].value == this.formularioPedido.get('rateOfDelivery').value) {
+      this.TaxaDelivery[0].checked = true
+    }
 
-  public concluirPedido(){
+    if(this.TaxaDelivery[1].value == this.formularioPedido.get('rateOfDelivery').value) {
+      this.TaxaDelivery[1].checked = true
+    }
 
-    this.validationClientMethodPayment()
+    if(this.TaxaDelivery[2].value == this.formularioPedido.get('rateOfDelivery').value) {
+      this.TaxaDelivery[2].checked = true
+    }
 
-    this.fieldValidation()
-
-    this.TaxaDeliveryStatusValidation()
-
-    if(this.formularioPedido.valid && this.ID && this.TaxaDeliveryStatusValidation() && Object.keys(this.produtos).length != 0){
-      this.cadastraPedido()
-      this.buttonconcluded = false
-    }else{
-      console.log("formulario invalido")
+    if(this.TaxaDelivery[3].value == this.formularioPedido.get('rateOfDelivery').value) {
+      this.TaxaDelivery[3].checked = true
     }
   }
 
-  public cadastraPedido(){
-    let pedido:any = []
-        pedido = this.formularioPedido.value
-        pedido.product = this.produtos
-        pedido.totalOrderValue = this.TotalValorDoPedido()
 
-  }
  
-  public setStoreForms(){
-    this.pedidoService.getByFOREIGN_KEY('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
+  public setTaxaDeliveryForms(FOREIGN_KEY_STORE){
+    this.pedidoService.getStore(FOREIGN_KEY_STORE).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
       this.FormaPagamento[0].checked = resposta[0].money
       this.FormaPagamento[1].checked = resposta[0].debit
       this.FormaPagamento[2].checked = resposta[0].credit
@@ -203,44 +212,10 @@ export class ClientOrderDetailAlterComponent implements OnInit {
       if(resposta[0].deliveryBy.status){
         this.TaxaDelivery.push({description: `Entrega por R$${resposta[0].deliveryBy.taxa}/KM`, rule:true, value: 'deliveryBy', checked:false})
       }
-
-      this.formularioPedido.patchValue({
-        storeImageUrl: resposta[0].storeImageUrl,
-        storeName : resposta[0].storeName,
-        storeNeighborhood : resposta[0].storeNeighborhood,
-        storeStreet : resposta[0].storeStreet,
-        storeCellPhone : resposta[0].storeCellPhone,
-        storeCity : resposta[0].storeCity,
-        storeCNPJ : resposta[0].storeCNPJ,
-        storeEmail : resposta[0].storeEmail,
-        storeHours : resposta[0].storeHours,
-        storeDeliveryEstimate : resposta[0].storeDeliveryEstimate
-      })
     })
   }
 
-  public setClientForms(){
-    this.authService.isLogged().pipe(takeUntil(this.unsubscribe$)).subscribe((res:any)=>{
-      if(res != null){
-        this.pedidoService.getByFOREIGN_KEY('client', res.uid).pipe(takeUntil(this.unsubscribe$)).subscribe((resposta:any)=>{
-          this.formularioPedido.patchValue({
-            clientImageUrl:resposta[0].clientImageUrl,
-            FOREIGN_KEY_CLIENT: resposta[0].FOREIGN_KEY,
-            clientName: resposta[0].clientName,
-            clientLastName: resposta[0].clientLastName,
-            clientCity: resposta[0].clientCity,
-            clientNeighborhood: resposta[0].clientNeighborhood,
-            clientStreet: resposta[0].clientStreet,
-            clientEmail: resposta[0].clientEmail,
-          })
-          this.formularioPedido.patchValue({
-            clientAddressFull : `${resposta[0].clientStreet}, Bairro:${resposta[0].clientNeighborhood}, ${resposta[0].clientCity}/${resposta[0].clientState}-${resposta[0].clientCountry}, cep:${resposta[0].clientCEP}`,
-            clientCellPhone: resposta[0].clientCellPhone
-          })
-        })
-      }
-    })
-  }
+
 
   public validationClientMethodPayment(){
     if(this.formularioPedido.get('clientMethodPayment').valid && this.formularioPedido.get('informChange').valid == false){
@@ -266,6 +241,37 @@ export class ClientOrderDetailAlterComponent implements OnInit {
     this.formularioPedido.get('clientAddressFull').markAsTouched()
     this.formularioPedido.get('clientCellPhone').markAsTouched()
     this.formularioPedido.get('clientMethodPayment').markAsTouched()
+  }
+
+  public concluirPedido(){
+
+    this.validationClientMethodPayment()
+
+    this.fieldValidation()
+
+    this.TaxaDeliveryStatusValidation()
+
+    if(this.formularioPedido.valid && this.TaxaDeliveryStatusValidation() && Object.keys(this.produtos).length != 0){
+      this.cadastraPedido()
+      this.buttonconcluded = false
+    }else{
+      console.log("formulario invalido")
+    }
+  }
+
+  public calculateTotalOrder(product, taxaPlataform, TaxaDelivery){
+    return Number(product) + Number(taxaPlataform) + Number(TaxaDelivery);
+  }
+
+  public cadastraPedido(){
+    let pedido:any = []
+        pedido = this.formularioPedido.value
+        pedido.product = this.produtos
+        pedido.note = this.note
+        pedido.totalOrderValue = this.TotalValorDoPedido()
+        this.pedidoService.changeOrder(pedido).then((res)=>{
+          this.historyNavigateBack()
+        })
   }
 
   ngOnDestroy(){

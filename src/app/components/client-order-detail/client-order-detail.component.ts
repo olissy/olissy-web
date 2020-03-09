@@ -49,7 +49,7 @@ export class ClientOrderDetailComponent implements OnInit {
   }
 
   public accept(){
-    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'reserved'})
+    this.orderDetailService.update('order',this.order.PRIMARY_KEY, {orderState: 'reserved', storeViewedTheOrder:false})
   }
 
   public finished(){
@@ -58,6 +58,10 @@ export class ClientOrderDetailComponent implements OnInit {
  
   public formatDataOrder(date){
     return new Date(date).toLocaleString([], { hour12: true});
+  }
+
+  public calculateTotalOrder(product, taxaPlataform, TaxaDelivery){
+    return Number(product) + Number(taxaPlataform) + Number(TaxaDelivery);
   }
 
   setProduct(product){

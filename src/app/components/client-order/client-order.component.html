@@ -26,7 +26,8 @@
         {{ order.storeName }}
       </span>
       <span class="info-box-number" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
-        {{ order.totalOrderValue | currency: "BRL" }}
+        {{ calculateTotalOrder(order.totalOrderValue, order.taxing, order.taxaDelivery) | currency: "BRL" }}
+        
       </span>
       <span class="progress-description" [ngClass]="{ 'text-blue': order.storeViewedTheOrder == false }">
         {{ order.orderDate | ClientOrderPipe: 'formatDataOrderList' }}
