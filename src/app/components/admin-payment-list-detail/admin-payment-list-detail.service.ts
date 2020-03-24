@@ -21,7 +21,8 @@ export class AdminPaymentListDetailService {
     return await this.db.collection('storeListStatePayment').doc(PRIMARY_KEY).update({statusPayment:"receivedPayment"})
   }
 
-  public getByPRIMARY_KEY_ADMIN_PAYMENT(PRIMARY_KEY_ADMIN_PAYMENT) {
-    return this.db.collection('storeListStatePayment', ref =>ref.where('PRIMARY_KEY_ADMIN_PAYMENT', '==', PRIMARY_KEY_ADMIN_PAYMENT)).valueChanges();
+  public getByPRIMARY_KEY_ADMIN_PAYMENT(FOREIGN_KEY_STORE, PRIMARY_KEY_ADMIN_PAYMENT) {
+    return this.db.collection('storeListStatePayment', ref =>ref.where('FOREIGN_KEY_STORE', '==', FOREIGN_KEY_STORE)
+                                                                .where('PRIMARY_KEY_ADMIN_PAYMENT', '==', PRIMARY_KEY_ADMIN_PAYMENT)).valueChanges();
   }
 }

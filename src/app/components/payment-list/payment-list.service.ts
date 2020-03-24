@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { firebase } from '@firebase/app';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -76,7 +76,12 @@ export class PaymentListService {
   }
 
   public getTimeZone() {
-    return this.http.get<any[]>("http://worldtimeapi.org/api/timezone/America/Sao_Paulo");
+
+     const headers = new HttpHeaders({
+      'Content-Type':  'application/json; charset=utf-8',
+      'Accept': 'application/json'
+    })
+    return this.http.get<any[]>("https://worldtimeapi.org/api/timezone/America/Sao_Paulo", { headers: headers});
   }
 
 }

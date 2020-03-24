@@ -74,7 +74,7 @@ a {
 }
 
 .card{
-  margin-bottom: 10px
+  margin-bottom: 0px
 }
 
 .box-header.with-border {
@@ -110,6 +110,7 @@ a {
 }
 
 .nameStore{
+  font-family: 'Thasadith', sans-serif;
   font-weight: 900;
   font-size: 16px;
   color: #000;
@@ -126,9 +127,16 @@ a {
   padding-top: 10px;
 }
 .menu-item-info-box-text {
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
   margin: 0px 0px 10px 5px;
   width: 98%;
   color: #333;
+}
+
+.font{
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
 }
 
 .productName{

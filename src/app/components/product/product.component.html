@@ -1,13 +1,12 @@
-<link href="https://fonts.googleapis.com/css?family=Roboto:900&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css?family=Thasadith&display=swap" rel="stylesheet">
 <div class="container"> 
   <div *ngFor="let product of result.product" >
-    <div *ngFor="let store of result.store"class="col-md-12 col-xs-12 center" style="top: 25px; margin-bottom: 10px">
+    <div *ngFor="let store of result.store"class="col-md-12 col-xs-12 center" style="top: 0px; margin-bottom: 0px">
       <div *ngIf="store.FOREIGN_KEY == product.FOREIGN_KEY" class="menu-item-info-box card" style="cursor: pointer">
 
-        <div   class="box-header with-border" style="padding: 5px 0px 0px 5px">
+        <div   class="box-header with-border" style="padding: 5px 0px 0px 5px;">
           <div class="user-block">
-            <div style="display:flex; flex-wrap: nowrap; justify-content: space-between; align-items:baseline;">
+            <div style="display:flex; flex-wrap: nowrap; justify-content: space-between; align-items:baseline; margin-top: 10px;margin-bottom: 5px;">
               <span [routerLink]="['/store-page',store?.FOREIGN_KEY]">
                 <img class="img-circle" [src]="store?.storeImageUrl" alt="User Image">
                 <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpen">
@@ -16,8 +15,8 @@
                 <span *ngIf="store?.storeOpenOrClosed  == false" class="storeClosed">
                   <i class="fa fa-circle"></i>
                 </span> 
-                <span class="username" style="position: relative; top: -15px; line-height: 11px; display:flex; 	flex-direction: column; font-family: 'Roboto';">
-                  <a class="nameStore">{{ store?.storeName }} <i class="fa fa-circle" style="font-size: 7px;"></i> {{ store?.storeNeighborhood }}</a>
+                <span class="username" style="position: relative; top: -15px; line-height: 11px; display:flex; 	flex-direction: column;">
+                  <a class="nameStore">{{ store?.storeName }} &nbsp;<i class="fa fa-circle" style="font-size: 7px;"></i>&nbsp;<i style="color: #777;">{{ store?.storeNeighborhood }}</i></a>
                 </span>
                 <span class="username" style="position: relative; top: -10px; line-height: 11px; display:flex; 	flex-direction: row;"> 
                   <i *ngIf="store.negotiateRateLivery.status" class="fa fa-circle" style="font-size: 15px; margin-right: 15px; color: #ffc900cf;"></i>
@@ -27,9 +26,9 @@
                 </span>
               </span>
               <span class="pull-right" style="margin-right: 10px;">
-                <span class="username" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo" style="position: relative; top: 7px; width: 35px">
-                  <a class="nameStore" style="font-size: 25px">
-                    <i class="fa  fa-ellipsis-h"></i>
+                <span class="username" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo" style="position: relative; top: 1px; width: 10px">
+                  <a class="nameStore" style="font-size: 16px">
+                    <i class="fa fa-info" style="color: #777;"></i>
                   </a>
                 </span>
               </span>
@@ -101,7 +100,7 @@
           <div *ngIf="productDB.PRIMARY_KEY == product.PRIMARY_KEY_PRODUCT_DB && store.FOREIGN_KEY == product.FOREIGN_KEY">
             <div style="margin: 5px 5px 5px 5px; padding:0px 0px 0px 0px ;">
               <div class="row" style="margin-left: 0px; margin-right: 0px;">
-                <span class="menu-item-info-box-price" style="font-size: 25px; color:#000">
+                <span class="menu-item-info-box-price font" style="font-size: 25px; color:#000">
                   {{ product.productPrice | currency: 'BRL'}}
                   <span style="font-size: 12px; background-color: #2cce2fd1; border-radius: 10px; color: aliceblue; color: #ffffff;padding: 5px; top: -20px; position: relative;">
                     <b>
@@ -109,7 +108,7 @@
                     </b>
                   </span>
                 </span>
-                <button type="button" (click)="purchase(productDB, product)" class="btn btn-default btn-xs pull-right" style="font-size: 25px;border-radius: 0px; border: 0px solid #EE3233; background: #fff; color:#000">
+                <button type="button" (click)="purchase(productDB, product)" class="btn btn-default btn-xs pull-right font" style="font-size: 25px;border-radius: 0px; border: 0px solid #EE3233; background: #fff; color:#000">
                   <b>Comprar</b>
                 </button>
               </div>
@@ -148,8 +147,8 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12 col-xs-12 center" style="top: 5px; margin-bottom: 50px">
-    <div class="col-md-12 col-xs-12 card" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;" *ngIf="loading">
+  <div class="col-md-12 col-xs-12 center" style="top: 0px; margin-bottom: 0px">
+    <div class="col-md-12 col-xs-12 card" style="padding-bottom: 0px; padding-right: 0px; padding-left: 0px;" *ngIf="loading">
       <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais" (click)="loadingPlusProduct()">
         Carregar mais
       </button>
