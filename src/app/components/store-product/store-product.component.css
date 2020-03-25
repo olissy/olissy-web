@@ -56,7 +56,7 @@ footer {
 
 
 .card{
-  margin-bottom: 10px
+  margin-bottom: 0px
 }
 
 
@@ -134,7 +134,7 @@ a {
 .card{
   width: 500px;
   margin-top: 10px;
-  margin-bottom: 60px;
+  margin-bottom: 0px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -150,7 +150,7 @@ a {
 }
 
 .card{
-  margin-bottom: 10px
+  margin-bottom: 0px
 }
 
 .box-header.with-border {
@@ -189,9 +189,16 @@ a {
   padding-top: 10px;
 }
 .menu-item-info-box-text {
-  margin: 0px 0px 10px 5px;
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
+  margin: 0px 0px 0px 5px;
   width: 98%;
-  color: #333;
+  color: #000;
+}
+
+.font{
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
 }
 
 .productName{

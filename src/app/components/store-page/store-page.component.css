@@ -26,15 +26,15 @@ img {
 }
 
 .nameStore{
-  font-size: 15px;
-  cursor: pointer;
-  text-decoration:none;
-  color: #000
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  color: #000;
 }
 
 .nameStore:hover{
   color: #000;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
 }
 
 .box-title:hover{
@@ -88,15 +88,17 @@ img {
 
 .storeOpen{
   color: #31cc48;
-  background-color: #fff;
-  font-family: 'Roboto';
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
 }
 
 
 .storeClosed{
   color: #ff6451;
-  background-color: #fff;
-  font-family: 'Roboto';
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
 }
 
 
@@ -107,4 +109,40 @@ img {
 
 .box-header {
   padding: 0px 10px 0px 0px;
+}
+
+.font-thasadith{
+  font-family: 'Thasadith', sans-serif;
+  font-weight: 900;
+  color: #000;
+}
+
+.border-icons-a{
+  background-color: #fff;
+  border-radius: 100px;
+  padding: 5px 8px 5px 8px;
+}
+
+.border-icons-b{
+  background-color: #fff;
+  border-radius: 100px;
+  padding: 4px 8px 5px 8px;
+}
+
+.border-icons-c {
+  background-color: #fff;
+  border-radius: 100px;
+  padding: 5px 9px 1px 9px;
+}
+
+.border-icons-d {
+  background-color: #fff;
+  border-radius: 100px;
+  padding: 5px 9px 1px 9px;
+}
+
+.border-icons-e {
+  background-color: #fff;
+  border-radius: 100px;
+  padding: 9px 9px 1px 9px;
 }

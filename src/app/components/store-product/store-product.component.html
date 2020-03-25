@@ -1,4 +1,4 @@
-<link href="https://fonts.googleapis.com/css?family=Roboto:900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Thasadith&display=swap" rel="stylesheet">
 
 <div *ngFor="let product of result.product" >
   <div *ngFor="let productDB of result.productDataBase">
@@ -78,7 +78,7 @@
             <div *ngIf="productDB.PRIMARY_KEY == product.PRIMARY_KEY_PRODUCT_DB">
               <div style="margin: 5px 5px 5px 5px; padding:0px 0px 0px 0px ;">
                 <div class="row" style=" margin-left: 0px; margin-right: 0px;">
-                  <span class="menu-item-info-box-price " style="font-size: 25px; color:#000">
+                  <span class="menu-item-info-box-price font" style="font-size: 25px; color:#000">
                     {{ product.productPriceOrigin ? (product.productPriceOrigin | currency: "BRL")  : (product.productPrice | currency: "BRL") }}
                     <span style="font-size: 12px; background-color: #2cce2fd1; border-radius: 10px; color: aliceblue; color: #ffffff;padding: 5px; top: -20px; position: relative;">
                       <b>
@@ -154,7 +154,7 @@
   </div>
 </div>
 
-<div class="col-md-12 col-xs-12 center" style="padding-bottom: 30px; padding-right: 0px; padding-left: 0px;" *ngIf="loading && result.product != 0">
+<div class="col-md-12 col-xs-12 center" style="padding-bottom: 0px; padding-right: 0px; padding-left: 0px;" *ngIf="loading && result.product != 0">
   <button type="submit" class="btn btn-primary btn-block btn-flat btn-mais card" (click)="loadingPlusProduct()">
     Carregar mais
   </button>
