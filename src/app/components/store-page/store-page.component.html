@@ -1,18 +1,18 @@
 <link href="https://fonts.googleapis.com/css?family=Thasadith&display=swap" rel="stylesheet">
 
-<div class="container not-select-text" style="padding: 10px 0px 0px 0px">
+<div class="container not-select-text removerEspacoEntreCabecarioLoja">
   <section class="content" style="padding: 0px 15px 0px 15px">
     <div class="row">
       <div class="col-xs-12 collumn-mobile center">
         <div class="box box-solid" *ngFor="let store of store">
 
-          <div class="box-body">
+          <div class="box-body wallpaper">
             <div class="box-header with-border">
               <span class="font-thasadith border-icons-a">
-                <a class="nameStore">{{ store?.storeName }} &nbsp;<i class="fa fa-circle" style="font-size: 7px;"></i>&nbsp;<i style="color: #777; font-style: normal;">{{ store?.storeNeighborhood }}</i></a>
+                <a class="nameStore">{{ store?.storeName }} &nbsp;<i class="fa fa-circle" style="font-size: 7px;"></i>&nbsp;<i style="color: #ccc; font-style: normal;">{{ store?.storeNeighborhood }}</i></a>
               </span> 
               <span class="pull-right border-icons-b" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
-                <a style="font-size: 15px; color: #777; background-color: transparent; cursor: pointer;">
+                <a style="font-size: 15px; color: #ccc; background-color: transparent; cursor: pointer;">
                   <i class="fa fa-star"></i>{{  store.sale || 0 }} &nbsp; <i class="fa fa-tags"></i>{{ store?.productQuantity }}
                 </a>
               </span> 
@@ -33,18 +33,18 @@
             </div>
             <div class="col-sm-12 col-xs-12" style=" display:flex; 	flex-direction: row; justify-content: space-between;">
               <span class="border-icons-e"  *ngIf="isLogin == false">
-                <i class="fa fa-thumbs-o-up" style="color: #000;font-size: 20px; cursor: pointer;"></i> 
-                <b style="color: #000;cursor: pointer;"> {{ store.follow }} Seguidores</b>
+                <i class="fa fa-thumbs-o-up" style="color: #fff;font-size: 20px; cursor: pointer;"></i> 
+                <b style="color: #fff;cursor: pointer;"> {{ store.follow }} Seguidores</b>
               </span>
               
               <span class="border-icons-e"  *ngIf="isLogin == true && react_user.status == 'react-empty'" (click)="createFollow(store)">
-                <i class="fa fa-thumbs-o-up" style="color: #000;font-size: 20px; cursor: pointer;"></i> 
-                <b style="color: #000;cursor: pointer;"> {{ store.follow }} Seguidores</b>
+                <i class="fa fa-thumbs-o-up" style="color: #fff;font-size: 20px; cursor: pointer;"></i> 
+                <b style="color: #fff;cursor: pointer;"> {{ store.follow }} Seguidores</b>
               </span>
 
               <span class="border-icons-e"  *ngIf="isLogin == true && react_user.status == 'react-full-black'" (click)="setFollowBlack(store)">
-                <i class="fa fa-thumbs-o-up" style="color: #000;font-size: 20px; cursor: pointer;"></i> 
-                <b style="color: #000;cursor: pointer;"> {{ store.follow }} Seguidores</b>
+                <i class="fa fa-thumbs-o-up" style="color: #fff;font-size: 20px; cursor: pointer;"></i> 
+                <b style="color: #fff;cursor: pointer;"> {{ store.follow }} Seguidores</b>
               </span>
               <span class="border-icons-e"  *ngIf="isLogin == true && react_user.status == 'react-full-grey'">
                 <i class="fa fa-thumbs-up" style="color:#999;font-size: 20px; cursor: pointer;"></i> 
@@ -56,11 +56,11 @@
               </span>
 
               <span class="border-icons-d" style="font-size: 20px; cursor: pointer;" (click)="message()">
-                <i class="fa fa-envelope" style="color: #000;font-size: 20px; cursor: pointer;"></i>
+                <i class="fa fa-envelope" style="color: #fff;font-size: 20px; cursor: pointer;"></i>
               </span>
 
               <span class="pull-right border-icons-c" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
-                <a style="font-size: 25px; color: #020202; background-color: transparent; cursor: pointer;">
+                <a style="font-size: 25px; color: #fff; background-color: transparent; cursor: pointer;">
                   <i class="fa  fa-ellipsis-h"></i>
                 </a>
               </span> 

@@ -231,7 +231,7 @@ export class ProductComponent implements OnInit {
     ]);
     this.titleService.setTitle('olissy');
     this.metaTagService.updateTag(
-      { name: 'description', content: 'A olissy delivery trata-se de uma Marketplace local de compras e vendas de produtos. No ambiente online isso se traduz em um espaço virtual onde a farmacia empresa permite que outros lojistas anunciem seus produtos e serviços através da plataforma da olissy.' }
+      { name: 'description', content: ' Olissy trata-se de uma Marketplace, local de compras e vendas de produtos, no ambiente online, isso se traduz em um espaço virtual, aonde a olissy permite que farmácias e drogarias anunciem seus produtos e serviços através da plataforma da olissy. Assim, a olissy, é como se fosse um shopping center virtual, onde vários lojistas vendem seus produtos e serviços diretamente aos consumidores.' }
     );
   }
 

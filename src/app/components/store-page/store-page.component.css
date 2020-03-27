@@ -29,11 +29,11 @@ img {
   font-family: 'Thasadith', sans-serif;
   font-weight: 900;
   font-size: 16px;
-  color: #000;
+  color: #fff;
 }
 
 .nameStore:hover{
-  color: #000;
+  color: #fff;
   background-color: transparent;
 }
 
@@ -44,6 +44,24 @@ img {
 
 .detail-active {
   border-bottom: 2px solid #b31377;
+}
+
+.removerEspacoEntreCabecarioLoja{
+  padding: 10px 0px 0px 0px
+}
+@media only screen and (max-width: 600px) {
+  .removerEspacoEntreCabecarioLoja{
+    padding: 0px 0px 0px 0px
+  }
+}
+@media only screen and (max-width: 600px) {
+  .collumn-mobile{
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  .box-body dl {
+    font-size: 14px;
+  }
 }
 
 @media only screen and (max-width: 600px) {
@@ -118,31 +136,39 @@ img {
 }
 
 .border-icons-a{
-  background-color: #fff;
+  background-color: #33333396;;
   border-radius: 100px;
-  padding: 5px 8px 5px 8px;
+  padding: 6px 8px 5px 8px;
 }
 
 .border-icons-b{
-  background-color: #fff;
+  background-color: #33333396;;
   border-radius: 100px;
-  padding: 4px 8px 5px 8px;
+  padding: 6px 8px 5px 8px;
 }
 
 .border-icons-c {
-  background-color: #fff;
+  background-color: #33333396;;
   border-radius: 100px;
-  padding: 5px 9px 1px 9px;
+  padding: 5px 11px 1px 11px;
 }
 
 .border-icons-d {
-  background-color: #fff;
+  background-color: #33333396;;
   border-radius: 100px;
-  padding: 5px 9px 1px 9px;
+  padding: 5.5px 11px 1px 11px;
 }
 
 .border-icons-e {
-  background-color: #fff;
+  background-color: #33333396;;
   border-radius: 100px;
   padding: 9px 9px 1px 9px;
+}
+
+.wallpaper{
+  background-image: url('/assets/developer/wallpaper-default.jpg');
+  background-color: #fff; /* Used if the image is unavailable */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
 }
