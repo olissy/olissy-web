@@ -7,31 +7,38 @@
         <div class="box box-solid" *ngFor="let store of store">
 
           <div class="box-body wallpaper">
-            <div class="box-header with-border">
+            <div class="box-header with-border h" style=" padding-right: 0px; ">
+              <span class="font-thasadith">
+                <a [href]="store?.storeImageUrl" target="_blank">
+                  <img class="img-circle box-img-detail"  [src]="store?.storeImageUrl" />
+                  <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpen">
+                    <i class="fa fa-circle"></i>
+                  </span> 
+                  <span *ngIf="store?.storeOpenOrClosed  == false" class="storeClosed">
+                    <i class="fa fa-circle"></i>
+                  </span>
+                </a>
+              </span> 
               <span class="font-thasadith border-icons-a">
                 <a class="nameStore">{{ store?.storeName }} &nbsp;<i class="fa fa-circle" style="font-size: 7px;"></i>&nbsp;<i style="color: #ccc; font-style: normal;">{{ store?.storeNeighborhood }}</i></a>
               </span> 
-              <span class="pull-right border-icons-b" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
-                <a style="font-size: 15px; color: #ccc; background-color: transparent; cursor: pointer;">
-                  <i class="fa fa-star"></i>{{  store.sale || 0 }} &nbsp; <i class="fa fa-tags"></i>{{ store?.productQuantity }}
+              <span class="pull-right border-icons-c" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
+                <a style="font-size: 20px; color: #ccc; background-color: transparent; cursor: pointer;">
+                  <i class="fa  fa-ellipsis-h"></i>
                 </a>
               </span> 
             </div>
-            <div class="col-sm-12 col-xs-12 painel">
-              <div> 
-                <a [href]="store?.storeImageUrl" target="_blank">
-                  <img class="img-circle box-img-detail"  [src]="store?.storeImageUrl" />
-                </a>
-              </div>         
+           <!-- <div class="col-sm-12 col-xs-12 painel">
+        
 
-              <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpen">
+               <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpen">
                 Aberto
               </span> 
               <span *ngIf="store?.storeOpenOrClosed  == false" class="storeClosed">
                 Fechado
-              </span> 
-            </div>
-            <div class="col-sm-12 col-xs-12" style=" display:flex; 	flex-direction: row; justify-content: space-between;">
+              </span>  
+            </div>-->
+            <div class="col-sm-12 col-xs-12 f">
               <span class="border-icons-e"  *ngIf="isLogin == false">
                 <i class="fa fa-thumbs-o-up" style="color: #fff;font-size: 20px; cursor: pointer;"></i> 
                 <b style="color: #fff;cursor: pointer;"> {{ store.follow }} Seguidores</b>
@@ -58,12 +65,11 @@
               <span class="border-icons-d" style="font-size: 20px; cursor: pointer;" (click)="message()">
                 <i class="fa fa-envelope" style="color: #fff;font-size: 20px; cursor: pointer;"></i>
               </span>
-
-              <span class="pull-right border-icons-c" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
-                <a style="font-size: 25px; color: #fff; background-color: transparent; cursor: pointer;">
-                  <i class="fa  fa-ellipsis-h"></i>
+              <span class="pull-right border-icons-b" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
+                <a style="font-size: 15px; color: #ccc; background-color: transparent; cursor: pointer;">
+                  <i class="fa fa-star"></i>{{  store.sale || 0 }} &nbsp; <i class="fa fa-tags"></i>{{ store?.productQuantity }}
                 </a>
-              </span> 
+              </span>
             </div>        
           </div>
           <div class="box-footer detail-footer">
@@ -78,7 +84,7 @@
       </div>
     </div>
     <div class="row">
-        <router-outlet></router-outlet>  
+       <router-outlet></router-outlet>  
     </div>
   </section>
 </div>

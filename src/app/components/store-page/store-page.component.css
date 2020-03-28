@@ -1,3 +1,5 @@
+
+
 img {
   border: 0px solid #31cc48;
 }
@@ -139,6 +141,7 @@ img {
   background-color: #33333396;;
   border-radius: 100px;
   padding: 6px 8px 5px 8px;
+  margin-left: 0px;
 }
 
 .border-icons-b{
@@ -150,25 +153,79 @@ img {
 .border-icons-c {
   background-color: #33333396;;
   border-radius: 100px;
-  padding: 5px 11px 1px 11px;
+  padding: 5px 11px 4px 11px;
+  margin: 0px 0px 0px 0px;
 }
 
 .border-icons-d {
   background-color: #33333396;;
   border-radius: 100px;
-  padding: 5.5px 11px 1px 11px;
+  padding: 3px 9px 5px 9px;
 }
 
 .border-icons-e {
   background-color: #33333396;;
   border-radius: 100px;
-  padding: 9px 9px 1px 9px;
+  padding: 5px 9px 5px 9px;
 }
 
 .wallpaper{
+  height: calc( 100vh - 50px );
   background-image: url('/assets/developer/wallpaper-default.jpg');
   background-color: #fff; /* Used if the image is unavailable */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
+  display:flex; 	
+  flex-direction: column;
+}
+
+.box-img-detail {
+  width: 50px;
+  height: 50px;
+}
+
+
+.h,.f{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /*ie10*/
+  display: -ms-flexbox;
+  -ms-flex-preferred-size: 50px;
+  -ms-flex-align: center; /*vertical*/
+  -ms-flex-line-pack: distribute; /*or justify*/
+}
+
+.f {
+  /*ie10 short content*/
+  margin-top: auto; 
+}
+
+.storeOpen > i{
+  font-size: 12px;
+  color: #02c16ad1;
+  border: #fff solid 1px;
+  border-radius: 100px;
+  background-color: #02c16ad1;
+}
+
+.storeOpen{
+  top: -15px;
+  left: -15px;
+  position: relative;
+}
+
+.storeClosed > i{
+  font-size:12px;
+  color: #ff6451;
+  border: #fff solid 2px;
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.storeClosed{
+  top: -10px;
+  left: -15px;
+  position: relative;
 }
