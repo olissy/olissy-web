@@ -87,6 +87,7 @@ img {
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
+  margin-top: -2px;
 }
 
 .painel-left{
@@ -142,6 +143,8 @@ img {
   border-radius: 100px;
   padding: 6px 8px 5px 8px;
   margin-left: 0px;
+  margin: 9px 0px 0px -5px;
+  position: absolute;
 }
 
 .border-icons-b{
@@ -153,8 +156,8 @@ img {
 .border-icons-c {
   background-color: #33333396;;
   border-radius: 100px;
-  padding: 5px 11px 4px 11px;
-  margin: 0px 0px 0px 0px;
+  padding: 4px 9px 0px 9px;
+  margin: 9px 0px 0px 0px;
 }
 
 .border-icons-d {
@@ -171,13 +174,16 @@ img {
 
 .wallpaper{
   height: calc( 100vh - 50px );
+  width: 100%;
   background-image: url('/assets/developer/wallpaper-default.jpg');
-  background-color: #fff; /* Used if the image is unavailable */
+  background-color: rgb(0, 0, 0); /* Used if the image is unavailable */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
   display:flex; 	
   flex-direction: column;
+  border-bottom-right-radius: 0px; 
+  border-bottom-left-radius: 0px;
 }
 
 .box-img-detail {
@@ -185,8 +191,17 @@ img {
   height: 50px;
 }
 
-
-.h,.f{
+.h{
+  display: initial;
+  align-items: center;
+  justify-content: space-between;
+  /*ie10*/
+  display: -ms-flexbox;
+  -ms-flex-preferred-size: 50px;
+  -ms-flex-align: center; /*vertical*/
+  -ms-flex-line-pack: distribute; /*or justify*/
+}
+.f{
   display: flex;
   align-items: center;
   justify-content: space-between;

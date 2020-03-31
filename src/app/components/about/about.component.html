@@ -203,38 +203,47 @@
         </div>
 
         <div class="social-auth-links text-center">
-            <a href="mailto:olissy.app@gmail.com">
-              <button class="btn btn-primary btn-block btn-flat" >
+            <a *ngIf="email" href="mailto:olissy.app@gmail.com">
+              <button class="btn btn-primary btn-block btn-flat" (click)="setEmail()">
               Quero enviar um 
               <b>Email!</b>
             </button>
             </a>
+            <button *ngIf="!email" class="btn btn-primary btn-block btn-flat" (click)="setEmail()">
+              olissy.app@gmail.com
+            </button>
           <br><br><br>
           <p>- OU -</p>
           <br>
         </div>
-        <div class="col-hidden col-md-12">
-          <h3 class="col-form-label" style="margin-bottom: 20px; display: flex;justify-content: center;">Mensagem</h3>
+        <div *ngIf="mensagem" class="sendMensagem">
+          <i class="fa fa-check-circle" style="color: #0fff00; font-size: 120px;"></i>
+          Mensagem enviada!
         </div>
-        <form class="form-horizontal">
-          <div class="box-body">
-            <div class="form-group">         
-               <input type="text" class="form-control" id="inputName" placeholder="Nome:">
-            </div>
-            <div class="form-group">
-              <input type="text" class="form-control" id="inputName" placeholder="Assunto:">
-            </div>
-            <div class="form-group">
-              <input type="email" class="form-control" id="inputEmail3" placeholder="Email:">
-            </div>
-            <div class="form-group">
-              <textarea class="form-control" rows="3" placeholder="Mensagem..."></textarea>
-            </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope-o"></i> Enviar</button>
-            </div>
+        <div *ngIf="!mensagem">
+          <div class="col-hidden col-md-12">
+            <h3 class="col-form-label" style="margin-bottom: 20px; display: flex;justify-content: center;">Mensagem</h3>
           </div>
-        </form>
+          <form class="form-horizontal" [formGroup]="formularioEnviarEmail" (ngSubmit)="sendMensagem()">
+            <div class="box-body">
+              <div class="form-group">         
+                <input type="text" class="form-control" id="inputName" placeholder="Nome:" formControlName="nome">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="inputName" placeholder="Assunto:" formControlName="assunto">
+              </div>
+              <div class="form-group">
+                <input type="email" class="form-control" id="inputEmail3" placeholder="Email:" formControlName="email">
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" rows="3" placeholder="Mensagem..." formControlName="mensagem"></textarea>
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-envelope-o"></i> Enviar</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </section> 

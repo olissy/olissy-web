@@ -1,3 +1,11 @@
+.font-olissy{
+  font-family: 'Clicker Script', cursive;
+  font-size: 90px;
+  font-weight: 100;
+  color: #000;
+  text-align: center;
+}
+
 .btn-alert{
   margin-top: -5px;
   border: 0px;
@@ -12,7 +20,7 @@ input.ng-invalid.ng-touched{
 }
 
 input.ng-valid.ng-touched{
-  border: 1px solid green;
+  border: 1px solid #ccc;
 }
 
 @media only screen and (max-width: 600px) {
@@ -28,14 +36,14 @@ input.ng-valid.ng-touched{
 
 .btn-primary {
   color: #fff;
-  background-color: #c71581;
-  border-color: #b31374;
+  background-color: #0095f6;
+  border-color: #0076c1;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #b31374;
-  border-color: #b31374;
+  background-color: #70c3f9;
+  border-color: #33a9f5;
 }
 
 .btn-google {
@@ -64,6 +72,6 @@ a {
 }
 
 .form-control {
-  color: #c71581;
-  border: 1px solid #c71581;
+  color: #000;
+  border: 1px solid #ccc;
 }

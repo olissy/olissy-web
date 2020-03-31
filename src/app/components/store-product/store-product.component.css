@@ -14,13 +14,11 @@ footer {
 
 .adicionar-carrinho{
   color: #2cce2fd1;
-  font-family: 'Roboto';
   cursor: pointer;
 }
 
 .remover-carrinho{
   color: #ff6451;
-  font-family: 'Roboto';
   cursor: pointer;
 }
 

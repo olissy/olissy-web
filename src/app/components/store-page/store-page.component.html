@@ -5,7 +5,6 @@
     <div class="row">
       <div class="col-xs-12 collumn-mobile center">
         <div class="box box-solid" *ngFor="let store of store">
-
           <div class="box-body wallpaper">
             <div class="box-header with-border h" style=" padding-right: 0px; ">
               <span class="font-thasadith">
@@ -28,16 +27,6 @@
                 </a>
               </span> 
             </div>
-           <!-- <div class="col-sm-12 col-xs-12 painel">
-        
-
-               <span *ngIf="store?.storeOpenOrClosed  == true" class="storeOpen">
-                Aberto
-              </span> 
-              <span *ngIf="store?.storeOpenOrClosed  == false" class="storeClosed">
-                Fechado
-              </span>  
-            </div>-->
             <div class="col-sm-12 col-xs-12 f">
               <span class="border-icons-e"  *ngIf="isLogin == false">
                 <i class="fa fa-thumbs-o-up" style="color: #fff;font-size: 20px; cursor: pointer;"></i> 
@@ -65,7 +54,7 @@
               <span class="border-icons-d" style="font-size: 20px; cursor: pointer;" (click)="message()">
                 <i class="fa fa-envelope" style="color: #fff;font-size: 20px; cursor: pointer;"></i>
               </span>
-              <span class="pull-right border-icons-b" (click)="selectDisplayStoreInfo(store)" data-keyboard="false" data-toggle="modal" data-target="#displayStoreInfo">
+              <span class="pull-right border-icons-b">
                 <a style="font-size: 15px; color: #ccc; background-color: transparent; cursor: pointer;">
                   <i class="fa fa-star"></i>{{  store.sale || 0 }} &nbsp; <i class="fa fa-tags"></i>{{ store?.productQuantity }}
                 </a>
