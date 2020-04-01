@@ -282,7 +282,11 @@ body {
 }
 
 .skin-red .wrapper, .skin-red .main-sidebar, .skin-red .left-side {
-  background-color: #b31374;
+  background-color: #fff;
+}
+
+.skin-red .main-sidebar {
+  background-color: #c71582;
 }
 
 .skin-red .main-header .logo {

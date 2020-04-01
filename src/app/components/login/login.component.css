@@ -1,3 +1,16 @@
+.container {
+  background-color: white;
+  height: calc( 100vh - 50px );
+}
+
+.login-box-body, .register-box-body {
+  padding: 0px;
+}
+
+.content-wrapper {
+  background-color: #fff;
+}
+
 .font-olissy{
   font-family: 'Clicker Script', cursive;
   font-size: 90px;
