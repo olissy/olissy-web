@@ -10,7 +10,7 @@
         <app-store-column *ngIf="tela == 'comercio'"></app-store-column>
       </section>
     </aside>
-    <div class="content-wrapper">
+    <div class="content-wrapper" [ngStyle]="url && {'background-color': '#fff'}"> 
       <router-outlet></router-outlet>
     </div>
     <div class="control-sidebar-bg"></div>

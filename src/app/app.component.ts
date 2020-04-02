@@ -15,6 +15,8 @@ export class AppComponent {
 
   public message:any;
 
+  public url:boolean = false
+
   constructor(private appService: AppService,
               private authService: AuthService
               ) {}
@@ -22,6 +24,17 @@ export class AppComponent {
   ngOnInit() {
     this.tela = this.appService.router_app_componet;
     this.token()
+    this.getRouterPage()
+  }
+
+  public getRouterPage(){
+    let router = window.location.href.split('/' ) 
+    if(router[3]  == 'login' || router[3]  == 'register'){
+      this.url = true
+    }else{
+      this.url = false
+    }
+    console.log(this.url, router[3])
   }
 
   public token() {
@@ -44,5 +57,6 @@ export class AppComponent {
 
   ngDoCheck() {
     this.tela = this.appService.router_app_componet;
+    this.getRouterPage()
   }
 }
