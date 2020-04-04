@@ -1,9 +1,10 @@
 .container {
-  background-color: white;
+  background-color: #fafafa;
   height: calc( 100vh - 50px );
 }
 
 .login-box-body, .register-box-body {
+  background-color: #fafafa;
   padding: 0px;
 }
 

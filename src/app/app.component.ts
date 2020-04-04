@@ -34,7 +34,6 @@ export class AppComponent {
     }else{
       this.url = false
     }
-    console.log(this.url, router[3])
   }
 
   public token() {

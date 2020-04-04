@@ -18,7 +18,7 @@ import { Meta, Title } from '@angular/platform-browser';
 
 export class StorePageComponent implements OnInit {
 
-  public store
+  public store:any
 
   public isLogin:boolean = false
 
@@ -74,6 +74,13 @@ export class StorePageComponent implements OnInit {
     this.appService.routeParams = this.route.snapshot.params['id']
     this.comercioPaginaService.store('store', this.route.snapshot.params['id']).pipe(takeUntil(this.unsubscribe$)).subscribe((store:any)=>{
       this.store = store
+      this.store[0].storePageImageUrl = store[0].storePageImageUrl ? store[0].storePageImageUrl : "/assets/developer/wallpaper-default.jpg"
+
+      
+
+
+
+
       this.getReact()
       this.searchEngineOptimization(store[0].storeCategory, store[0].storeCity, store[0].storeNeighborhood, store[0].storeName, store[0].storeAbout)
     })

@@ -65,15 +65,41 @@
 </div>
 
 
-<div *ngIf="store.commentStore == 0 && loading == false"  class="col-md-12 col-xs-12 center">
+<div *ngIf="store.commentStore == 0 && loading == false && LOGIN == false"  class="col-md-12 col-xs-12 center">
   <div class="box box-solid card">
       <div class="box-header with-border">
           <div class="user-block" style=" padding: 10px; ">
             <span class="username center">
-              Esta loja não possui comentario 
+              Esta loja não possui comentario  
             </span>
           </div>
       </div>
   </div>
 </div>
+
+
+
+<footer>
+  <div *ngIf="store.commentStore == 0 && loading == false && LOGIN == true"  class="col-md-12 col-xs-12 center">
+    <div class="box box-solid card">
+        <div class="box-header with-border">
+            <div class="user-block" style=" padding: 10px; ">
+              <span class="username center">
+                Esta loja não possui comentario
+              </span>
+              <form *ngIf="LOGIN" [formGroup]="formularioComentario" style="margin: 5px 2px 5px 4px; background-color: #d2d6de; display: flex;">
+                <div class="img-push" style="width: 100%;">
+                  <input type="text" formControlName="commentText" class="form-control input-sm" (keyup.enter)="publicarComentario()" placeholder="Comente Você Também ...">
+                </div>
+                <div class="img-responsive pull-right" style=" background-color: #fff; "> 
+                  <button type="button" (click)="publicarComentario()" class="btn btn-default btn-xs">
+                    <i class="fa  fa-send-o" style="font-size: 24px"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+        </div>
+    </div>
+  </div>
+</footer>
 
