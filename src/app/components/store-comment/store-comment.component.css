@@ -67,3 +67,11 @@
   margin-left: 5px;
   margin-right: 3px;
 }
+
+.direct-chat-text {
+  margin: 0px 0 0 50px;
+}
+
+.direct-chat-text:after, .direct-chat-text:before {
+  position: initial;
+}

@@ -219,21 +219,20 @@
           <span aria-hidden="true"><i class="fa fa-fw fa-close"></i></span></button>
         <h4 class="modal-title" style="color: #fff;">{{ this.comments.post.length }} Comentarios</h4>
       </div>
-      <div  *ngIf="!comments.status" class="modal-body" style="padding: 0px;">
-        <div *ngIf="comments.post.length != 0">
-          <div *ngFor="let comment of comments.post" class="box-footer box-comments" style="border-top: 1px solid #eadae0;">
-            <div class="box-comment">
-              <img class="img-circle img-sm" [src]="comment.commentImageUrl" alt="User Image">
-              <div class="comment-text">
-                <span class="username">
-                  {{ comment.commentName }}
-                  <span class="text-muted pull-right">
-                    <!-- {{ comment.commentDate | ProductPipe }} -->
-                  </span>
-                </span>
-               {{ comment.commentText }}
+
+      <div *ngIf="comments.post.length != 0" id="content" style=" padding: 0px 10px 0px 10px;">
+        <div class="box-primary direct-chat direct-chat-success box-body" >
+          <div class="row msn-mensagem-center-desktop">
+            <div *ngFor="let comment of comments.post" style="margin-bottom:0px;">
+              <div  class="direct-chat-msg">
+                <img class="direct-chat-img" [src]="comment.commentImageUrl">
+                <div class="direct-chat-text" style="background: #d2d6de;border-color: rgba(0, 0, 0, 0.2);color: #444; border: 1px solid #b4b6bb;">
+                  <span class="direct-chat-name pull-left"> {{ comment.commentName }} </span>
+                  <span class="direct-chat-name pull-right" style=" font-size: 12px; "> {{ formatDate(comment.commentDate) }} </span><br>
+                  {{ comment.commentText }}
+                </div>
               </div>
-            </div>
+            </div>  
           </div>
         </div>
       </div>

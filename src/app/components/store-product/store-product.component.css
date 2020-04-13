@@ -227,3 +227,11 @@ a {
   cursor: pointer;
 }
 
+.direct-chat-text {
+  margin: 0px 0 0 50px;
+}
+
+.direct-chat-text:after, .direct-chat-text:before {
+  position: initial;
+}
+
