@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AppService } from './app.service';
 import { AuthService } from './AuthService';
 import { user } from './interfaces';
+declare var $ :any
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,35 @@ export class AppComponent {
     this.tela = this.appService.router_app_componet;
     this.token()
     this.getRouterPage()
+    this.modalHide()
+
+  }
+
+  public modalHide(){
+    //quando o modal esta aberto e o cliente enves de clicar em ocultar modal, clicar no botao voltar no smartphone
+    //o modal e oculto forçado e poriço fica escuro e sem toque
+    //este codigo faz
+
+    //foi pressionado botap voltar, se sim
+    $(window).on('popstate', function(event) {
+
+      //seta variavel modal para alteracao
+      var $modal = $('#displayComment');
+
+      //se o modal for aberto aplicar esta funcao
+      $modal.on('hidden.bs.modal', function(e) { 
+
+        //desabelita botao de voltar
+        history.go(1);
+      });
+
+      //ocultar botao
+      $modal.modal('hide');
+
+
+      //problema:
+      //ele ficar na mesma pagian do modal aberto mas da refresh
+    });
   }
 
   public getRouterPage(){
@@ -53,6 +83,8 @@ export class AppComponent {
       }
     });
   }
+
+
 
   ngDoCheck() {
     this.tela = this.appService.router_app_componet;

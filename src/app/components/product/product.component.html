@@ -16,7 +16,7 @@
                   <i class="fa fa-circle"></i>
                 </span> 
                 <span class="username" style="position: relative; top: -15px; line-height: 11px; display:flex; 	flex-direction: column;">
-                  <a class="nameStore">{{ store?.storeName }} &nbsp;<i class="fa fa-circle" style="font-size: 7px;"></i>&nbsp;<i style="color: #777; font-style: normal;">{{ store?.storeNeighborhood }}</i></a>
+                  <a class="nameStore">{{ store?.storeName }}&nbsp;<i class="fa fa-circle" style="font-size: 7px;"></i>&nbsp;<i style="color: #777; font-style: normal;">{{ store?.storeNeighborhood }}</i></a>
                 </span>
                 <span class="username" style="position: relative; top: -10px; line-height: 11px; display:flex; 	flex-direction: row;"> 
                   <i *ngIf="store.negotiateRateLivery.status" class="fa fa-circle" style="font-size: 15px; margin-right: 15px; color: #ffc900cf;"></i>
@@ -228,7 +228,7 @@
     </div>
   </form>  
   <form>
-    <div class="modal fade" id="displayComment">
+    <div class="modal fade mobile" id="displayComment">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="row" *ngIf="comments.status">
@@ -247,9 +247,9 @@
                 <div *ngFor="let comment of comments.post" style="margin-bottom:0px;">
                   <div  class="direct-chat-msg">
                     <img class="direct-chat-img" [src]="comment.commentImageUrl">
-                    <div class="direct-chat-text" style="background: #d2d6de;border-color: rgba(0, 0, 0, 0.2);color: #444; border: 1px solid #b4b6bb; ">
+                    <div class="direct-chat-text" style="background: #f0f2f5;color: #444; border: 1px solid #f0f2f5; ">
                       <span class="direct-chat-name pull-left"> {{ comment.commentName }} </span>
-                      <span class="direct-chat-name pull-right" style=" font-size: 12px; "> {{ formatDate(comment.commentDate) }} </span><br>
+                      <span class="direct-chat-name pull-right" style=" font-size: 12px; font-weight: normal; color: #65676b;"> {{ formatDate(comment.commentDate) }} </span><br>
                       {{ comment.commentText }}
                     </div>
                   </div>
@@ -269,11 +269,11 @@
               </div>
             </div>
             <form *ngIf="LOGIN" [formGroup]="formularioComentario" style="margin: 5px 2px 5px 4px; background-color: #d2d6de;">
-              <div class="img-responsive img-circle img-sm pull-right" style="margin-right: 10px;"> 
+              <!-- <div class="img-responsive img-circle img-sm pull-right" style="margin-right: 10px;"> 
                 <button type="button" (click)="publicarComentario()" class="btn btn-default btn-xs">
                   <i class="fa  fa-send-o" style="font-size: 25px"></i>
                 </button>
-              </div>
+              </div> -->
               <div class="img-push">
                 <input type="text" formControlName="commentText" class="form-control input-sm" (keyup.enter)="publicarComentario()" placeholder="Comente Você Também ...">
               </div>

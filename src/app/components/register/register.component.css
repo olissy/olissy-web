@@ -89,3 +89,9 @@ a {
   margin-top: 0px;
   width: 300px;
 }
+
+@media all and (max-width: 600px) {
+  input[type=checkbox] {
+    margin: 0px 0px 15px 0px;
+  }
+}

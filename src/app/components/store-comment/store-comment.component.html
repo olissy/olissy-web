@@ -46,9 +46,9 @@
               <div *ngFor="let comment of comments.post" style="margin-bottom:0px;">
                 <div  class="direct-chat-msg">
                   <img class="direct-chat-img" [src]="comment.commentImageUrl">
-                  <div class="direct-chat-text" style="background: #d2d6de;border-color: rgba(0, 0, 0, 0.2);color: #444; border: 1px solid #b4b6bb; ">
+                  <div class="direct-chat-text" style="background: #f0f2f5;color: #444; border: 1px solid #f0f2f5; ">
                     <span class="direct-chat-name pull-left"> {{ comment.commentName }} </span>
-                    <span class="direct-chat-name pull-right" style=" font-size: 12px; "> {{ formatDate(comment.commentDate) }} </span><br>
+                    <span class="direct-chat-name pull-right" style=" font-size: 12px; font-weight: normal; color: #65676b;"> {{ formatDate(comment.commentDate) }} </span><br>
                     {{ comment.commentText }}
                   </div>
                 </div>
@@ -63,7 +63,7 @@
 
 
 
-        <div *ngIf="!comments.status" class="modal-footer" style="padding: 0px; text-align: start; border-top: 0px solid #e5e5e5;background-color: #d2d6de;">
+        <div *ngIf="!comments.status" class="modal-footer" style="padding: 0px; text-align: start; border-top: 0px solid #fff;background-color: #fff;">
           <!-- <div *ngIf="false" class="box box-default collapsed-box box-solid" style="cursor: pointer; margin-bottom: 0px; box-shadow: none;">
             <div class="box-header with-border">
               <div *ngIf="commentPlus" class="box-title" (click)="setCommentPlus()" style="align-items: center; display: flex; justify-content: center;">
@@ -74,15 +74,15 @@
               </div>
             </div>
           </div> -->
-          <form *ngIf="LOGIN" [formGroup]="formularioComentario" style="margin: 5px 2px 5px 4px; background-color: #d2d6de; display: flex;">
+          <form *ngIf="LOGIN" [formGroup]="formularioComentario" style="margin: 5px 2px 5px 4px; background-color: #fff; display: flex;">
             <div class="img-push" style="width: 100%;">
-              <input type="text" formControlName="commentText" class="form-control input-sm" (keyup.enter)="publicarComentario()" placeholder="Comente Você Também ...">
+              <input  type="text" formControlName="commentText" class="form-control input-sm" (keyup.enter)="publicarComentario()" placeholder="Comente Você Também ...">
             </div>
-            <div class="img-responsive img-circle pull-right"> 
+            <!-- <div class="img-responsive img-circle pull-right"> 
               <button type="button" (click)="publicarComentario()" class="btn btn-default btn-xs">
                 <i class="fa  fa-send-o" style="font-size: 24px"></i>
               </button>
-            </div>
+            </div> -->
           </form>
         </div>
       </div>
