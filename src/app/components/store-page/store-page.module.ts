@@ -9,7 +9,7 @@ import { ShoppingCartComponent } from '../../components/shopping-cart/shopping-c
 import { StorePageComponent } from './store-page.component';
 import { NgxMaskModule } from 'ngx-mask';
 import { IMaskModule} from 'angular-imask';
-
+import { AppComponentPipe } from '../../app.component.pipe' 
 
 @NgModule({
   imports: [
@@ -24,7 +24,8 @@ import { IMaskModule} from 'angular-imask';
     StoreCommentComponent,
     StoreProductComponent,
     ShoppingCartComponent,
-    StorePageComponent
+    StorePageComponent,
+    AppComponentPipe
   ]
 })
 

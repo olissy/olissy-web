@@ -4,6 +4,7 @@ import { AuthService } from './AuthService';
 import { user } from './interfaces';
 declare var $ :any
 
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -22,6 +23,8 @@ export class AppComponent {
               private authService: AuthService
               ) {}
 
+              
+
   ngOnInit() {
     this.tela = this.appService.router_app_componet;
     this.token()
@@ -31,6 +34,9 @@ export class AppComponent {
   }
 
   public modalHide(){
+    // um cenário em que preciso exibir uma caixa de diálogo. Gostaria de permitir que o usuário retornasse para fechar a caixa de diálogo, pois é um comportamento muito comum no celular (especialmente no Android).
+    //Quando isso acontece atualmente, a página vai para a página anterior. Em vez disso, preciso do botão para simplesmente descartar a caixa de diálogo.
+    //95% dos usuários usam o botão voltar nos aplicativos em vez do botão X para fechar caixas de diálogo e sidenavs.
     //quando o modal esta aberto e o cliente enves de clicar em ocultar modal, clicar no botao voltar no smartphone
     //o modal e oculto forçado e poriço fica escuro e sem toque
     //este codigo faz
@@ -45,7 +51,9 @@ export class AppComponent {
       $modal.on('hidden.bs.modal', function(e) { 
 
         //desabelita botao de voltar
-        history.go(1);
+        //history.go(1);
+        window.history.forward()
+        console.log('window.history.forward()')
       });
 
       //ocultar botao

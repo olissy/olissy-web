@@ -69,7 +69,11 @@
 }
 
 .direct-chat-text {
-  margin: 0px 0 0 50px;
+  margin: 0px 0 10px 50px;
+}
+
+.direct-chat-text {
+  padding: 5px 15px 5px 15px
 }
 
 .direct-chat-text:after, .direct-chat-text:before {
@@ -77,7 +81,7 @@
 }
 
 .direct-chat-text {
-  border-radius: 15px;
+  border-radius: 20px;
 }
 
 .input-sm {

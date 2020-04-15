@@ -15,7 +15,7 @@ export class ProductService {
   }
   
   public product(LIMIT) {
-    return this.db.collection('product', ref => ref.limit(LIMIT).where("productQuantities", ">", 0).where("productForSale", "==", "sim")).valueChanges();
+    return this.db.collection('product', ref => ref.limit(1).where("productQuantities", ">", 0).where("productForSale", "==", "sim")).valueChanges();
   }
   
   public store(FOREIGN_KEY) {

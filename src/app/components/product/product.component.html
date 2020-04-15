@@ -241,15 +241,15 @@
               <span aria-hidden="true"><i class="fa fa-fw fa-close"></i></span></button>
             <h4 class="modal-title" style="color: #fff;">{{ this.comments.post.length }} Comentarios</h4>
           </div>
-          <div *ngIf="comments.post.length != 0" id="content" style=" padding: 0px 10px 0px 10px;">
+          <div *ngIf="comments.post.length != 0" id="content" style="background-color: #fff; padding: 0px 10px 0px 10px;">
             <div class="box-primary direct-chat direct-chat-success box-body" >
               <div class="row msn-mensagem-center-desktop">
                 <div *ngFor="let comment of comments.post" style="margin-bottom:0px;">
                   <div  class="direct-chat-msg">
                     <img class="direct-chat-img" [src]="comment.commentImageUrl">
-                    <div class="direct-chat-text" style="background: #f0f2f5;color: #444; border: 1px solid #f0f2f5; ">
+                    <div class="direct-chat-text" style="background: #f0f2f5; color: #000; border: 1px solid #f0f2f5; font-size: 16px; ">
                       <span class="direct-chat-name pull-left"> {{ comment.commentName }} </span>
-                      <span class="direct-chat-name pull-right" style=" font-size: 12px; font-weight: normal; color: #65676b;"> {{ formatDate(comment.commentDate) }} </span><br>
+                      <span class="direct-chat-name pull-right" style=" font-size: 12px; font-weight: normal; color: #65676b;"> {{ comment.commentDate | formatterDateForFriend  }} </span><br>
                       {{ comment.commentText }}
                     </div>
                   </div>
