@@ -43,4 +43,13 @@ a:hover, a:active, a:focus {
   .welcome-jumbotron p {
     font-size: 14px;
   }
- }
+}
+
+@media all and (max-width: 600px) {
+  .content {
+    padding: 0px;
+  }
+  .jumbotron {
+    margin-bottom: 0px;
+  }
+}

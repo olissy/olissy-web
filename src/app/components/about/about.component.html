@@ -220,6 +220,10 @@
             <button *ngIf="!email" class="btn btn-primary btn-block btn-flat" (click)="setEmail()">
               olissy.app@gmail.com
             </button>
+            <div *ngIf="!email" style="color: #404040; background-color: #f1f1f1; border-color: #c1c1c1; margin-top: 5px; border: 1px solid #c1c1c1; padding: 3px;">
+              e-mail foi copiado com sucesso! basta somente colar<br>
+              <b>olissy.app@gmail.com</b>
+            </div>
           <br><br><br>
           <p>- OU -</p>
           <br>

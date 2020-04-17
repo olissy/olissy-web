@@ -8,7 +8,7 @@
             </div>
         </section>
     </div>
-    <section  *ngIf="!loadingOrder" class="invoice box box-widget" id="print-section" style="margin: 20px 0px 10px 0px;">
+    <section  *ngIf="!loadingOrder" class="invoice box box-widget espacamentos-card" id="print-section">
         <div class="row ">
             <div class="col-sm-12 col-xs-12" style="display: flex; flex-wrap: nowrap;  justify-content: center;">
                 <img class="box-img-detail img-circle" [src]="order?.storeImageUrl" width="180px" height="180px" style="margin-bottom: 60px;"/>
@@ -36,7 +36,7 @@
         </div>
         <div class="col-sm-4 invoice-col">
             <b>COD:</b> {{ order?.PRIMARY_KEY }}<br />
-            <b>Pagamento:</b> {{ order?.clientMethodPayment | ClientOrderDetailPipe: 'formatMethodPayment' }}<br />
+            <b>Pagamento:</b> {{ order?.clientMethodPayment | ClientOrderDetailPipe: 'formatMethodPayment' }}&nbsp;<span *ngIf="order?.clientMethodPayment == 'money'" class="label label-info" style="background-color: #565656 !important; color: #f0f0f1 !important;">{{ order?.informChange}}</span><br />
             <b>Estado:</b> {{ order?.orderState | ClientOrderDetailPipe: 'formatOrderState'  }} <br />
             <b>Taxa de Entrega:</b> {{ order?.rateOfDeliveryDescription }} 
         </div>

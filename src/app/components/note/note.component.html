@@ -58,7 +58,7 @@
           </div>
           <div class="modal-footer" *ngIf="noteWrite == true">
             <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="border: 2px solid transparent;">Ocultar <b>NOTA</b></button>
-            <button type="button" class="btn btn-primary" (click)="setNoteRead()">Leia a  <b>NOTA</b></button>
+            <button type="button" class="btn btn-primary btn-nota-leia" (click)="setNoteRead()">Leia a  <b>NOTA</b></button>
             <button type="button" class="btn btn-primary" (click)="sendNote(noteWrites.value, false)">Enviar a <b>NOTA</b></button>
           </div>
           <div class="modal-footer" *ngIf="noteRead == true">

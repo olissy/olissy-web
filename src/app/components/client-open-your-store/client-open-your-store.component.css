@@ -6,5 +6,26 @@
   color: #ee2778;
 }
 .box.box-primary {
-  border-top-color: #00a65a;
+  border-top-color: transparent;
+}
+
+@media all and (max-width: 600px) {
+  .container {
+    padding-right: 0px; 
+    padding-left: 0px; 
+  }
+
+  .box {
+    border-radius: 0px;
+    border-radius: 0px;
+    border-top: 0px;
+    margin-bottom: 0px;
+  } 
+  .margin-top-box{
+    margin-top: 0px !important;
+  }
+}
+
+.margin-top-box{
+  margin-top: 30px;
 }

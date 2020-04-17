@@ -41,9 +41,18 @@ export class AboutComponent implements OnInit {
   public setEmail(){
     if(this.email){
       this.email = false
+      this.copy()
     }else{
       this.email = true
     }
+  }
+
+  public copy(){
+    document.addEventListener('copy', (e: ClipboardEvent) => {
+      e.clipboardData.setData('text/plain', "olissy.app@gmail.com");
+      e.preventDefault();
+    });
+    document.execCommand('copy');
   }
 
   public sendMensagem(){
