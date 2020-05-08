@@ -7,7 +7,7 @@
     <span>Carregando Pagamentos</span>
   </div>
 
-  <section *ngIf="loadingPayment == false"  class="paymentDetail box box-widget" id="print-section">
+  <section *ngIf="loadingPayment == false"  class="paymentDetail box box-widget espacamentos-card" id="print-section">
     <div class="row ">
       <div class="col-xs-12">
         <h2 class="page-header">
@@ -98,29 +98,50 @@
           # Data de vencimento : <b> {{  formatterDateForPayment(paymentDetail.latePaymentDay) }}</b><br />
         </p>
       </div>
-      <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'latePayment'" class="col-md-6 col-xs-12">
-        <p class="lead">Montantes</p>
+      <!-- <div *ngIf="paymentDetail.statusPayment == 'inPayment' || paymentDetail.statusPayment == 'latePayment'" class="col-md-6 col-xs-12"> -->
+        <div class="col-md-6 col-xs-12">
+        <p class="lead">Dados da conta destino</p>
         <div class="table-responsive">
           <table class="table">
             <tbody>
               <tr>
                 <th style="width:50%">Banco:</th>
-                <td class="text-right">{{  paymentDetail.bank }}</td>
+                <td class="text-right">077 | Banco Inter S.a</td>
               </tr>
               <tr>
-                <th>Agencia</th>
-                <td class="text-right">{{ paymentDetail.agency }}</td>
+                <th>Agencia:</th>
+                <td class="text-right">0001-9</td>
               </tr>
               <tr>
                 <th>Conta:</th>
-                <td class="text-right">{{ paymentDetail.account }}</td>
+                <td class="text-right">57773130</td>
+              </tr>
+              <tr>
+                <th>Tipo de pessoa:</th>
+                <td class="text-right">Pessoa Fisica</td>
+              </tr>
+              <tr>
+                <th>Nome:</th>
+                <td class="text-right">Saulo Silva Santos</td>
+              </tr>
+              <tr>
+                <th>CPF/CNPJ:</th>
+                <td class="text-right">135.953.847-09</td>
+              </tr>
+              <tr>
+                <th>Finalidade:</th>
+                <td class="text-right">Crédito em conta</td>
+              </tr>
+              <tr>
+                <th>Tipo de Conta:</th>
+                <td class="text-right">Conta Corrente</td>
               </tr>
               <tr>
                 <th>vencimento:</th>
                 <td class="text-right">{{ formatterDateForPayment(paymentDetail.latePaymentDay) }}</td>
               </tr>
               <tr>
-                <th>Total:</th>
+                <th>Valor:</th>
                 <td class="text-right">{{  paymentDetail.totalPayment | currency: "BRL" }}</td>
               </tr>
             </tbody>

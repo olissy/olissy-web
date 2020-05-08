@@ -132,3 +132,22 @@ a{
   }
 }
 
+@media all and (max-width: 600px) {
+  .container {
+    padding-right: 0px;
+    padding-left: 0px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .espacamentos-card {
+    margin: 0px 0px 0px 0px !important;
+  }
+  #print-section{
+    padding: 10px;
+  }
+}
+
+.espacamentos-card {
+  margin: 10px 0px 10px 0px;
+}
+
