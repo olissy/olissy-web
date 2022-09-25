@@ -26,7 +26,7 @@ This project is part of my personal portfolio, so, I'll be happy if you could pr
 
 Email-me: 2033.xyx@gmail.com
 
-Connect with me at [LinkedIn](https://www.linkedin.com/in/saulo-silva-0a1640197/).
+Connect with me at [LinkedIn](https://www.linkedin.com/in/saulomcchelsom/).
 
 Also, you can use this Project as you wish, be for study, be for make improvements or earn money with it!
 
@@ -47,7 +47,7 @@ To run this project in the development mode, you'll need to have a basic environ
 **Cloning the Repository**
 
 ```
-$ git clone https://github.com/caifnet/olissy
+$ git clone https://github.com/olissy/olissy-web/
 
 $ cd olissy
 ```
@@ -87,7 +87,7 @@ You can send how many PR's do you want, I'll be glad to analyse and accept them!
 
 Email-me: 2033.xyz@gmail.com
 
-Connect with me at [LinkedIn](https://www.linkedin.com/in/saulo-silva-0a1640197/)
+Connect with me at [LinkedIn](https://www.linkedin.com/in/saulomcchelsom/)
 
 Thank you!
 
